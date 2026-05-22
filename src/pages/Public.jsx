@@ -2,7 +2,7 @@ import React from 'react'
 
 function Public() {
   return (
-    <div>Public</div>
+   <a href='/login'>jaa</a>
   )
 }
 

@@ -4,11 +4,13 @@ import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
 import Public from './pages/Public.jsx'
+import Login from './pages/Login.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} >
       <Route path="" element={<Public />} />
+      <Route path="/login" element={<Login />} />
     </Route>
   )
 )
