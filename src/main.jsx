@@ -17,6 +17,7 @@ import Home from './pages/Home.jsx'
 import StudentLogin from './pages/Login/StudentLogin.jsx'
 import TeacherLogin from './pages/Login/TeacherLogin.jsx'
 import TeacherPlaceholderPage from './pages/Teacher/TeacherPlaceholderPage.jsx'
+import StudentSetup from './pages/Student/StudentSetup.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
 registerServiceWorker()
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<Navigate to="/login/student" replace />} />
       <Route path="login/student" element={<StudentLogin />} />
       <Route path="login/teacher" element={<TeacherLogin />} />
+      <Route path="student/setup" element={<StudentSetup />} />
 
       <Route element={<ProtectedRoute allowedRole="student" />}>
         <Route path="student/dashboard" element={<StudentDashboard />} />
