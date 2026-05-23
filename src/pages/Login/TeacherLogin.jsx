@@ -145,9 +145,7 @@ function TeacherLogin() {
                 Welcome back, teacher.
               </h1>
               <p className="mt-3 max-w-lg text-sm leading-6 text-slate-600">
-                Use your phone number and password to access the staff
-                dashboard. New teachers are routed through secure access code
-                verification first.
+                Use your registered phone number and password to access the staff dashboard.
               </p>
             </div>
 
@@ -194,15 +192,8 @@ function TeacherLogin() {
               ) : null}
 
               <Button type="submit" loading={loading} fullWidth>
-                Login to teacher dashboard
+                Sign in
               </Button>
-
-              <div className="rounded-2xl border border-slate-200 bg-[#fffaf2] px-4 py-4 text-sm leading-6 text-slate-600">
-                <span className="font-semibold text-slate-800">Demo access:</span>{' '}
-                try <span className="font-medium text-slate-900">9999999999</span>{' '}
-                / <span className="font-medium text-slate-900">teacher123</span>{' '}
-                to enter an existing teacher profile.
-              </div>
             </form>
           </div>
         </section>

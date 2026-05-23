@@ -1,68 +1,29 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import {
   authenticateMockUser,
-  getNewUserDraft,
   getSession,
   isValidPhone,
 } from "../../utils/auth";
 
 const roleStyles = {
   student: {
-    badge: "Learner access",
+    badge: "Student access",
     badgeTone: "bg-[#ffd900]/20 text-[#7a5a00] border-[#ffd900]/35",
-    heroTitle: "Fast, friendly access to your learning space.",
-    heroCopy:
-      "A mobile-first login designed for students: quick sign-in, warm visuals, and a clear path back to class.",
-    heroBullets: [
-      "Phone number login",
-      "One clean step to your dashboard",
-      "Optimized for handheld use",
-    ],
-    introTone: "bg-[#fff8ef]",
-    cardGlow: "from-[#f25d0d]/12 via-white to-[#ff9100]/10",
-    sidePanel:
-      "bg-[linear-gradient(180deg,rgba(242,93,13,0.08),rgba(255,145,0,0.03),rgba(255,255,255,0.96))]",
     accentLine: "bg-gradient-to-r from-[#f25d0d] to-[#ff9100]",
-    helperTone: "text-[#8a3d0d]",
-    demoTone: "border-[#ffd900]/40 bg-[#ffd900]/12",
-    titleTone: "text-slate-900",
-    subtitleTone: "text-slate-600",
-    proseTone: "text-slate-700",
-    formTitle: "Welcome back",
-    formSubtitle: "Sign in with your student phone number and password.",
-    buttonLabel: "Login as student",
-    footerLinkLabel: "Student dashboard preview",
-    footerLinkHref: "/student/dashboard",
+    formTitle: "Sign in",
+    formSubtitle: "Use your registered phone number and password.",
+    buttonLabel: "Sign in",
   },
   teacher: {
     badge: "Private staff portal",
     badgeTone: "bg-[#f25d0d]/10 text-[#b74208] border-[#f25d0d]/25",
-    heroTitle: "Structured access for teachers and coordinators.",
-    heroCopy:
-      "This private portal keeps the interface professional, calm, and efficient for coaching and class operations.",
-    heroBullets: [
-      "Invitation-only access",
-      "Designed for staff workflows",
-      "Simple login on desktop or mobile",
-    ],
-    introTone: "bg-[#fff7f1]",
-    cardGlow: "from-[#f25d0d]/10 via-white to-[#ffd900]/8",
-    sidePanel:
-      "bg-[linear-gradient(180deg,rgba(242,93,13,0.06),rgba(31,41,55,0.02),rgba(255,255,255,0.97))]",
     accentLine: "bg-gradient-to-r from-[#f25d0d] to-[#ff9100]",
-    helperTone: "text-[#7b3408]",
-    demoTone: "border-[#f25d0d]/20 bg-[#f25d0d]/8",
-    titleTone: "text-slate-900",
-    subtitleTone: "text-slate-600",
-    proseTone: "text-slate-700",
-    formTitle: "Staff sign in",
-    formSubtitle: "Use your teacher phone number and password to continue.",
-    buttonLabel: "Login as teacher",
-    footerLinkLabel: "Teacher dashboard preview",
-    footerLinkHref: "/teacher/dashboard",
+    formTitle: "Sign in",
+    formSubtitle: "Use your registered phone number and password.",
+    buttonLabel: "Sign in",
   },
 };
 
@@ -80,7 +41,6 @@ function AuthPage({ role }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [info, setInfo] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -88,16 +48,6 @@ function AuthPage({ role }) {
       navigate(`/${sessionRole || role}/dashboard`, { replace: true });
     }
   }, [navigate, role, sessionRole, sessionToken]);
-
-  useEffect(() => {
-    const draft = getNewUserDraft();
-
-    if (draft?.role === role) {
-      setInfo(
-        "A profile setup draft was saved for this portal. Finish the login flow when registration is added.",
-      );
-    }
-  }, [role]);
 
   const updateField = (field) => (event) => {
     const value =
@@ -111,16 +61,11 @@ function AuthPage({ role }) {
     if (error) {
       setError("");
     }
-
-    if (info) {
-      setInfo("");
-    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
-    setInfo("");
     setLoading(true);
 
     try {
@@ -130,11 +75,6 @@ function AuthPage({ role }) {
         password: form.password,
         rememberSession: form.rememberSession,
       });
-
-      if (result.status === "new_user") {
-        setInfo(result.message);
-        return;
-      }
 
       navigate(result.redirectTo, { replace: true });
     } catch (submitError) {
@@ -180,9 +120,8 @@ function AuthPage({ role }) {
                 </div>
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-                    App logo placeholder
+                    Login portal
                   </p>
-                  <p className="text-sm text-slate-500">Login portal</p>
                 </div>
               </div>
 
@@ -235,7 +174,6 @@ function AuthPage({ role }) {
                     {showPassword ? "Hide" : "Show"}
                   </button>
                 }
-                hint="Passwords are mocked for now and will be replaced by secure auth later."
               />
 
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-[#fffdf8] px-4 py-3">
@@ -250,10 +188,9 @@ function AuthPage({ role }) {
                   htmlFor={`${role}-remember`}
                   className="text-sm leading-6 text-slate-700"
                 >
-                  Remember session on this device
+                  Keep me signed in
                   <span className="block text-xs text-slate-500">
-                    Placeholder behavior for local session persistence in the
-                    mock login flow.
+                    Only on this device.
                   </span>
                 </label>
               </div>
@@ -264,25 +201,13 @@ function AuthPage({ role }) {
                 </div>
               ) : null}
 
-              {info ? (
-                <div className="rounded-2xl border border-[#ffd900]/50 bg-[#ffd900]/12 px-4 py-3 text-sm text-[#6f5800]">
-                  {info}
-                </div>
-              ) : null}
-
               <Button type="submit" loading={loading} fullWidth>
                 {styles.buttonLabel}
               </Button>
             </form>
 
-            <div className="mt-6 flex flex-col gap-3 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-              <p>Session tokens are saved in localStorage for this prototype.</p>
-              <Link
-                to={styles.footerLinkHref}
-                className="font-semibold text-[#f25d0d] transition hover:text-[#d94f09]"
-              >
-                {styles.footerLinkLabel}
-              </Link>
+            <div className="mt-6 text-sm text-slate-500">
+              Sign in to continue to your dashboard.
             </div>
           </div>
         </section>
