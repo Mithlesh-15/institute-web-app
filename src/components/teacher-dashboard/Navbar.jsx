@@ -1,5 +1,6 @@
-import { Bell, Menu, LogOut } from 'lucide-react'
+import { Menu, LogOut } from 'lucide-react'
 import { useMemo } from 'react'
+import InstallAppButton from '../pwa/InstallAppButton'
 
 function getInitials(name = 'Teacher') {
   return name
@@ -39,14 +40,14 @@ function Navbar({ session, title, currentLabel, onMenuClick, onLogout }) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <button
-            type="button"
-            className="relative inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-[#f25d0d]/25 hover:text-[#f25d0d]"
-            aria-label="Notifications"
-          >
-            <Bell className="h-5 w-5" />
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#f25d0d]" />
-          </button>
+          <InstallAppButton
+            label="Install"
+            compact
+            showHelperText={false}
+            className="shrink-0"
+          />
+
+          
 
           <div className="hidden items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm sm:flex">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(242,93,13,0.95),rgba(255,145,0,0.9))] text-sm font-semibold text-white">
