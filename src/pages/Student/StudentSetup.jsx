@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { BadgeCheck, Sparkles, UserRound } from 'lucide-react'
+import { BadgeCheck, UserRound } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import ClassSelector from '../../components/student/ClassSelector'
 import PhotoUpload from '../../components/student/PhotoUpload'
-import SubjectPicker from '../../components/student/SubjectPicker'
 import StudentPageShell from '../../components/student/StudentPageShell'
 import { getSession, isValidPhone } from '../../utils/auth'
 import {
@@ -28,7 +27,6 @@ function StudentSetup() {
     password: draft?.password || '',
     name: '',
     className: '',
-    subjects: [],
     photoFile: null,
     photoPreview: '',
   })
@@ -64,23 +62,6 @@ function StudentSetup() {
     }
   }
 
-  const handleSubjectToggle = (subject) => {
-    setForm((current) => {
-      const exists = current.subjects.includes(subject)
-
-      return {
-        ...current,
-        subjects: exists
-          ? current.subjects.filter((item) => item !== subject)
-          : [...current.subjects, subject],
-      }
-    })
-
-    if (error) {
-      setError('')
-    }
-  }
-
   const handlePhotoChange = (photoFile, photoPreview) => {
     setForm((current) => ({
       ...current,
@@ -104,7 +85,6 @@ function StudentSetup() {
         password: draft?.password || form.password,
         name: form.name,
         className: form.className,
-        subjects: form.subjects,
         photoFile: form.photoFile,
       })
 
@@ -158,7 +138,6 @@ function StudentSetup() {
                   autoComplete="tel"
                   inputMode="numeric"
                   disabled
-                  hint="Pulled from the login step."
                   error={draft?.phone && !isValidPhone(draft.phone) ? 'Invalid draft phone number.' : ''}
                 />
 
@@ -185,9 +164,6 @@ function StudentSetup() {
                 }))
               }
             />
-            <p className="px-1 text-xs font-medium text-slate-500">
-              Photo is optional. You can skip it and add one later.
-            </p>
           </div>
 
           <div className="space-y-4">
@@ -204,22 +180,7 @@ function StudentSetup() {
               </div>
             </div>
 
-            <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
-              <p className="text-sm font-semibold text-slate-900">Subjects studying</p>
-              <p className="mt-1 text-sm text-slate-500">
-                Select one or more subjects.
-              </p>
-              <div className="mt-4">
-                <SubjectPicker value={form.subjects} onToggle={handleSubjectToggle} />
-              </div>
-            </div>
-
-            <div className="rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(242,93,13,0.08),rgba(255,145,0,0.05),rgba(255,217,0,0.04))] p-5">
-              <p className="text-sm font-semibold text-slate-900">Ready to create your profile?</p>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                Your phone number, password, class, subjects, and optional photo will be saved to Supabase.
-              </p>
-            </div>
+            
           </div>
         </div>
 

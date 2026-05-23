@@ -1,43 +1,41 @@
-import { useMemo } from 'react'
-import { CalendarDays, Clock3, TrendingUp } from 'lucide-react'
-import ActionCard from '../../components/teacher-dashboard/ActionCard'
-import SectionCard from '../../components/teacher-dashboard/SectionCard'
-import StatsCard from '../../components/teacher-dashboard/StatsCard'
+import { useMemo } from "react";
+import { CalendarDays, Clock3, TrendingUp } from "lucide-react";
+import ActionCard from "../../components/teacher-dashboard/ActionCard";
+import SectionCard from "../../components/teacher-dashboard/SectionCard";
+import StatsCard from "../../components/teacher-dashboard/StatsCard";
 import {
-  overviewStats,
   quickActions,
-  recentActivities,
   upcomingEvents,
-} from '../../components/teacher-dashboard/dashboardConfig'
-import { getSession } from '../../utils/auth'
+} from "../../components/teacher-dashboard/dashboardConfig";
+import { getSession } from "../../utils/auth";
 
 function formatDateLabel() {
-  return new Intl.DateTimeFormat('en-IN', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date())
+  return new Intl.DateTimeFormat("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
 }
 
 function getGreeting() {
-  const hour = new Date().getHours()
+  const hour = new Date().getHours();
 
   if (hour < 12) {
-    return 'Good morning'
+    return "Good morning";
   }
 
   if (hour < 17) {
-    return 'Good afternoon'
+    return "Good afternoon";
   }
 
-  return 'Good evening'
+  return "Good evening";
 }
 
 function TeacherDashboard() {
-  const session = getSession()
-  const dateLabel = useMemo(() => formatDateLabel(), [])
-  const greeting = useMemo(() => getGreeting(), [])
+  const session = getSession();
+  const dateLabel = useMemo(() => formatDateLabel(), []);
+  const greeting = useMemo(() => getGreeting(), []);
 
   return (
     <div className="space-y-6">
@@ -50,11 +48,13 @@ function TeacherDashboard() {
                 Live teacher overview
               </div>
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                {greeting}, {session?.displayName || 'Teacher'}.
+                {greeting}, {session?.displayName || "Teacher"}.
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                You are viewing the {session?.coachingName || 'tuition workspace'} dashboard. Track classes, fees,
-                attendance, and updates from one polished control center.
+                You are viewing the{" "}
+                {session?.coachingName || "tuition workspace"} dashboard. Track
+                classes, fees, attendance, and updates from one polished control
+                center.
               </p>
             </div>
 
@@ -64,7 +64,9 @@ function TeacherDashboard() {
                   <CalendarDays className="h-4 w-4 text-[#f25d0d]" />
                   Current date
                 </div>
-                <p className="mt-2 text-sm font-semibold text-slate-900">{dateLabel}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-900">
+                  {dateLabel}
+                </p>
               </div>
               <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
@@ -72,18 +74,12 @@ function TeacherDashboard() {
                   Coaching name
                 </div>
                 <p className="mt-2 text-sm font-semibold text-slate-900">
-                  {session?.coachingName || 'RTC Tuition'}
+                  {session?.coachingName || "RTC Tuition"}
                 </p>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {overviewStats.map((stat) => (
-          <StatsCard key={stat.label} {...stat} />
-        ))}
       </section>
 
       <div className="grid gap-6 xl:grid-cols-[1.18fr_0.82fr]">
@@ -102,51 +98,32 @@ function TeacherDashboard() {
             ))}
           </div>
         </SectionCard>
-
-        <SectionCard
-          title="Recent activity"
-          subtitle="Timeline"
-          action={
-            <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-500">
-              Updated now
-            </div>
-          }
-        >
-          <div className="space-y-4">
-            {recentActivities.map((item) => (
-              <div key={item.title} className="rounded-2xl border border-slate-200 bg-[#fffdf8] p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900">{item.title}</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-500">{item.description}</p>
-                  </div>
-                  <span className="shrink-0 rounded-full bg-[#fff8ef] px-3 py-1 text-xs font-semibold text-[#b84908]">
-                    {item.time}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </SectionCard>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <SectionCard title="Upcoming events" subtitle="Schedule">
           <div className="space-y-4">
             {upcomingEvents.map((event) => {
-              const Icon = event.icon
+              const Icon = event.icon;
 
               return (
-                <div key={event.title} className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4">
+                <div
+                  key={event.title}
+                  className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4"
+                >
                   <div className="rounded-2xl bg-[linear-gradient(135deg,rgba(242,93,13,0.08),rgba(255,145,0,0.08))] p-3 text-[#f25d0d]">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-900">{event.title}</p>
-                    <p className="mt-1 text-sm text-slate-500">{event.description}</p>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {event.title}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-500">
+                      {event.description}
+                    </p>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </SectionCard>
@@ -154,20 +131,27 @@ function TeacherDashboard() {
         <SectionCard title="Workspace pulse" subtitle="Snapshot">
           <div className="grid gap-4 sm:grid-cols-3">
             {[
-              ['Batches', '08'],
-              ['Fee follow-ups', '14'],
-              ['Announcements', '03'],
+              ["Batches", "08"],
+              ["Fee follow-ups", "14"],
+              ["Announcements", "03"],
             ].map(([label, value]) => (
-              <div key={label} className="rounded-2xl border border-slate-200 bg-[#fffdf8] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{label}</p>
-                <p className="mt-3 text-2xl font-semibold text-slate-900">{value}</p>
+              <div
+                key={label}
+                className="rounded-2xl border border-slate-200 bg-[#fffdf8] p-4"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  {label}
+                </p>
+                <p className="mt-3 text-2xl font-semibold text-slate-900">
+                  {value}
+                </p>
               </div>
             ))}
           </div>
         </SectionCard>
       </div>
     </div>
-  )
+  );
 }
 
-export default TeacherDashboard
+export default TeacherDashboard;

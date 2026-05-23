@@ -194,7 +194,6 @@ export const createStudentProfile = async ({
   password,
   name,
   className,
-  subjects,
   photoFile,
 }) => {
   await delay(900);
@@ -202,8 +201,6 @@ export const createStudentProfile = async ({
   const trimmedPhone = normalizeText(phone);
   const trimmedPassword = String(password || "");
   const trimmedName = normalizeText(name);
-  const normalizedSubjects = normalizeSubjects(subjects);
-
   if (!isValidPhone(trimmedPhone)) {
     throw new Error("Please enter a valid 10-digit phone number.");
   }
@@ -218,10 +215,6 @@ export const createStudentProfile = async ({
 
   if (!className) {
     throw new Error("Please select a class.");
-  }
-
-  if (!normalizedSubjects.length) {
-    throw new Error("Please select at least one subject.");
   }
 
   const existing = await getStudentByPhone(trimmedPhone);
@@ -248,7 +241,7 @@ export const createStudentProfile = async ({
     password: trimmedPassword,
     photo,
     class: className,
-    subjects: normalizedSubjects,
+    subjects: [],
     name: trimmedName,
     role: "student",
   };
