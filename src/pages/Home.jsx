@@ -10,14 +10,14 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fffdf8] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center">
-        <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/90 bg-white/90 p-6 shadow-[0_24px_90px_rgba(15,23,42,0.08)] backdrop-blur-sm sm:p-8 lg:p-10">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,145,0,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(242,93,13,0.08),transparent_24%)]" />
+        <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/90 bg-white/90 p-6 shadow-soft backdrop-blur-sm sm:p-8 lg:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(15,23,42,0.06),transparent_24%)]" />
 
           <div className="relative grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#ffd900]/40 bg-[#ffd900]/12 px-3 py-1 text-xs font-semibold text-[#6f5800]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 Student access
               </div>
 
@@ -31,9 +31,9 @@ function Home() {
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-600">
-                <span className="rounded-full bg-[#fff8ef] px-4 py-2">Fast access</span>
-                <span className="rounded-full bg-[#fff8ef] px-4 py-2">Offline ready</span>
-                <span className="rounded-full bg-[#fff8ef] px-4 py-2">App-like feel</span>
+                <span className="rounded-full bg-blue-50 px-4 py-2">Fast access</span>
+                <span className="rounded-full bg-blue-50 px-4 py-2">Offline ready</span>
+                <span className="rounded-full bg-blue-50 px-4 py-2">App-like feel</span>
               </div>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -47,8 +47,8 @@ function Home() {
             </div>
 
             <div className="relative">
-              <div className="rounded-[1.75rem] border border-[#f25d0d]/10 bg-gradient-to-br from-white via-[#fffdf8] to-[#fff4e6] p-6 shadow-[0_20px_60px_rgba(242,93,13,0.12)] sm:p-7">
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#f25d0d]/10 px-3 py-1 text-xs font-semibold text-[#b84908]">
+              <div className="rounded-[1.75rem] border border-blue-100 bg-gradient-to-br from-white via-[#f8fafc] to-[#eef4ff] p-6 shadow-[0_20px_60px_rgba(37,99,235,0.12)] sm:p-7">
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                   Install App
                 </div>
 

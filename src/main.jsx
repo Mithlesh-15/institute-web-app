@@ -10,11 +10,15 @@ import {
 } from 'react-router-dom'
 import App from './App.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute.jsx'
+import TeacherDashboardShell from './components/teacher-dashboard/TeacherDashboardShell.jsx'
 import StudentDashboard from './pages/Dashboard/StudentDashboard.jsx'
 import TeacherDashboard from './pages/Dashboard/TeacherDashboard.jsx'
 import Home from './pages/Home.jsx'
 import StudentLogin from './pages/Login/StudentLogin.jsx'
 import TeacherLogin from './pages/Login/TeacherLogin.jsx'
+import TeacherStudents from './pages/Teacher/TeacherStudents.jsx'
+import TeacherPlaceholderPage from './pages/Teacher/TeacherPlaceholderPage.jsx'
+import StudentSetup from './pages/Student/StudentSetup.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
 registerServiceWorker()
@@ -26,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<Navigate to="/login/student" replace />} />
       <Route path="login/student" element={<StudentLogin />} />
       <Route path="login/teacher" element={<TeacherLogin />} />
+      <Route path="student/setup" element={<StudentSetup />} />
 
       <Route element={<ProtectedRoute allowedRole="student" />}>
         <Route path="student/dashboard" element={<StudentDashboard />} />
@@ -34,7 +39,20 @@ const router = createBrowserRouter(
       <Route path="teacher/setup" element={<Navigate to="/login/teacher" replace />} />
 
       <Route element={<ProtectedRoute allowedRole="teacher" requireVerified />}>
-        <Route path="teacher/dashboard" element={<TeacherDashboard />} />
+        <Route path="teacher" element={<TeacherDashboardShell />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<TeacherDashboard />} />
+          <Route path="students" element={<TeacherStudents />} />
+          <Route path="classes" element={<TeacherPlaceholderPage moduleKey="classes" />} />
+          <Route path="attendance" element={<TeacherPlaceholderPage moduleKey="attendance" />} />
+          <Route path="fees" element={<TeacherPlaceholderPage moduleKey="fees" />} />
+          <Route path="results" element={<TeacherPlaceholderPage moduleKey="results" />} />
+          <Route path="homework" element={<TeacherPlaceholderPage moduleKey="homework" />} />
+          <Route path="study-material" element={<TeacherPlaceholderPage moduleKey="studyMaterial" />} />
+          <Route path="notices" element={<TeacherPlaceholderPage moduleKey="notices" />} />
+          <Route path="analytics" element={<TeacherPlaceholderPage moduleKey="analytics" />} />
+          <Route path="settings" element={<TeacherPlaceholderPage moduleKey="settings" />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

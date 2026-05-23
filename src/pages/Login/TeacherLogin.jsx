@@ -109,11 +109,11 @@ function TeacherLogin() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#fffdf8]">
+    <div className="relative min-h-screen overflow-hidden bg-surface">
       <div className="absolute inset-0 opacity-90">
-        <div className="absolute left-[-8%] top-[-10%] h-80 w-80 rounded-full bg-[#f25d0d]/10 blur-3xl" />
-        <div className="absolute right-[-10%] top-[8%] h-96 w-96 rounded-full bg-[#ff9100]/10 blur-3xl" />
-        <div className="absolute bottom-[-12%] left-[10%] h-80 w-80 rounded-full bg-[#ffd900]/10 blur-3xl" />
+        <div className="absolute left-[-8%] top-[-10%] h-80 w-80 rounded-full bg-[#2563eb]/10 blur-3xl" />
+        <div className="absolute right-[-10%] top-[8%] h-96 w-96 rounded-full bg-[#0f172a]/8 blur-3xl" />
+        <div className="absolute bottom-[-12%] left-[10%] h-80 w-80 rounded-full bg-[#dbeafe]/35 blur-3xl" />
       </div>
 
       <main className="relative flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
@@ -121,24 +121,24 @@ function TeacherLogin() {
           <div className="rounded-[2rem] border border-white/80 bg-white/95 p-6 shadow-[0_30px_100px_rgba(15,23,42,0.14)] backdrop-blur-xl sm:p-8">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f25d0d] to-[#ff9100] text-lg font-bold text-white shadow-[0_18px_34px_rgba(242,93,13,0.24)]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-lg font-bold text-white shadow-[0_18px_34px_rgba(37,99,235,0.24)]">
                   RTC
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#f25d0d]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
                     Teacher portal
                   </p>
                   <p className="text-sm text-slate-500">Private access only</p>
                 </div>
               </div>
 
-              <div className="inline-flex items-center rounded-full border border-[#ffd900]/45 bg-[#ffd900]/12 px-3 py-1 text-xs font-semibold text-[#6f5800]">
+              <div className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 Secure staff login
               </div>
             </div>
 
             <div className="mt-7">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#f25d0d]">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
                 Teacher sign in
               </p>
               <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -176,7 +176,7 @@ function TeacherLogin() {
                 rightSlot={
                   <button
                     type="button"
-                    className="text-sm font-medium text-[#f25d0d] transition hover:text-[#d94f09]"
+                    className="text-sm font-medium text-[#2563eb] transition hover:text-[#1d4ed8]"
                     onClick={() => setShowPassword((current) => !current)}
                   >
                     {showPassword ? 'Hide' : 'Show'}
