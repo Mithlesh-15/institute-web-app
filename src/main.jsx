@@ -15,6 +15,9 @@ import TeacherDashboard from './pages/Dashboard/TeacherDashboard.jsx'
 import Home from './pages/Home.jsx'
 import StudentLogin from './pages/Login/StudentLogin.jsx'
 import TeacherLogin from './pages/Login/TeacherLogin.jsx'
+import { registerServiceWorker } from './pwa/registerSW.js'
+
+registerServiceWorker()
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,7 +31,9 @@ const router = createBrowserRouter(
         <Route path="student/dashboard" element={<StudentDashboard />} />
       </Route>
 
-      <Route element={<ProtectedRoute allowedRole="teacher" />}>
+      <Route path="teacher/setup" element={<Navigate to="/login/teacher" replace />} />
+
+      <Route element={<ProtectedRoute allowedRole="teacher" requireVerified />}>
         <Route path="teacher/dashboard" element={<TeacherDashboard />} />
       </Route>
 

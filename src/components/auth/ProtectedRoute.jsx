@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { getSession } from '../../utils/auth'
 
-function ProtectedRoute({ allowedRole }) {
+function ProtectedRoute({ allowedRole, requireVerified = false }) {
   const location = useLocation()
   const session = getSession()
 
@@ -11,6 +11,10 @@ function ProtectedRoute({ allowedRole }) {
 
   if (allowedRole && session.role !== allowedRole) {
     return <Navigate to={`/${session.role}/dashboard`} replace />
+  }
+
+  if (requireVerified && session.role === 'teacher' && !session.verified) {
+    return <Navigate to="/login/teacher" replace />
   }
 
   return <Outlet />
