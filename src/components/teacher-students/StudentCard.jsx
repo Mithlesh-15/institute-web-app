@@ -20,14 +20,14 @@ function StudentCard({ student, onDelete, deleting = false }) {
   }
 
   return (
-    <article className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_12px_34px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]">
+    <article className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]">
       <div className="p-5">
         <div className="flex items-start gap-4">
-          <div className="h-16 w-16 overflow-hidden rounded-2xl border border-slate-200 bg-[linear-gradient(135deg,rgba(242,93,13,0.08),rgba(255,217,0,0.12))]">
+          <div className="h-16 w-16 overflow-hidden rounded-2xl border border-slate-200 bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(219,234,254,0.28))]">
             {student.photo ? (
               <img src={student.photo} alt={student.name} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-[#b84908]">
+              <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-[#2563eb]">
                 {initials}
               </div>
             )}
@@ -36,18 +36,18 @@ function StudentCard({ student, onDelete, deleting = false }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="truncate text-lg font-semibold text-slate-900">{student.name || 'Unnamed student'}</h3>
-              <span className="rounded-full bg-[#fff8ef] px-3 py-1 text-xs font-semibold text-[#9a3d07]">
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 Active
               </span>
             </div>
 
             <div className="mt-3 space-y-2 text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <School2 className="h-4 w-4 text-[#f25d0d]" />
+                <School2 className="h-4 w-4 text-[#2563eb]" />
                 <span>Class {student.className || 'N/A'}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-[#f25d0d]" />
+                <Phone className="h-4 w-4 text-[#2563eb]" />
                 <span>{student.phone || 'No phone available'}</span>
               </div>
             </div>
@@ -59,7 +59,7 @@ function StudentCard({ student, onDelete, deleting = false }) {
             student.subjects.map((subject) => (
               <span
                 key={subject}
-                className="rounded-full border border-[#ffd900]/35 bg-[#fff8ef] px-3 py-1 text-xs font-medium text-[#9a3d07]"
+                className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700"
               >
                 {subject}
               </span>
@@ -74,7 +74,7 @@ function StudentCard({ student, onDelete, deleting = false }) {
         <div className="mt-5 grid grid-cols-2 gap-2">
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-[#f25d0d]/25 hover:text-[#f25d0d]"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
           >
             <Eye className="h-3.5 w-3.5" />
             View Profile

@@ -6,9 +6,9 @@ function ActionCard({ to, label, description, icon }) {
   return (
     <Link
       to={to}
-      className="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-1 hover:border-[#f25d0d]/25 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]"
+      className="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-[#2563eb]/25 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]"
     >
-      <div className="rounded-2xl bg-[linear-gradient(135deg,rgba(242,93,13,0.08),rgba(255,145,0,0.08))] p-3 text-[#f25d0d] transition-transform duration-300 group-hover:scale-105">
+      <div className="rounded-2xl bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(29,78,216,0.08))] p-3 text-[#2563eb] transition-transform duration-300 group-hover:scale-105">
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0">

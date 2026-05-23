@@ -107,9 +107,9 @@ function StudentSetup() {
       title="Complete your profile"
       description="Tell us a little about you so we can create your student profile and unlock the dashboard."
       rightSlot={
-        <div className="rounded-2xl border border-[#ffd900]/30 bg-white px-4 py-3 text-sm font-medium text-[#7a5a00] shadow-sm">
+        <div className="rounded-2xl border border-blue-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 shadow-sm">
           <div className="flex items-center gap-2">
-            <BadgeCheck className="h-4 w-4 text-[#f25d0d]" />
+            <BadgeCheck className="h-4 w-4 text-[#2563eb]" />
             Quick setup
           </div>
         </div>
@@ -120,7 +120,7 @@ function StudentSetup() {
           <div className="space-y-4">
             <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(242,93,13,0.95),rgba(255,145,0,0.9))] text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-white">
                   <UserRound className="h-5 w-5" />
                 </div>
                 <div>
@@ -167,7 +167,7 @@ function StudentSetup() {
           </div>
 
           <div className="space-y-4">
-            <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
+          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft">
               <p className="text-sm font-semibold text-slate-900">Select class</p>
               <p className="mt-1 text-sm text-slate-500">
                 Choose the student&apos;s current class.

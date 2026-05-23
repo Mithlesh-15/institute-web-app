@@ -217,7 +217,7 @@ export const moduleDetails = {
       'Sort learners by batch or subject',
     ],
     icon: Users,
-    accent: 'from-[#f25d0d] to-[#ff9100]',
+    accent: 'from-[#2563eb] to-[#1d4ed8]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open attendance', to: '/teacher/attendance' },
@@ -234,7 +234,7 @@ export const moduleDetails = {
       'Prepare session-wise updates',
     ],
     icon: GraduationCap,
-    accent: 'from-[#f25d0d] to-[#ffd900]',
+    accent: 'from-[#2563eb] to-[#60a5fa]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open students', to: '/teacher/students' },
@@ -251,7 +251,7 @@ export const moduleDetails = {
       'Attendance history snapshot',
     ],
     icon: CalendarCheck2,
-    accent: 'from-[#ff9100] to-[#ffd900]',
+    accent: 'from-[#1d4ed8] to-[#2563eb]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open classes', to: '/teacher/classes' },
@@ -268,7 +268,7 @@ export const moduleDetails = {
       'Batch-wise payment overview',
     ],
     icon: CreditCard,
-    accent: 'from-[#f25d0d] to-[#ff9100]',
+    accent: 'from-[#2563eb] to-[#1d4ed8]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open analytics', to: '/teacher/analytics' },
@@ -285,7 +285,7 @@ export const moduleDetails = {
       'Exam-ready result summaries',
     ],
     icon: ClipboardList,
-    accent: 'from-[#ffd900] to-[#ff9100]',
+    accent: 'from-[#1d4ed8] to-[#2563eb]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open homework', to: '/teacher/homework' },
@@ -302,7 +302,7 @@ export const moduleDetails = {
       'Reuse recurring assignments',
     ],
     icon: NotebookPen,
-    accent: 'from-[#f25d0d] to-[#ffd900]',
+    accent: 'from-[#2563eb] to-[#3b82f6]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open notice board', to: '/teacher/notices' },
@@ -319,7 +319,7 @@ export const moduleDetails = {
       'Keep families informed fast',
     ],
     icon: Megaphone,
-    accent: 'from-[#ff9100] to-[#f25d0d]',
+    accent: 'from-[#2563eb] to-[#0f172a]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open students', to: '/teacher/students' },
@@ -336,7 +336,7 @@ export const moduleDetails = {
       'Simple charts for fast review',
     ],
     icon: BarChart3,
-    accent: 'from-[#f25d0d] to-[#ff9100]',
+    accent: 'from-[#2563eb] to-[#1d4ed8]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open fees', to: '/teacher/fees' },
@@ -353,7 +353,7 @@ export const moduleDetails = {
       'Organize material by subject',
     ],
     icon: BookOpen,
-    accent: 'from-[#ffd900] to-[#f25d0d]',
+    accent: 'from-[#1d4ed8] to-[#2563eb]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open homework', to: '/teacher/homework' },
@@ -370,7 +370,7 @@ export const moduleDetails = {
       'Manage workspace defaults',
     ],
     icon: Settings2,
-    accent: 'from-[#f25d0d] to-[#ff9100]',
+    accent: 'from-[#2563eb] to-[#1d4ed8]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open analytics', to: '/teacher/analytics' },

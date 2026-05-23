@@ -54,7 +54,7 @@ function TeacherDashboardShell() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fffdf8]">
+    <div className="min-h-screen bg-surface">
       <Sidebar
         open={mobileOpen}
         session={session}
@@ -82,4 +82,3 @@ function TeacherDashboardShell() {
 }
 
 export default TeacherDashboardShell
-

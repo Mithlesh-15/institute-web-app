@@ -111,7 +111,7 @@ function TeacherStudents() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#ffd900]/35 bg-[#fff8ef] px-4 py-3 text-sm font-medium text-[#7a5a00]">
+          <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700">
             Filter and search students by class, name, or phone number.
           </div>
         </div>
@@ -134,7 +134,7 @@ function TeacherStudents() {
           {[...Array(6)].map((_, index) => (
             <div
               key={index}
-              className="h-72 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_12px_34px_rgba(15,23,42,0.04)]"
+              className="h-72 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft"
             />
           ))}
         </div>

@@ -13,8 +13,8 @@ function FilterTabs({ value, options, onChange }) {
               className={[
                 'whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300',
                 active
-                  ? 'bg-[linear-gradient(135deg,rgba(242,93,13,0.95),rgba(255,145,0,0.95))] text-white shadow-[0_12px_24px_rgba(242,93,13,0.16)]'
-                  : 'text-slate-600 hover:text-[#f25d0d]',
+                  ? 'bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.95))] text-white shadow-[0_12px_24px_rgba(37,99,235,0.16)]'
+                  : 'text-slate-600 hover:text-[#2563eb]',
               ].join(' ')}
             >
               {option}
@@ -27,4 +27,3 @@ function FilterTabs({ value, options, onChange }) {
 }
 
 export default FilterTabs
-

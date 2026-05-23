@@ -27,15 +27,15 @@ function PhotoUpload({ file, onChange, preview, onClear }) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-[#fffdf8] p-4">
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
       <div className="flex items-center gap-4">
         <div className="h-20 w-20 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           {localPreview ? (
             <img src={localPreview} alt="Profile preview" className="h-full w-full object-cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,rgba(242,93,13,0.1),rgba(255,217,0,0.12))] text-xs font-semibold text-[#b84908]">
-              Preview
-            </div>
+          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,rgba(37,99,235,0.1),rgba(219,234,254,0.28))] text-xs font-semibold text-[#2563eb]">
+            Preview
+          </div>
           )}
         </div>
 
@@ -48,7 +48,7 @@ function PhotoUpload({ file, onChange, preview, onClear }) {
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="rounded-2xl bg-[linear-gradient(135deg,rgba(242,93,13,0.95),rgba(255,145,0,0.92))] px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(242,93,13,0.16)]"
+              className="rounded-2xl bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(37,99,235,0.16)]"
             >
               {file ? 'Change photo' : 'Upload photo'}
             </button>
@@ -83,4 +83,3 @@ function PhotoUpload({ file, onChange, preview, onClear }) {
 }
 
 export default PhotoUpload
-

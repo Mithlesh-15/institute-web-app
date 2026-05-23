@@ -1,7 +1,7 @@
 export const PWA_THEME = {
-  primary: '#f25d0d',
-  secondary: '#ff9100',
-  accent: '#ffd900',
+  primary: '#2563eb',
+  secondary: '#1d4ed8',
+  accent: '#f59e0b',
 }
 
 export function isStandaloneDisplay() {

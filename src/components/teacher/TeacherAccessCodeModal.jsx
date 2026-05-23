@@ -37,11 +37,11 @@ function TeacherAccessCodeModal({
       <div className="w-full max-w-lg rounded-[2rem] border border-white/80 bg-white p-6 shadow-[0_30px_120px_rgba(15,23,42,0.28)] sm:p-8">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f25d0d]/10 text-[#f25d0d]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
               <ShieldIcon />
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#f25d0d]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
                 Secure access
               </p>
               <h2 className="text-xl font-semibold text-slate-900">
@@ -85,7 +85,7 @@ function TeacherAccessCodeModal({
               autoComplete="off"
               className={[
                 'w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none',
-                'placeholder:text-slate-400 transition focus:border-[#f25d0d] focus:ring-4 focus:ring-[#f25d0d]/15',
+                'placeholder:text-slate-400 transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15',
               ].join(' ')}
               placeholder="Enter access code"
             />
@@ -96,7 +96,7 @@ function TeacherAccessCodeModal({
               {error}
             </div>
           ) : (
-            <div className="rounded-2xl border border-[#ffd900]/35 bg-[#ffd900]/10 px-4 py-3 text-sm text-[#6f5800]">
+            <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
               Premium staff verification enabled. Wrong codes will be rejected.
             </div>
           )}

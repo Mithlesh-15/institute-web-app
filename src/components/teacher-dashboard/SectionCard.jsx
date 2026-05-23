@@ -1,11 +1,11 @@
 function SectionCard({ title, subtitle, action, children, className = '' }) {
   return (
-    <section className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)] ${className}`}>
+    <section className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-soft ${className}`}>
       {(title || subtitle || action) ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             {subtitle ? (
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#f25d0d]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
                 {subtitle}
               </p>
             ) : null}
@@ -21,4 +21,3 @@ function SectionCard({ title, subtitle, action, children, className = '' }) {
 }
 
 export default SectionCard
-

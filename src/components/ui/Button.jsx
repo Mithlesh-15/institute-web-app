@@ -1,8 +1,8 @@
 const variantClasses = {
   primary:
-    'bg-gradient-to-r from-[#f25d0d] to-[#ff9100] text-white shadow-[0_18px_40px_rgba(242,93,13,0.22)] hover:shadow-[0_20px_48px_rgba(242,93,13,0.28)]',
+    'bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_18px_40px_rgba(37,99,235,0.22)] hover:shadow-[0_20px_48px_rgba(37,99,235,0.28)]',
   secondary:
-    'border border-[#f25d0d]/20 bg-white text-[#9a3d07] hover:border-[#f25d0d]/35 hover:bg-[#fff8f1]',
+    'border border-slate-200 bg-white text-slate-700 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
   ghost: 'bg-transparent text-[#374151] hover:bg-black/5',
 }
 

@@ -99,7 +99,7 @@ function InstallAppButton({
   const helperTextClass = compact ? 'text-xs' : 'text-xs'
   const buttonTone =
     status === 'unavailable'
-      ? 'opacity-90 ring-1 ring-[#f25d0d]/20'
+      ? 'opacity-90 ring-1 ring-[#2563eb]/20'
       : ''
 
   return (
@@ -109,7 +109,7 @@ function InstallAppButton({
         onClick={handleInstall}
         disabled={isBusy}
         className={[
-          'group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#f25d0d] via-[#ff9100] to-[#ffd900] font-semibold text-white shadow-[0_18px_40px_rgba(242,93,13,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_48px_rgba(242,93,13,0.3)] focus:outline-none focus:ring-2 focus:ring-[#f25d0d]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70',
+          'group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#2563eb] via-[#1d4ed8] to-[#0f172a] font-semibold text-white shadow-[0_18px_40px_rgba(37,99,235,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_48px_rgba(37,99,235,0.3)] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70',
           buttonTone,
           compact ? 'px-4 py-2.5 text-sm' : 'px-6 py-3 text-sm',
         ].join(' ')}

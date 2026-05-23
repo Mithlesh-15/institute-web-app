@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, GraduationCap, Phone, ShieldCheck } from 'lucide-react'
+import { Eye, EyeOff, GraduationCap, ShieldCheck } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import StudentPageShell from '../../components/student/StudentPageShell'
@@ -88,18 +88,18 @@ function StudentLogin() {
       title="Welcome back"
       description="Sign in with your phone number and password to continue to your dashboard."
       rightSlot={
-        <div className="hidden rounded-2xl border border-[#ffd900]/30 bg-white px-4 py-3 text-sm font-medium text-[#7a5a00] shadow-sm md:block">
+        <div className="hidden rounded-2xl border border-blue-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 shadow-sm md:block">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-[#f25d0d]" />
+            <ShieldCheck className="h-4 w-4 text-[#2563eb]" />
             Secure student login
           </div>
         </div>
       }
     >
       <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <div className="rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(242,93,13,0.08),rgba(255,145,0,0.05),rgba(255,217,0,0.04))] p-6 sm:p-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#ffd900]/35 bg-white/85 px-3 py-1 text-xs font-semibold text-[#7a5a00]">
-            <GraduationCap className="h-3.5 w-3.5 text-[#f25d0d]" />
+        <div className="rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(29,78,216,0.05),rgba(219,234,254,0.28))] p-6 sm:p-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/85 px-3 py-1 text-xs font-semibold text-blue-700">
+            <GraduationCap className="h-3.5 w-3.5 text-[#2563eb]" />
             Student portal
           </div>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">
@@ -122,7 +122,10 @@ function StudentLogin() {
           </div>
         </div>
 
-        <form className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-7" onSubmit={handleSubmit}>
+        <form
+          className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-7"
+          onSubmit={handleSubmit}
+        >
           <div className="space-y-5">
             <Input
               id="student-phone"
@@ -150,7 +153,7 @@ function StudentLogin() {
               rightSlot={
                 <button
                   type="button"
-                  className="text-sm font-medium text-[#f25d0d] transition hover:text-[#d94f09]"
+                  className="text-sm font-medium text-[#2563eb] transition hover:text-[#1d4ed8]"
                   onClick={() => setShowPassword((current) => !current)}
                 >
                   {showPassword ? (
@@ -179,7 +182,7 @@ function StudentLogin() {
             </Button>
 
             <p className="text-center text-sm text-slate-500">
-              New here? After login we’ll guide you through a quick setup.
+              New here? After login we&apos;ll guide you through a quick setup.
             </p>
           </div>
         </form>

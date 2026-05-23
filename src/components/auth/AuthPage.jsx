@@ -11,16 +11,16 @@ import {
 const roleStyles = {
   student: {
     badge: "Student access",
-    badgeTone: "bg-[#ffd900]/20 text-[#7a5a00] border-[#ffd900]/35",
-    accentLine: "bg-gradient-to-r from-[#f25d0d] to-[#ff9100]",
+    badgeTone: "bg-blue-50 text-blue-700 border-blue-200",
+    accentLine: "bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]",
     formTitle: "Sign in",
     formSubtitle: "Use your registered phone number and password.",
     buttonLabel: "Sign in",
   },
   teacher: {
     badge: "Private staff portal",
-    badgeTone: "bg-[#f25d0d]/10 text-[#b74208] border-[#f25d0d]/25",
-    accentLine: "bg-gradient-to-r from-[#f25d0d] to-[#ff9100]",
+    badgeTone: "bg-slate-100 text-slate-700 border-slate-200",
+    accentLine: "bg-gradient-to-r from-[#0f172a] to-[#2563eb]",
     formTitle: "Sign in",
     formSubtitle: "Use your registered phone number and password.",
     buttonLabel: "Sign in",
@@ -93,11 +93,11 @@ function AuthPage({ role }) {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#fffdf8]">
+    <div className="relative min-h-screen overflow-hidden bg-surface">
       <div className="absolute inset-0 opacity-80">
-        <div className="absolute left-[-10%] top-[-8%] h-72 w-72 rounded-full bg-[#f25d0d]/10 blur-3xl" />
-        <div className="absolute right-[-8%] top-[12%] h-80 w-80 rounded-full bg-[#ff9100]/10 blur-3xl" />
-        <div className="absolute bottom-[-12%] left-[18%] h-72 w-72 rounded-full bg-[#ffd900]/8 blur-3xl" />
+        <div className="absolute left-[-10%] top-[-8%] h-72 w-72 rounded-full bg-[#2563eb]/10 blur-3xl" />
+        <div className="absolute right-[-8%] top-[12%] h-80 w-80 rounded-full bg-[#0f172a]/8 blur-3xl" />
+        <div className="absolute bottom-[-12%] left-[18%] h-72 w-72 rounded-full bg-[#dbeafe]/40 blur-3xl" />
       </div>
 
       <main className="relative flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
@@ -115,7 +115,7 @@ function AuthPage({ role }) {
 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f25d0d] text-lg font-bold text-white shadow-[0_14px_30px_rgba(242,93,13,0.25)]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-lg font-bold text-white shadow-[0_14px_30px_rgba(37,99,235,0.25)]">
                   RTC
                 </div>
                 <div>
@@ -168,7 +168,7 @@ function AuthPage({ role }) {
                 rightSlot={
                   <button
                     type="button"
-                    className="text-sm font-medium text-[#f25d0d] transition hover:text-[#d94f09]"
+                    className="text-sm font-medium text-[#2563eb] transition hover:text-[#1d4ed8]"
                     onClick={() => setShowPassword((current) => !current)}
                   >
                     {showPassword ? "Hide" : "Show"}
@@ -176,13 +176,13 @@ function AuthPage({ role }) {
                 }
               />
 
-              <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-[#fffdf8] px-4 py-3">
+              <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                 <input
                   id={`${role}-remember`}
                   type="checkbox"
                   checked={form.rememberSession}
                   onChange={updateField("rememberSession")}
-                  className="mt-1 h-4 w-4 rounded border-slate-300 text-[#f25d0d] accent-[#f25d0d]"
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-[#2563eb] accent-[#2563eb]"
                 />
                 <label
                   htmlFor={`${role}-remember`}
