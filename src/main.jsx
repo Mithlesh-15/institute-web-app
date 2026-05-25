@@ -16,6 +16,7 @@ import TeacherDashboard from './pages/Dashboard/TeacherDashboard.jsx'
 import Home from './pages/Home.jsx'
 import StudentLogin from './pages/Login/StudentLogin.jsx'
 import TeacherLogin from './pages/Login/TeacherLogin.jsx'
+import TeacherAttendance from './pages/Teacher/TeacherAttendance.jsx'
 import TeacherClasses from './pages/Teacher/TeacherClasses.jsx'
 import TeacherClassDetails from './pages/Teacher/TeacherClassDetails.jsx'
 import TeacherStudents from './pages/Teacher/TeacherStudents.jsx'
@@ -47,7 +48,7 @@ const router = createBrowserRouter(
           <Route path="students" element={<TeacherStudents />} />
           <Route path="classes" element={<TeacherClasses />} />
           <Route path="classes/:id" element={<TeacherClassDetails />} />
-          <Route path="attendance" element={<TeacherPlaceholderPage moduleKey="attendance" />} />
+          <Route path="attendance" element={<TeacherAttendance />} />
           <Route path="fees" element={<TeacherPlaceholderPage moduleKey="fees" />} />
           <Route path="results" element={<TeacherPlaceholderPage moduleKey="results" />} />
           <Route path="homework" element={<TeacherPlaceholderPage moduleKey="homework" />} />
