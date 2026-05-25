@@ -18,7 +18,13 @@ const formatDate = (value) => {
   }).format(date)
 }
 
-function ClassCard({ classItem, onEdit, onDelete, deleting = false }) {
+function ClassCard({ classItem, onEdit, onDelete, onOpen, deleting = false }) {
+  const handleOpen = () => {
+    if (typeof onOpen === 'function') {
+      onOpen(classItem)
+    }
+  }
+
   const handleEdit = () => {
     if (typeof onEdit === 'function') {
       onEdit(classItem)
@@ -32,7 +38,18 @@ function ClassCard({ classItem, onEdit, onDelete, deleting = false }) {
   }
 
   return (
-    <article className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]">
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={handleOpen}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          handleOpen()
+        }
+      }}
+      className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]"
+    >
       <div className="h-1.5 bg-[linear-gradient(90deg,#2563eb,#f25d0d)]" />
 
       <div className="p-5">
@@ -44,6 +61,14 @@ function ClassCard({ classItem, onEdit, onDelete, deleting = false }) {
               </h3>
               <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 {classItem.classLevel || 'N/A'}
+              </span>
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+                {Number.isFinite(classItem.totalStudents)
+                  ? `${classItem.totalStudents} students`
+                  : '0 students'}
               </span>
             </div>
 
@@ -63,7 +88,10 @@ function ClassCard({ classItem, onEdit, onDelete, deleting = false }) {
         <div className="mt-5 grid grid-cols-2 gap-2">
           <button
             type="button"
-            onClick={handleEdit}
+            onClick={(event) => {
+              event.stopPropagation()
+              handleEdit()
+            }}
             className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
           >
             <PencilLine className="h-3.5 w-3.5" />
@@ -71,7 +99,10 @@ function ClassCard({ classItem, onEdit, onDelete, deleting = false }) {
           </button>
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={(event) => {
+              event.stopPropagation()
+              handleDelete()
+            }}
             disabled={deleting}
             className="inline-flex items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-70"
           >

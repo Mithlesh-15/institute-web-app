@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { BookOpen, Plus } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
@@ -11,7 +12,7 @@ import {
   CLASS_OPTIONS,
   createClassRecord,
   deleteClassRecord,
-  fetchClasses,
+  fetchClassesWithStudentCounts,
   updateClassRecord,
 } from '../../utils/classesManagement'
 
@@ -22,6 +23,7 @@ const initialModalState = {
 }
 
 function TeacherClasses() {
+  const navigate = useNavigate()
   const [classes, setClasses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -39,7 +41,7 @@ function TeacherClasses() {
       try {
         setLoading(true)
         setError('')
-        const data = await fetchClasses()
+        const data = await fetchClassesWithStudentCounts()
 
         if (mounted) {
           setClasses(data)
@@ -94,6 +96,10 @@ function TeacherClasses() {
     setModalOpen(true)
   }
 
+  const openClassDetails = (classItem) => {
+    navigate(`/teacher/classes/${classItem.id}`)
+  }
+
   const closeModal = () => {
     setModalOpen(false)
     setEditingClass(null)
@@ -107,11 +113,15 @@ function TeacherClasses() {
       if (editingClass) {
         const updatedClass = await updateClassRecord(editingClass.id, values)
         setClasses((current) =>
-          current.map((item) => (item.id === updatedClass.id ? updatedClass : item)),
+          current.map((item) =>
+            item.id === updatedClass.id
+              ? { ...updatedClass, totalStudents: item.totalStudents || 0 }
+              : item,
+          ),
         )
       } else {
         const createdClass = await createClassRecord(values)
-        setClasses((current) => [createdClass, ...current])
+        setClasses((current) => [{ ...createdClass, totalStudents: 0 }, ...current])
       }
 
       closeModal()
@@ -214,6 +224,7 @@ function TeacherClasses() {
               key={classItem.id}
               classItem={classItem}
               deleting={deletingId === classItem.id}
+              onOpen={openClassDetails}
               onEdit={openEditModal}
               onDelete={handleDeleteClass}
             />
