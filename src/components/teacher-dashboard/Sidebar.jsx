@@ -38,12 +38,17 @@ function Sidebar({ open, session, onClose, onLogout }) {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-slate-200 px-5 py-5">
             <div className="flex items-center gap-3">
+<<<<<<< HEAD
               <div className="h-12 w-12 overflow-hidden rounded-2xl shadow-[0_14px_28px_rgba(37,99,235,0.24)]">
                 <img
                   src="/icon-512.png"
                   alt="Logo"
                   className="h-full w-full object-cover"
                 />
+=======
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-sm font-semibold text-white shadow-[0_14px_28px_rgba(37,99,235,0.24)]">
+                RTC
+>>>>>>> feature
               </div>
 
               <div>

@@ -53,7 +53,7 @@ const sanitizeStudentForSession = (student) => {
     return null;
   }
 
-  const { password: _password, ...rest } = student;
+  const { password: _password, subjects: _subjects, ...rest } = student;
   return rest;
 };
 
@@ -99,7 +99,6 @@ export const createStudentSession = (student) => {
     phone: safeStudent.phone,
     displayName: safeStudent.name,
     className: safeStudent.className,
-    subjects: safeStudent.subjects,
     photo: safeStudent.photo || "",
     student: safeStudent,
     loginAt: new Date().toISOString(),
@@ -241,7 +240,6 @@ export const createStudentProfile = async ({
     password: trimmedPassword,
     photo,
     class: className,
-    subjects: [],
     name: trimmedName,
     role: "student",
   };

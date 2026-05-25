@@ -54,22 +54,7 @@ function StudentCard({ student, onDelete, deleting = false }) {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {(student.subjects || []).length ? (
-            student.subjects.map((subject) => (
-              <span
-                key={subject}
-                className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700"
-              >
-                {subject}
-              </span>
-            ))
-          ) : (
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">
-              No subjects added
-            </span>
-          )}
-        </div>
+        
 
         <div className="mt-5 grid grid-cols-2 gap-2">
           <button

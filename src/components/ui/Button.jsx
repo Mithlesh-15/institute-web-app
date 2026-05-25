@@ -10,6 +10,7 @@ function Button({
   children,
   className = '',
   loading = false,
+  loadingLabel = 'Checking credentials...',
   variant = 'primary',
   type = 'button',
   fullWidth = false,
@@ -33,7 +34,7 @@ function Button({
       {loading ? (
         <>
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-          <span>Checking credentials...</span>
+          <span>{loadingLabel}</span>
         </>
       ) : (
         children
