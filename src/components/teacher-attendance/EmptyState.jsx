@@ -8,7 +8,9 @@ function EmptyState({ title, description, onBack, actionLabel = 'Back' }) {
         <CalendarClock className="h-8 w-8" />
       </div>
       <h3 className="mt-5 text-xl font-semibold text-slate-900">{title}</h3>
-      <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">{description}</p>
+      {description ? (
+        <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">{description}</p>
+      ) : null}
       {typeof onBack === 'function' ? (
         <div className="mt-6">
           <Button variant="secondary" onClick={onBack}>

@@ -68,8 +68,6 @@ function TeacherStudents() {
     })
   }, [classFilter, search, students])
 
-  const totalStudents = students.length
-
   const handleDeleteStudent = async (student) => {
     const confirmed = window.confirm(
       `Delete ${student.name || 'this student'}? This cannot be undone.`,
@@ -97,26 +95,8 @@ function TeacherStudents() {
 
   return (
     <div className="space-y-6">
-      <SectionCard
-        subtitle="Student management"
-        title="Students"
-      >
-        <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
-          <div>
-            <p className="text-sm text-slate-500">
-              Total students
-            </p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
-              {totalStudents}
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700">
-            Filter and search students by class, name, or phone number.
-          </div>
-        </div>
-
-        <div className="mt-5 grid gap-4">
+      <SectionCard title="Students">
+        <div className="grid gap-4">
           <SearchBar
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -158,7 +138,6 @@ function TeacherStudents() {
       ) : (
         <EmptyState
           title="No students found"
-          description="Try a different search term or class filter."
         />
       )}
     </div>
