@@ -19,6 +19,7 @@ import TeacherLogin from './pages/Login/TeacherLogin.jsx'
 import TeacherAttendance from './pages/Teacher/TeacherAttendance.jsx'
 import TeacherClasses from './pages/Teacher/TeacherClasses.jsx'
 import TeacherClassDetails from './pages/Teacher/TeacherClassDetails.jsx'
+import TeacherFees from './pages/Teacher/TeacherFees.jsx'
 import TeacherStudents from './pages/Teacher/TeacherStudents.jsx'
 import TeacherPlaceholderPage from './pages/Teacher/TeacherPlaceholderPage.jsx'
 import StudentSetup from './pages/Student/StudentSetup.jsx'
@@ -49,7 +50,7 @@ const router = createBrowserRouter(
           <Route path="classes" element={<TeacherClasses />} />
           <Route path="classes/:id" element={<TeacherClassDetails />} />
           <Route path="attendance" element={<TeacherAttendance />} />
-          <Route path="fees" element={<TeacherPlaceholderPage moduleKey="fees" />} />
+          <Route path="fees" element={<TeacherFees />} />
           <Route path="results" element={<TeacherPlaceholderPage moduleKey="results" />} />
           <Route path="homework" element={<TeacherPlaceholderPage moduleKey="homework" />} />
           <Route path="study-material" element={<TeacherPlaceholderPage moduleKey="studyMaterial" />} />
