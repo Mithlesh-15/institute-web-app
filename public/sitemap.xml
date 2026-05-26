@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/login/student</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/login/teacher</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/student/setup</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/student/dashboard</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/setup</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/dashboard</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/students</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/classes</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/attendance</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/fees</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/results</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/homework</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/study-material</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/notices</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/analytics</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://rtcdurg.vercel.app/teacher/settings</loc>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>
