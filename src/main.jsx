@@ -10,8 +10,8 @@ import {
 } from 'react-router-dom'
 import App from './App.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute.jsx'
+import StudentPortalShell from './components/student-portal/StudentPortalShell.jsx'
 import TeacherDashboardShell from './components/teacher-dashboard/TeacherDashboardShell.jsx'
-import StudentDashboard from './pages/Dashboard/StudentDashboard.jsx'
 import TeacherDashboard from './pages/Dashboard/TeacherDashboard.jsx'
 import Home from './pages/Home.jsx'
 import StudentLogin from './pages/Login/StudentLogin.jsx'
@@ -22,6 +22,11 @@ import TeacherClassDetails from './pages/Teacher/TeacherClassDetails.jsx'
 import TeacherFees from './pages/Teacher/TeacherFees.jsx'
 import TeacherStudents from './pages/Teacher/TeacherStudents.jsx'
 import TeacherPlaceholderPage from './pages/Teacher/TeacherPlaceholderPage.jsx'
+import StudentAttendance from './pages/Student/StudentAttendance.jsx'
+import StudentClasses from './pages/Student/StudentClasses.jsx'
+import StudentDashboard from './pages/Student/StudentDashboard.jsx'
+import StudentFees from './pages/Student/StudentFees.jsx'
+import StudentProfile from './pages/Student/StudentProfile.jsx'
 import StudentSetup from './pages/Student/StudentSetup.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
@@ -37,7 +42,14 @@ const router = createBrowserRouter(
       <Route path="student/setup" element={<StudentSetup />} />
 
       <Route element={<ProtectedRoute allowedRole="student" />}>
-        <Route path="student/dashboard" element={<StudentDashboard />} />
+        <Route path="student" element={<StudentPortalShell />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<StudentDashboard />} />
+          <Route path="profile" element={<StudentProfile />} />
+          <Route path="classes" element={<StudentClasses />} />
+          <Route path="attendance" element={<StudentAttendance />} />
+          <Route path="fees" element={<StudentFees />} />
+        </Route>
       </Route>
 
       <Route path="teacher/setup" element={<Navigate to="/login/teacher" replace />} />
