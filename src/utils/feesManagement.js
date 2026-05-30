@@ -6,18 +6,6 @@ const FEES_TABLE = 'fees'
 
 const normalizeText = (value) => String(value || '').trim()
 
-const normalizeDateValue = (value) => {
-  if (!value) {
-    return ''
-  }
-
-  if (typeof value === 'string' && value.length >= 10) {
-    return value.slice(0, 10)
-  }
-
-  return new Date(value).toISOString().slice(0, 10)
-}
-
 export const FEE_STATUS_OPTIONS = ['paid', 'pending']
 
 export const MONTH_NAMES = [
