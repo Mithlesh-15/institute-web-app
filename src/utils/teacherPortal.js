@@ -244,7 +244,6 @@ export async function fetchTeacherTests() {
   const { data, error } = await supabase
     .from(TESTS_TABLE)
     .select('*')
-    .eq('teacher_id', teacherId)
     .order('test_date', { ascending: false })
     .order('created_at', { ascending: false })
 
@@ -261,7 +260,6 @@ export async function fetchTeacherTest(testId) {
     .from(TESTS_TABLE)
     .select('*')
     .eq('id', testId)
-    .eq('teacher_id', teacherId)
     .maybeSingle()
 
   if (error) {
@@ -406,7 +404,6 @@ export async function fetchTeacherMaterials() {
   const { data, error } = await supabase
     .from(MATERIALS_TABLE)
     .select('*')
-    .eq('teacher_id', teacherId)
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -444,7 +441,6 @@ export async function deleteTeacherMaterial(materialId) {
     .from(MATERIALS_TABLE)
     .delete()
     .eq('id', materialId)
-    .eq('teacher_id', teacherId)
 
   if (error) {
     throw new Error(error.message || 'Unable to delete material.')
@@ -456,7 +452,6 @@ export async function fetchTeacherNotices() {
   const { data, error } = await supabase
     .from(NOTICES_TABLE)
     .select('*')
-    .eq('teacher_id', teacherId)
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -498,7 +493,6 @@ export async function updateTeacherNotice(noticeId, { title, noticeLink }) {
     .from(NOTICES_TABLE)
     .update(payload)
     .eq('id', noticeId)
-    .eq('teacher_id', teacherId)
     .select('*')
     .single()
 
@@ -515,7 +509,6 @@ export async function deleteTeacherNotice(noticeId) {
     .from(NOTICES_TABLE)
     .delete()
     .eq('id', noticeId)
-    .eq('teacher_id', teacherId)
 
   if (error) {
     throw new Error(error.message || 'Unable to delete notice.')

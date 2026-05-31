@@ -70,7 +70,6 @@ export async function fetchClasses() {
   const { data, error } = await supabase
     .from(CLASSES_TABLE)
     .select("*")
-    .eq("teacher_id", teacherId)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -120,7 +119,6 @@ export async function fetchClassById(classId) {
     .from(CLASSES_TABLE)
     .select('*')
     .eq('id', classId)
-    .eq('teacher_id', teacherId)
     .maybeSingle()
 
   if (error) {
@@ -225,7 +223,6 @@ export async function updateClassRecord(
     .from(CLASSES_TABLE)
     .update(payload)
     .eq("id", classId)
-    .eq("teacher_id", teacherId)
     .select("*")
     .single();
 
@@ -246,8 +243,7 @@ export async function deleteClassRecord(classId) {
   const { error } = await supabase
     .from(CLASSES_TABLE)
     .delete()
-    .eq("id", classId)
-    .eq("teacher_id", teacherId);
+    .eq("id", classId);
   if (error) {
     throw new Error(error.message || "Unable to delete class.");
   }
