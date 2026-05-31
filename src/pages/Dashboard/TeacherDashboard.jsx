@@ -94,8 +94,6 @@ function TeacherDashboard() {
   }, []);
 
   const activeLive = liveClasses.length > 0 ? liveClasses[0] : null;
-  const marqueeNotices = notices.length > 0 ? [...notices, ...notices] : [];
-
   if (loading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -111,27 +109,28 @@ function TeacherDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Styles for continuous vertical scroll marquee */}
+      {/* Styles for simple scrollable list (no animation to prevent glitches) */}
       <style>{`
-        @keyframes scrollUp {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(-50%); }
+        .notice-list-viewport {
+          max-height: 250px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-right: 4px;
         }
-        .marquee-viewport {
-          height: 300px;
-          overflow: hidden;
-          position: relative;
-          mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-          -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+        .notice-list-viewport::-webkit-scrollbar {
+          width: 4px;
         }
-        .marquee-track {
+        .notice-list-viewport::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .notice-list-viewport::-webkit-scrollbar-thumb {
+          background-color: #cbd5e1;
+          border-radius: 10px;
+        }
+        .notice-list-track {
           display: flex;
           flex-direction: column;
           gap: 10px;
-          animation: scrollUp 16s linear infinite;
-        }
-        .marquee-track:hover {
-          animation-play-state: paused;
         }
       `}</style>
 
@@ -216,9 +215,9 @@ function TeacherDashboard() {
 
         <div className="mt-5 border border-slate-100 bg-slate-50/50 rounded-2xl p-3">
           {notices.length ? (
-            <div className="marquee-viewport">
-              <div className="marquee-track">
-                {marqueeNotices.map((notice, idx) => (
+            <div className="notice-list-viewport">
+              <div className="notice-list-track">
+                {notices.map((notice, idx) => (
                   <div
                     key={`${notice.id}-${idx}`}
                     onClick={() => {
