@@ -193,18 +193,28 @@ function TeacherFees() {
             type="button"
             onClick={() => setClassFilter('All')}
             className={[
-              'rounded-2xl border px-3 py-3 text-left shadow-soft transition-all duration-300 sm:px-4 sm:py-4',
+              'rounded-xl border p-2.5 text-left transition-all duration-300',
               classFilter === 'All'
-                ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white'
-                : 'border-slate-200 bg-white text-slate-900 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
+                ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
+                : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-[#f8fafc]',
             ].join(' ')}
           >
-            <p className={classFilter === 'All' ? 'text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80' : 'text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400'}>
-              All
-            </p>
-            <p className="mt-2 text-2xl font-semibold sm:mt-3 sm:text-3xl">{students.length}</p>
-            <p className={classFilter === 'All' ? 'mt-2 text-xs text-white/80 sm:mt-3 sm:text-sm' : 'mt-2 text-xs text-slate-500 sm:mt-3 sm:text-sm'}>
-              All students
+            <div className="flex items-center justify-between">
+              <span className={[
+                'text-xs font-bold uppercase tracking-wider',
+                classFilter === 'All' ? 'text-white' : 'text-slate-700',
+              ].join(' ')}>
+                All
+              </span>
+              <span className={[
+                'rounded-full px-2 py-0.5 text-[10px] font-bold',
+                classFilter === 'All' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600',
+              ].join(' ')}>
+                {students.length} st
+              </span>
+            </div>
+            <p className={classFilter === 'All' ? 'mt-2.5 text-[11px] text-white/80' : 'mt-2.5 text-[11px] text-slate-500'}>
+              All student fee records
             </p>
           </button>
 
@@ -214,27 +224,32 @@ function TeacherFees() {
               type="button"
               onClick={() => setClassFilter(bucket.className)}
               className={[
-                'rounded-2xl border px-3 py-3 text-left shadow-soft transition-all duration-300 sm:px-4 sm:py-4',
+                'rounded-xl border p-2.5 text-left transition-all duration-300',
                 classFilter === bucket.className
-                  ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white'
-                  : 'border-slate-200 bg-white text-slate-900 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
+                  ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
+                  : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-[#f8fafc]',
               ].join(' ')}
             >
-              <p
-                className={[
-                  'text-[10px] font-semibold uppercase tracking-[0.14em]',
-                  classFilter === bucket.className ? 'text-white/80' : 'text-slate-400',
-                ].join(' ')}
-              >
-                {bucket.className}
-              </p>
-              <p className="mt-2 text-2xl font-semibold sm:mt-3 sm:text-3xl">{bucket.totalStudents}</p>
-              <div className="mt-2 flex flex-col gap-1 text-xs sm:mt-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:text-sm">
+              <div className="flex items-center justify-between">
+                <span className={[
+                  'text-xs font-bold uppercase tracking-wider',
+                  classFilter === bucket.className ? 'text-white' : 'text-slate-700',
+                ].join(' ')}>
+                  {bucket.className}
+                </span>
+                <span className={[
+                  'rounded-full px-2 py-0.5 text-[10px] font-bold',
+                  classFilter === bucket.className ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600',
+                ].join(' ')}>
+                  {bucket.totalStudents} st
+                </span>
+              </div>
+              <div className="mt-2.5 flex items-center justify-between text-[11px] font-medium">
                 <span className={classFilter === bucket.className ? 'text-white/80' : 'text-slate-500'}>
-                  Pending {bucket.pendingCount}
+                  {bucket.pendingCount} pending
                 </span>
                 <span className={classFilter === bucket.className ? 'text-white' : 'text-[#f25d0d]'}>
-                  Rs. {Number(bucket.totalPendingAmount).toLocaleString('en-IN')}
+                  ₹{Number(bucket.totalPendingAmount).toLocaleString('en-IN')}
                 </span>
               </div>
             </button>

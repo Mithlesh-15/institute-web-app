@@ -22,6 +22,12 @@ export const normalizeStudent = (row) => {
     className: normalizeText(row.class || row.className),
     totalFees: Number(row.total_fees || row.totalFees || 0),
     photo: row.photo || '',
+    phone: normalizeText(row.phone),
+    fatherName: normalizeText(row.father_name || row.fatherName),
+    schoolName: normalizeText(row.school_name || row.schoolName),
+    address: normalizeText(row.address),
+    board: normalizeText(row.board),
+    medium: normalizeText(row.medium),
   }
 }
 

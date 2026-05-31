@@ -220,6 +220,7 @@ export async function fetchStudentDetail(studentId) {
       totalAbsent,
       attendancePercentage: totalCount ? Math.round((totalPresent / totalCount) * 100) : 0,
       totalCount,
+      rawList: attendance,
     },
   }
 }
