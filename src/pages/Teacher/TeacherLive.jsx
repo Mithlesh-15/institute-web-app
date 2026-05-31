@@ -25,10 +25,6 @@ function CreateLiveModal({ open, loading, onClose, onSave }) {
       alert('Please enter a live class name.')
       return
     }
-    if (!liveLink.trim()) {
-      alert('Please enter the live video/stream link.')
-      return
-    }
     await onSave({ name: liveName, link: liveLink })
   }
 
@@ -49,7 +45,7 @@ function CreateLiveModal({ open, loading, onClose, onSave }) {
         />
 
         <Input
-          label="Live Link / URL"
+          label="Live Link / URL (Optional)"
           value={liveLink}
           onChange={(e) => setLiveLink(e.target.value)}
           placeholder="https://zoom.us/j/... or https://meet.google.com/..."
@@ -197,17 +193,19 @@ function TeacherLive() {
                 </span>
               </div>
 
-              <div className="mt-5 flex items-center gap-2">
-                <a
-                  href={live.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl bg-[#2563eb] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-sm"
-                >
-                  Join Live Class
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </div>
+              {live.link && (
+                <div className="mt-5 flex items-center gap-2">
+                  <a
+                    href={live.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-[#2563eb] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-sm"
+                  >
+                    Join Live Class
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              )}
 
               <button
                 type="button"

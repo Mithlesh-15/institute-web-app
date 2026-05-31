@@ -92,17 +92,19 @@ function StudentLive() {
                 </span>
               </div>
 
-              <div className="mt-5 flex items-center gap-2">
-                <a
-                  href={live.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl bg-[#2563eb] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-sm"
-                >
-                  Join Live Class
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </div>
+              {live.link && (
+                <div className="mt-5 flex items-center gap-2">
+                  <a
+                    href={live.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-[#2563eb] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-sm"
+                  >
+                    Join Live Class
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              )}
             </div>
           ))}
         </div>

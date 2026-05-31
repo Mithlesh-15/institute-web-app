@@ -225,24 +225,28 @@ export async function createLiveEvent({ name, link }) {
     throw new Error(eventError.message || 'Unable to create live event.')
   }
 
-  const { error: gallaryError } = await supabase
-    .from('gallary')
-    .insert({
-      event_id: eventData.id,
-      type: 'live',
-      link: normalizeText(link)
-    })
+  const normalizedLink = normalizeText(link)
 
-  if (gallaryError) {
-    await supabase.from('event').delete().eq('id', eventData.id)
-    throw new Error(gallaryError.message || 'Unable to save live link.')
+  if (normalizedLink) {
+    const { error: gallaryError } = await supabase
+      .from('gallary')
+      .insert({
+        event_id: eventData.id,
+        type: 'live',
+        link: normalizedLink
+      })
+
+    if (gallaryError) {
+      await supabase.from('event').delete().eq('id', eventData.id)
+      throw new Error(gallaryError.message || 'Unable to save live link.')
+    }
   }
 
   return {
     id: eventData.id,
     eventName: eventData.event_name,
     type: 'live',
-    link: normalizeText(link),
+    link: normalizedLink,
     createdAt: eventData.created_at
   }
 }
