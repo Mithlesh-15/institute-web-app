@@ -18,7 +18,7 @@ import {
 
 const initialModalState = {
   className: '',
-  classLevel: '9th',
+  classLevel: '6th',
   startDate: '',
 }
 

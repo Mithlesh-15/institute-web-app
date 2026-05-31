@@ -104,7 +104,6 @@ function TeacherClassDetails() {
 
       return (
         student.name.toLowerCase().includes(term) ||
-        student.phone.toLowerCase().includes(term) ||
         student.className.toLowerCase().includes(term)
       )
     })
@@ -321,7 +320,7 @@ function TeacherClassDetails() {
           <SearchBar
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search assigned students by name, phone, or class..."
+            placeholder="Search assigned students by name or class..."
           />
         </div>
       </SectionCard>
@@ -351,7 +350,7 @@ function TeacherClassDetails() {
           title={students.length ? 'No students match your search' : 'No students assigned yet'}
           description={
             students.length
-              ? 'Try a different name or phone number.'
+              ? 'Try a different search term.'
               : 'Add students to this class to begin building the batch roster.'
           }
           onCreate={openAddModal}

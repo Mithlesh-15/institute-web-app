@@ -1,5 +1,5 @@
 function ClassSelector({ value, onChange }) {
-  const classes = ['9th', '10th', '11th', '12th']
+  const classes = ['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

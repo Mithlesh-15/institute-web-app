@@ -26,17 +26,11 @@ function FeeCard({ fee }) {
         </span>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+      <div className="mt-5">
         <div className="rounded-2xl bg-slate-50 p-3">
           <p className="text-xs font-medium text-slate-500">Pending Amount</p>
           <p className="mt-2 text-base font-semibold text-slate-900">
             {formatPortalCurrency(fee.pendingAmount)}
-          </p>
-        </div>
-        <div className="rounded-2xl bg-slate-50 p-3">
-          <p className="text-xs font-medium text-slate-500">Payment Date</p>
-          <p className="mt-2 text-base font-semibold text-slate-900">
-            {fee.paymentDate ? formatPortalDate(fee.paymentDate) : 'Not paid yet'}
           </p>
         </div>
       </div>

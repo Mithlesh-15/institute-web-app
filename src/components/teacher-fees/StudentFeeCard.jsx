@@ -1,4 +1,4 @@
-import { CalendarDays, Phone, UserCircle2 } from 'lucide-react'
+import { CalendarDays, UserCircle2 } from 'lucide-react'
 import FeeStatusBadge from './FeeStatusBadge'
 import PendingBadge from './PendingBadge'
 
@@ -34,10 +34,6 @@ function StudentFeeCard({ student, onClick }) {
               <div className="flex items-center gap-2">
                 <UserCircle2 className="h-4 w-4 text-[#2563eb]" />
                 <span>Class {student.className || 'N/A'}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-[#2563eb]" />
-                <span>{student.phone || 'No phone available'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4 text-[#2563eb]" />

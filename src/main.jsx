@@ -20,8 +20,10 @@ import TeacherAttendance from './pages/Teacher/TeacherAttendance.jsx'
 import TeacherClasses from './pages/Teacher/TeacherClasses.jsx'
 import TeacherClassDetails from './pages/Teacher/TeacherClassDetails.jsx'
 import TeacherFees from './pages/Teacher/TeacherFees.jsx'
+import TeacherLibrary from './pages/Teacher/TeacherLibrary.jsx'
+import TeacherNotices from './pages/Teacher/TeacherNotices.jsx'
+import TeacherResults from './pages/Teacher/TeacherResults.jsx'
 import TeacherStudents from './pages/Teacher/TeacherStudents.jsx'
-import TeacherPlaceholderPage from './pages/Teacher/TeacherPlaceholderPage.jsx'
 import StudentAttendance from './pages/Student/StudentAttendance.jsx'
 import StudentClasses from './pages/Student/StudentClasses.jsx'
 import StudentDashboard from './pages/Student/StudentDashboard.jsx'
@@ -63,12 +65,10 @@ const router = createBrowserRouter(
           <Route path="classes/:id" element={<TeacherClassDetails />} />
           <Route path="attendance" element={<TeacherAttendance />} />
           <Route path="fees" element={<TeacherFees />} />
-          <Route path="results" element={<TeacherPlaceholderPage moduleKey="results" />} />
-          <Route path="homework" element={<TeacherPlaceholderPage moduleKey="homework" />} />
-          <Route path="study-material" element={<TeacherPlaceholderPage moduleKey="studyMaterial" />} />
-          <Route path="notices" element={<TeacherPlaceholderPage moduleKey="notices" />} />
-          <Route path="analytics" element={<TeacherPlaceholderPage moduleKey="analytics" />} />
-          <Route path="settings" element={<TeacherPlaceholderPage moduleKey="settings" />} />
+          <Route path="results" element={<TeacherResults />} />
+          <Route path="results/:testId" element={<TeacherResults />} />
+          <Route path="library" element={<TeacherLibrary />} />
+          <Route path="notices" element={<TeacherNotices />} />
         </Route>
       </Route>
 

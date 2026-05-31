@@ -1,4 +1,4 @@
-import { Eye, Trash2, Phone, School2 } from 'lucide-react'
+import { Eye, Trash2, School2 } from 'lucide-react'
 
 function getInitials(name = 'Student') {
   return name
@@ -10,12 +10,18 @@ function getInitials(name = 'Student') {
     .toUpperCase()
 }
 
-function StudentCard({ student, onDelete, deleting = false }) {
+function StudentCard({ student, onDelete, onViewProfile, deleting = false }) {
   const initials = getInitials(student.name)
 
   const handleDelete = () => {
     if (typeof onDelete === 'function') {
       onDelete(student)
+    }
+  }
+
+  const handleViewProfile = () => {
+    if (typeof onViewProfile === 'function') {
+      onViewProfile(student)
     }
   }
 
@@ -46,10 +52,6 @@ function StudentCard({ student, onDelete, deleting = false }) {
                 <School2 className="h-4 w-4 text-[#2563eb]" />
                 <span>Class {student.className || 'N/A'}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-[#2563eb]" />
-                <span>{student.phone || 'No phone available'}</span>
-              </div>
             </div>
           </div>
         </div>
@@ -59,6 +61,7 @@ function StudentCard({ student, onDelete, deleting = false }) {
         <div className="mt-5 grid grid-cols-2 gap-2">
           <button
             type="button"
+            onClick={handleViewProfile}
             className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
           >
             <Eye className="h-3.5 w-3.5" />

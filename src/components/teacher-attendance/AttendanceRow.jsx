@@ -30,7 +30,6 @@ function AttendanceRow({ student, status, onChange, presentLabel = 'Present', ab
                 <UserCircle2 className="h-4 w-4 text-[#2563eb]" />
                 Class {student.className || 'N/A'}
               </span>
-              <span>{student.phone || 'No phone available'}</span>
             </div>
           </div>
         </div>

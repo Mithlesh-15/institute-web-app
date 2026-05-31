@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import EmptyState from '../../components/teacher-fees/EmptyState'
 import EditPendingModal from '../../components/teacher-fees/EditPendingModal'
 import FeeDetailsModal from '../../components/teacher-fees/FeeDetailsModal'
-import SearchBar from '../../components/teacher-fees/SearchBar'
 import StudentFeeCard from '../../components/teacher-fees/StudentFeeCard'
+import { STUDENT_CLASS_OPTIONS } from '../../utils/studentManagement'
 import {
   fetchFeesOverview,
   getCurrentMonthYear,
@@ -13,23 +14,12 @@ import {
   saveStudentCurrentMonthFee,
 } from '../../utils/feesManagement'
 
-const CLASS_FILTER_OPTIONS = ['All', '9th', '10th', '11th', '12th', 'Others']
-
-const getStudentClassGroup = (className) => {
-  const normalized = String(className || '').trim().toLowerCase()
-
-  if (normalized === '9th') return '9th'
-  if (normalized === '10th') return '10th'
-  if (normalized === '11th') return '11th'
-  if (normalized === '12th') return '12th'
-  return 'Others'
-}
-
 function TeacherFees() {
+  const navigate = useNavigate()
+  const currentMonthYear = useMemo(() => getCurrentMonthYear(), [])
   const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [search, setSearch] = useState('')
   const [classFilter, setClassFilter] = useState('All')
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
@@ -37,13 +27,6 @@ function TeacherFees() {
   const [editingPendingFee, setEditingPendingFee] = useState(null)
   const [saving, setSaving] = useState(false)
   const [actionLoadingId, setActionLoadingId] = useState('')
-
-  const currentMonthYear = useMemo(() => getCurrentMonthYear(), [])
-
-  const currentMonthPendingCount = useMemo(
-    () => students.filter((student) => student.currentFee?.status === 'pending').length,
-    [students],
-  )
 
   const loadFees = async (selectedStudentId = '') => {
     try {
@@ -53,18 +36,13 @@ function TeacherFees() {
       setStudents(data)
 
       if (selectedStudentId) {
-        const matchedStudent = data.find((student) => student.id === selectedStudentId)
-        if (matchedStudent) {
-          setSelectedStudent(matchedStudent)
-        }
-      } else if (selectedStudent) {
-        const matchedStudent = data.find((student) => student.id === selectedStudent.id)
-        if (matchedStudent) {
-          setSelectedStudent(matchedStudent)
-        }
+        const nextSelected = data.find((student) => student.id === selectedStudentId) || null
+        setSelectedStudent(nextSelected)
       }
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Unable to load fees.')
+      setError(
+        loadError instanceof Error ? loadError.message : 'Unable to load fee records right now.',
+      )
     } finally {
       setLoading(false)
     }
@@ -72,96 +50,99 @@ function TeacherFees() {
 
   useEffect(() => {
     loadFees()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const filteredStudents = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase()
+  const classBuckets = useMemo(() => {
+    const bucketMap = STUDENT_CLASS_OPTIONS.filter((option) => option !== 'All').reduce(
+      (accumulator, className) => {
+        accumulator[className] = {
+          className,
+          totalStudents: 0,
+          pendingCount: 0,
+          totalPendingAmount: 0,
+        }
+        return accumulator
+      },
+      {},
+    )
 
-    return students.filter((student) => {
-      const matchesSearch =
-        !normalizedSearch ||
-        student.name?.toLowerCase().includes(normalizedSearch) ||
-        student.phone?.toLowerCase().includes(normalizedSearch)
+    students.forEach((student) => {
+      const bucket = bucketMap[student.className]
 
-      const matchesClassFilter =
-        classFilter === 'All' ? true : getStudentClassGroup(student.className) === classFilter
+      if (!bucket) {
+        return
+      }
 
-      return matchesSearch && matchesClassFilter
+      bucket.totalStudents += 1
+
+      if (student.currentFee?.status !== 'paid') {
+        bucket.pendingCount += 1
+        bucket.totalPendingAmount += Number(student.currentFee?.pendingAmount || student.totalFees || 0)
+      }
     })
-  }, [classFilter, search, students])
 
-  const openStudent = (student) => {
+    return Object.values(bucketMap)
+  }, [students])
+
+  const filteredStudents = useMemo(() => {
+    return students.filter(
+      (student) => classFilter === 'All' || student.className === classFilter,
+    )
+  }, [classFilter, students])
+
+  const refreshSelectedStudent = async (studentId) => {
+    await loadFees(studentId)
+  }
+
+  const openStudentDetails = (student) => {
     setSelectedStudent(student)
     setModalOpen(true)
   }
 
-  const closeStudent = () => {
+  const closeStudentDetails = () => {
     setModalOpen(false)
-  }
-
-  const refreshSelectedStudent = (nextStudent) => {
-    if (!nextStudent) {
-      return
-    }
-
-    setSelectedStudent(nextStudent)
-    setStudents((current) =>
-      current.map((student) => (student.id === nextStudent.id ? nextStudent : student)),
-    )
+    setSelectedStudent(null)
   }
 
   const handleSaveStudentFee = async ({ studentId, status, pendingAmount }) => {
-    if (!selectedStudent || selectedStudent.id !== studentId) {
+    if (!selectedStudent) {
       return
     }
 
     try {
       setSaving(true)
-      const updatedFee = await saveStudentCurrentMonthFee(studentId, {
+      setError('')
+      await saveStudentCurrentMonthFee(studentId, {
         status,
         pendingAmount,
         month: currentMonthYear.month,
         year: currentMonthYear.year,
       })
-
-      const nextStudent = {
-        ...selectedStudent,
-        currentFee: updatedFee,
-      }
-
-      refreshSelectedStudent(nextStudent)
-      await loadFees(studentId)
+      await refreshSelectedStudent(studentId)
     } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : 'Unable to save fees.')
+      setError(saveError instanceof Error ? saveError.message : 'Unable to save fees right now.')
     } finally {
       setSaving(false)
     }
   }
 
   const handleMarkOldFeePaid = async (fee) => {
-    if (!selectedStudent || !fee?.studentId) {
+    if (!selectedStudent) {
       return
     }
 
     try {
       setActionLoadingId(fee.id)
-      const updatedFee = await markStudentFeePaid(fee.studentId, {
+      setError('')
+      await markStudentFeePaid(selectedStudent.id, {
         month: fee.month,
         year: fee.year,
       })
-
-      const nextStudent = {
-        ...selectedStudent,
-        previousPendingFees: selectedStudent.previousPendingFees
-          .map((item) => (item.id === fee.id ? updatedFee : item))
-          .filter(Boolean),
-      }
-
-      refreshSelectedStudent(nextStudent)
-      await loadFees(selectedStudent.id)
-    } catch (markError) {
-      setError(markError instanceof Error ? markError.message : 'Unable to update fee.')
+      await refreshSelectedStudent(selectedStudent.id)
+    } catch (actionError) {
+      setError(
+        actionError instanceof Error ? actionError.message : 'Unable to mark fee as paid.',
+      )
     } finally {
       setActionLoadingId('')
     }
@@ -178,121 +159,152 @@ function TeacherFees() {
   }
 
   const handleSavePendingEdit = async ({ fee, status, pendingAmount }) => {
-    if (!selectedStudent || !fee?.studentId) {
+    if (!selectedStudent) {
       return
     }
 
     try {
-      setActionLoadingId(fee.id)
-      const updatedFee = await saveStudentFeeRecord(fee.studentId, {
+      setSaving(true)
+      setError('')
+      await saveStudentFeeRecord(selectedStudent.id, {
         status,
         pendingAmount,
         month: fee.month,
         year: fee.year,
-        paymentDate: fee.paymentDate,
       })
-
-      const nextStudent = {
-        ...selectedStudent,
-        previousPendingFees: selectedStudent.previousPendingFees
-          .map((item) => (item.id === fee.id ? updatedFee : item))
-          .filter(Boolean),
-      }
-
-      refreshSelectedStudent(nextStudent)
       closeEditPending()
-      await loadFees(selectedStudent.id)
+      await refreshSelectedStudent(selectedStudent.id)
     } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : 'Unable to update fee.')
+      setError(
+        saveError instanceof Error
+          ? saveError.message
+          : 'Unable to update pending fee right now.',
+      )
     } finally {
-      setActionLoadingId('')
+      setSaving(false)
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {[...Array(6)].map((_, index) => (
-          <div
-            key={index}
-            className="h-64 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft"
-          />
-        ))}
-      </div>
-    )
   }
 
   return (
     <div className="space-y-6">
-      <SectionCard
-        title="Fees"
-        action={
-          <div className="rounded-full bg-red-50 px-4 py-2 text-sm font-semibold text-[#ef4444]">
-            Pending {currentMonthPendingCount}
-          </div>
-        }
-      >
-        <SearchBar value={search} onChange={(event) => setSearch(event.target.value)} />
+      <SectionCard title="Fees" subtitle="Class wise categories">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
+          <button
+            type="button"
+            onClick={() => setClassFilter('All')}
+            className={[
+              'rounded-xl border p-2.5 text-left transition-all duration-300',
+              classFilter === 'All'
+                ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
+                : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-[#f8fafc]',
+            ].join(' ')}
+          >
+            <div className="flex items-center justify-between">
+              <span className={[
+                'text-xs font-bold uppercase tracking-wider',
+                classFilter === 'All' ? 'text-white' : 'text-slate-700',
+              ].join(' ')}>
+                All
+              </span>
+              <span className={[
+                'rounded-full px-2 py-0.5 text-[10px] font-bold',
+                classFilter === 'All' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600',
+              ].join(' ')}>
+                {students.length} st
+              </span>
+            </div>
+            <p className={classFilter === 'All' ? 'mt-2.5 text-[11px] text-white/80' : 'mt-2.5 text-[11px] text-slate-500'}>
+              All student fee records
+            </p>
+          </button>
+
+          {classBuckets.map((bucket) => (
+            <button
+              key={bucket.className}
+              type="button"
+              onClick={() => setClassFilter(bucket.className)}
+              className={[
+                'rounded-xl border p-2.5 text-left transition-all duration-300',
+                classFilter === bucket.className
+                  ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
+                  : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-[#f8fafc]',
+              ].join(' ')}
+            >
+              <div className="flex items-center justify-between">
+                <span className={[
+                  'text-xs font-bold uppercase tracking-wider',
+                  classFilter === bucket.className ? 'text-white' : 'text-slate-700',
+                ].join(' ')}>
+                  {bucket.className}
+                </span>
+                <span className={[
+                  'rounded-full px-2 py-0.5 text-[10px] font-bold',
+                  classFilter === bucket.className ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600',
+                ].join(' ')}>
+                  {bucket.totalStudents} st
+                </span>
+              </div>
+              <div className="mt-2.5 flex items-center justify-between text-[11px] font-medium">
+                <span className={classFilter === bucket.className ? 'text-white/80' : 'text-slate-500'}>
+                  {bucket.pendingCount} pending
+                </span>
+                <span className={classFilter === bucket.className ? 'text-white' : 'text-[#f25d0d]'}>
+                  ₹{Number(bucket.totalPendingAmount).toLocaleString('en-IN')}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
       </SectionCard>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-soft">
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {CLASS_FILTER_OPTIONS.map((option) => {
-            const active = classFilter === option
-
-            return (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setClassFilter(option)}
-                className={[
-                  'whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition',
-                  active
-                    ? 'bg-[#2563eb] text-white shadow-[0_10px_24px_rgba(37,99,235,0.2)]'
-                    : 'border border-slate-200 bg-white text-slate-600 hover:border-[#2563eb]/20 hover:text-[#2563eb]',
-                ].join(' ')}
-              >
-                {option}
-              </button>
-            )
-          })}
+      {loading ? (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {[...Array(6)].map((_, index) => (
+            <div
+              key={index}
+              className="h-52 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft sm:h-64"
+            />
+          ))}
         </div>
-      </div>
-
-      {error ? (
-        <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-4 text-sm text-red-700 shadow-soft">
-          {error}
-        </div>
-      ) : null}
-
-      {filteredStudents.length ? (
+      ) : error ? (
+        <SectionCard>
+          <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700">
+            {error}
+          </div>
+        </SectionCard>
+      ) : filteredStudents.length ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filteredStudents.map((student) => (
-            <StudentFeeCard key={student.id} student={student} onClick={openStudent} />
+            <StudentFeeCard key={student.id} student={student} onClick={openStudentDetails} />
           ))}
         </div>
       ) : (
-        <EmptyState title="No students found" />
+        <EmptyState
+          title="No students found"
+          description="Try a different class category."
+          onBack={() => navigate('/teacher/students')}
+          actionLabel="Back to Students"
+        />
       )}
 
       <FeeDetailsModal
         open={modalOpen}
         student={selectedStudent}
         currentMonthYear={currentMonthYear}
-        onClose={closeStudent}
+        loading={saving}
+        actionLoadingId={actionLoadingId}
+        onClose={closeStudentDetails}
         onSave={handleSaveStudentFee}
         onMarkPaid={handleMarkOldFeePaid}
         onEditPending={openEditPending}
-        loading={saving}
-        actionLoadingId={actionLoadingId}
       />
 
       <EditPendingModal
         open={editPendingOpen}
         fee={editingPendingFee}
+        loading={saving}
         onClose={closeEditPending}
         onSave={handleSavePendingEdit}
-        loading={actionLoadingId === editingPendingFee?.id}
       />
     </div>
   )
