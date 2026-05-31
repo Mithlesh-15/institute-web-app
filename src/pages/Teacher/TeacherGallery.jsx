@@ -441,7 +441,7 @@ function TeacherGallery() {
                           e.stopPropagation()
                           handleDeletePhoto(photo.id, photo.link)
                         }}
-                        className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition shadow-md hover:bg-red-600 group-hover:opacity-100 disabled:opacity-50"
+                        className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-all duration-300 hover:bg-red-600 lg:opacity-0 lg:group-hover:opacity-100 disabled:opacity-50"
                         disabled={saving}
                         title="Delete photo"
                       >
@@ -593,7 +593,7 @@ function TeacherGallery() {
                   e.stopPropagation()
                   handleDeleteEvent(event.id, event.eventName)
                 }}
-                className="absolute right-3 bottom-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 border border-red-100 opacity-0 transition hover:bg-red-100 group-hover:opacity-100 disabled:opacity-50 shadow-sm"
+                className="absolute right-3 bottom-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-600 border border-red-100 shadow-sm transition hover:bg-red-100 lg:opacity-0 lg:group-hover:opacity-100 disabled:opacity-50"
                 disabled={saving}
                 title="Delete event"
               >
