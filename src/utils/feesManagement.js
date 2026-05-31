@@ -90,6 +90,16 @@ export const normalizeStudentFee = (student, fees = [], currentMonthYear) => {
       fee.month.toLowerCase() === currentMonthYear.month.toLowerCase() &&
       fee.year === currentMonthYear.year,
   )
+  const currentPendingAmount =
+    currentFee?.status === 'pending'
+      ? Number(currentFee.pendingAmount || student.totalFees || 0)
+      : 0
+  const normalizedCurrentFee = currentFee
+    ? {
+        ...currentFee,
+        pendingAmount: currentPendingAmount,
+      }
+    : null
 
   const previousPendingFees = studentFees.filter((fee) => {
     const isCurrentMonth =
@@ -101,20 +111,19 @@ export const normalizeStudentFee = (student, fees = [], currentMonthYear) => {
 
   return {
     ...student,
-    currentFee: currentFee || null,
+    currentFee: normalizedCurrentFee,
     previousPendingFees,
     previousPendingCount: previousPendingFees.length,
     previousPendingAmount: previousPendingFees.reduce(
       (total, fee) => total + Number(fee.pendingAmount || 0),
       0,
     ),
-    totalPendingCount:
-      previousPendingFees.length + (currentFee?.status === 'pending' ? 1 : 0),
+    totalPendingCount: previousPendingFees.length + (normalizedCurrentFee?.status === 'pending' ? 1 : 0),
     totalPendingAmount:
       previousPendingFees.reduce(
         (total, fee) => total + Number(fee.pendingAmount || 0),
         0,
-      ) + Number(currentFee?.status === 'pending' ? currentFee.pendingAmount || 0 : 0),
+      ) + Number(normalizedCurrentFee?.status === 'pending' ? normalizedCurrentFee.pendingAmount || 0 : 0),
   }
 }
 
@@ -169,13 +178,17 @@ export async function ensureCurrentMonthFees(students = []) {
   const existingStudentIds = new Set((data || []).map((row) => row.student_id).filter(Boolean))
   const missingRows = studentIds
     .filter((studentId) => !existingStudentIds.has(studentId))
-    .map((studentId) => ({
+    .map((studentId) => {
+      const student = students.find((item) => item.id === studentId)
+
+      return {
       student_id: studentId,
       month: currentMonthYear.month,
       year: currentMonthYear.year,
       status: 'pending',
-      pending_amount: 0,
-    }))
+      pending_amount: Number(student?.totalFees || 0),
+      }
+    })
 
   if (!missingRows.length) {
     return { insertedCount: 0 }

@@ -10,19 +10,11 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
-        'favicon.svg',
-        'favicon-16.png',
-        'favicon-32.png',
-        'favicon-48.png',
-        'favicon-192.png',
-        'icon-192.png',
-        'icon-512.png',
-        'icon-maskable.png',
-        'apple-touch-icon.png',
+        'logo.png',
       ],
       manifest: {
-        name: 'RTC Tuition',
-        short_name: 'RTC',
+        name: 'Raj Tuition Classes',
+        short_name: 'Raj Tuition',
         description: 'A premium mobile-first tuition management app for students and teachers.',
         theme_color: '#2563eb',
         background_color: '#f8fafc',
@@ -33,19 +25,13 @@ export default defineConfig({
         categories: ['education', 'productivity'],
         icons: [
           {
-            src: '/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any',
-          },
-          {
-            src: '/icon-512.png',
+            src: '/logo.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: '/icon-maskable.png',
+            src: '/logo.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
@@ -54,6 +40,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
+        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,

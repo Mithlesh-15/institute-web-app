@@ -65,7 +65,7 @@ function TeacherDashboardShell() {
       <div className="lg:pl-80">
         <Navbar
           session={session}
-          title={session?.coachingName || 'RTC Tuition'}
+          title={session?.coachingName || 'Raj Tuition Classes'}
           currentLabel={currentLabel}
           onMenuClick={() => setMobileOpen(true)}
           onLogout={handleLogout}

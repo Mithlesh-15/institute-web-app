@@ -5,7 +5,7 @@ import { fetchStudents, normalizeStudent } from './studentManagement'
 const CLASSES_TABLE = "classes";
 const BATCH_STUDENTS_TABLE = 'batch_students'
 
-export const CLASS_OPTIONS = ["All", "9th", "10th", "11th", "12th"];
+export const CLASS_OPTIONS = ["All", "6th", "7th", "8th", "9th", "10th", "11th", "12th", "UG", "PG"];
 
 const normalizeText = (value) => String(value || "").trim();
 

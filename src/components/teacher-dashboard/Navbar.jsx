@@ -58,7 +58,7 @@ function Navbar({ session, title, currentLabel, onMenuClick, onLogout }) {
                 {session?.displayName || session?.fullName || 'Teacher'}
               </p>
               <p className="text-xs text-slate-500">
-                {session?.coachingName || 'Verified staff account'}
+                {session?.coachingName || 'Raj Tuition Classes'}
               </p>
             </div>
           </div>

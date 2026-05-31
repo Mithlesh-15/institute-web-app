@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  BookOpenText,
   CalendarCheck2,
   ClipboardList,
   CreditCard,
@@ -7,12 +8,8 @@ import {
   LayoutDashboard,
   LogOut,
   Megaphone,
-  NotebookPen,
-  Settings2,
   Users,
-  BookOpenText,
   Sparkles,
-  BarChart3,
 } from 'lucide-react'
 
 export const sidebarItems = [
@@ -47,29 +44,14 @@ export const sidebarItems = [
     icon: ClipboardList,
   },
   {
-    label: 'Homework',
-    to: '/teacher/homework',
-    icon: NotebookPen,
-  },
-  {
-    label: 'Study Material',
-    to: '/teacher/study-material',
+    label: 'Library',
+    to: '/teacher/library',
     icon: BookOpenText,
   },
   {
-    label: 'Notice Board',
+    label: 'Notices',
     to: '/teacher/notices',
     icon: Megaphone,
-  },
-  {
-    label: 'Analytics',
-    to: '/teacher/analytics',
-    icon: BarChart3,
-  },
-  {
-    label: 'Settings',
-    to: '/teacher/settings',
-    icon: Settings2,
   },
   {
     label: 'Logout',
@@ -145,21 +127,15 @@ export const quickActions = [
     icon: ClipboardList,
   },
   {
-    label: 'Homework',
-    description: 'Assign and review tasks',
-    to: '/teacher/homework',
-    icon: NotebookPen,
-  },
-  {
-    label: 'Notice Board',
+    label: 'Notices',
     description: 'Broadcast updates to families',
     to: '/teacher/notices',
     icon: Megaphone,
   },
   {
-    label: 'Study Material',
+    label: 'Library',
     description: 'Share notes, PDFs, and links',
-    to: '/teacher/study-material',
+    to: '/teacher/library',
     icon: BookOpen,
   },
 ]
@@ -271,7 +247,7 @@ export const moduleDetails = {
     accent: 'from-[#2563eb] to-[#1d4ed8]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
-      { label: 'Open analytics', to: '/teacher/analytics' },
+      { label: 'Open students', to: '/teacher/students' },
     ],
   },
   results: {
@@ -288,29 +264,12 @@ export const moduleDetails = {
     accent: 'from-[#1d4ed8] to-[#2563eb]',
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
-      { label: 'Open homework', to: '/teacher/homework' },
-    ],
-  },
-  homework: {
-    eyebrow: 'Assignments',
-    title: 'Homework',
-    description:
-      'Assign work, upload tasks, and keep track of pending submissions with ease.',
-    bullets: [
-      'Upload homework by class',
-      'Track submission status',
-      'Reuse recurring assignments',
-    ],
-    icon: NotebookPen,
-    accent: 'from-[#2563eb] to-[#3b82f6]',
-    links: [
-      { label: 'View dashboard', to: '/teacher/dashboard' },
-      { label: 'Open notice board', to: '/teacher/notices' },
+      { label: 'Open library', to: '/teacher/library' },
     ],
   },
   notices: {
     eyebrow: 'Communication',
-    title: 'Notice Board',
+    title: 'Notices',
     description:
       'Broadcast important updates, reminders, and schedule changes to students and parents.',
     bullets: [
@@ -323,57 +282,6 @@ export const moduleDetails = {
     links: [
       { label: 'View dashboard', to: '/teacher/dashboard' },
       { label: 'Open students', to: '/teacher/students' },
-    ],
-  },
-  analytics: {
-    eyebrow: 'Insights',
-    title: 'Analytics',
-    description:
-      'See engagement, attendance, and fee trends in a compact analytics workspace.',
-    bullets: [
-      'Attendance and fee trends',
-      'Batch-wise performance signals',
-      'Simple charts for fast review',
-    ],
-    icon: BarChart3,
-    accent: 'from-[#2563eb] to-[#1d4ed8]',
-    links: [
-      { label: 'View dashboard', to: '/teacher/dashboard' },
-      { label: 'Open fees', to: '/teacher/fees' },
-    ],
-  },
-  studyMaterial: {
-    eyebrow: 'Resources',
-    title: 'Study Material',
-    description:
-      'Share notes, worksheets, PDFs, and reference links with a clean material hub.',
-    bullets: [
-      'Upload notes and documents',
-      'Share learning links quickly',
-      'Organize material by subject',
-    ],
-    icon: BookOpen,
-    accent: 'from-[#1d4ed8] to-[#2563eb]',
-    links: [
-      { label: 'View dashboard', to: '/teacher/dashboard' },
-      { label: 'Open homework', to: '/teacher/homework' },
-    ],
-  },
-  settings: {
-    eyebrow: 'Preferences',
-    title: 'Settings',
-    description:
-      'Adjust your profile, workspace preferences, and notification settings in one place.',
-    bullets: [
-      'Update teacher profile details',
-      'Tune notification preferences',
-      'Manage workspace defaults',
-    ],
-    icon: Settings2,
-    accent: 'from-[#2563eb] to-[#1d4ed8]',
-    links: [
-      { label: 'View dashboard', to: '/teacher/dashboard' },
-      { label: 'Open analytics', to: '/teacher/analytics' },
     ],
   },
 }

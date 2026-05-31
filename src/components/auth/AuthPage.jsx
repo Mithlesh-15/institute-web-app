@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
+import BrandLogo from "../BrandLogo";
 import {
   authenticateMockUser,
   getSession,
@@ -115,8 +116,8 @@ function AuthPage({ role }) {
 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-lg font-bold text-white shadow-[0_14px_30px_rgba(37,99,235,0.25)]">
-                  RTC
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1 shadow-[0_14px_30px_rgba(37,99,235,0.25)]">
+                  <BrandLogo className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">

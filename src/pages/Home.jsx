@@ -1,5 +1,6 @@
 import { Link, Navigate } from 'react-router-dom'
 import InstallAppButton from '../components/pwa/InstallAppButton.jsx'
+import BrandLogo from '../components/BrandLogo.jsx'
 import { getSession } from '../utils/auth'
 
 function Home() {
@@ -17,6 +18,16 @@ function Home() {
 
           <div className="relative grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div>
+              <div className="inline-flex items-center gap-3 rounded-[1.5rem] border border-slate-200 bg-white px-4 py-3 shadow-soft">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1 shadow-sm">
+                  <BrandLogo className="h-full w-full object-contain" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">Raj Tuition Classes</p>
+                  <p className="text-xs text-slate-500">Student portal</p>
+                </div>
+              </div>
+
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 Student access
               </div>

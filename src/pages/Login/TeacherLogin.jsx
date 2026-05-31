@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
+import BrandLogo from '../../components/BrandLogo'
 import TeacherAccessCodeModal from '../../components/teacher/TeacherAccessCodeModal'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -121,8 +122,8 @@ function TeacherLogin() {
           <div className="rounded-[2rem] border border-white/80 bg-white/95 p-6 shadow-[0_30px_100px_rgba(15,23,42,0.14)] backdrop-blur-xl sm:p-8">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-lg font-bold text-white shadow-[0_18px_34px_rgba(37,99,235,0.24)]">
-                  RTC
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1 shadow-[0_18px_34px_rgba(37,99,235,0.24)]">
+                  <BrandLogo className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">

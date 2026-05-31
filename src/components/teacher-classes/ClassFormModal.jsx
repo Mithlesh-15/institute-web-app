@@ -5,7 +5,7 @@ import Input from '../ui/Input'
 
 const initialFormState = {
   className: '',
-  classLevel: '9th',
+  classLevel: '6th',
   startDate: '',
 }
 
@@ -27,7 +27,7 @@ function ClassFormModal({
 
     setFormData({
       className: initialValues?.className || '',
-      classLevel: initialValues?.classLevel || '9th',
+      classLevel: initialValues?.classLevel || '6th',
       startDate: initialValues?.startDate || '',
     })
     setFormError('')
@@ -134,7 +134,7 @@ function ClassFormModal({
               disabled={loading}
               className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
             >
-              {['9th', '10th', '11th', '12th'].map((option) => (
+              {['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG'].map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>

@@ -74,7 +74,7 @@ function TeacherDashboard() {
                   Coaching name
                 </div>
                 <p className="mt-2 text-sm font-semibold text-slate-900">
-                  {session?.coachingName || "RTC Tuition"}
+                  {session?.coachingName || "Raj Tuition Classes"}
                 </p>
               </div>
             </div>

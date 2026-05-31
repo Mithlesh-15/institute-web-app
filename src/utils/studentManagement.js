@@ -9,7 +9,7 @@ const normalizeSubjects = (subjects) =>
     ? [...new Set(subjects.map((subject) => normalizeText(subject)).filter(Boolean))]
     : []
 
-export const STUDENT_CLASS_OPTIONS = ['All', '9th', '10th', '11th', '12th']
+export const STUDENT_CLASS_OPTIONS = ['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']
 
 export const normalizeStudent = (row) => {
   if (!row) {
@@ -23,6 +23,7 @@ export const normalizeStudent = (row) => {
     className: normalizeText(row.class || row.className),
     photo: row.photo || '',
     subjects: normalizeSubjects(row.subjects),
+    totalFees: Number(row.total_fees || row.totalFees || 0),
     role: row.role || 'student',
     createdAt: row.created_at || row.createdAt || null,
   }
@@ -50,4 +51,55 @@ export async function deleteStudentById(studentId) {
   if (error) {
     throw new Error(error.message || 'Unable to delete student.')
   }
+}
+
+export async function fetchStudentById(studentId) {
+  const { data, error } = await supabase
+    .from(STUDENT_TABLE)
+    .select('*')
+    .eq('id', studentId)
+    .maybeSingle()
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load student.')
+  }
+
+  return normalizeStudent(data)
+}
+
+export async function updateStudentById(studentId, updates = {}) {
+  const payload = {}
+
+  if (Object.prototype.hasOwnProperty.call(updates, 'name')) {
+    payload.name = normalizeText(updates.name)
+  }
+
+  if (Object.prototype.hasOwnProperty.call(updates, 'className')) {
+    payload.class = normalizeText(updates.className)
+  }
+
+  if (Object.prototype.hasOwnProperty.call(updates, 'subjects')) {
+    payload.subjects = normalizeSubjects(updates.subjects)
+  }
+
+  if (Object.prototype.hasOwnProperty.call(updates, 'totalFees')) {
+    payload.total_fees = Number(updates.totalFees || 0)
+  }
+
+  if (!Object.keys(payload).length) {
+    return fetchStudentById(studentId)
+  }
+
+  const { data, error } = await supabase
+    .from(STUDENT_TABLE)
+    .update(payload)
+    .eq('id', studentId)
+    .select('*')
+    .single()
+
+  if (error) {
+    throw new Error(error.message || 'Unable to update student.')
+  }
+
+  return normalizeStudent(data)
 }

@@ -1,14 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CircleDollarSign, Plus } from 'lucide-react'
-import Button from '../../components/ui/Button'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import EmptyState from '../../components/teacher-fees/EmptyState'
 import EditPendingModal from '../../components/teacher-fees/EditPendingModal'
 import FeeDetailsModal from '../../components/teacher-fees/FeeDetailsModal'
-import FeeSummaryCard from '../../components/teacher-fees/FeeSummaryCard'
-import SearchBar from '../../components/teacher-fees/SearchBar'
 import StudentFeeCard from '../../components/teacher-fees/StudentFeeCard'
+import { STUDENT_CLASS_OPTIONS } from '../../utils/studentManagement'
 import {
   fetchFeesOverview,
   getCurrentMonthYear,
@@ -23,7 +20,7 @@ function TeacherFees() {
   const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [search, setSearch] = useState('')
+  const [classFilter, setClassFilter] = useState('All')
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [editPendingOpen, setEditPendingOpen] = useState(false)
@@ -44,9 +41,7 @@ function TeacherFees() {
       }
     } catch (loadError) {
       setError(
-        loadError instanceof Error
-          ? loadError.message
-          : 'Unable to load fee records right now.',
+        loadError instanceof Error ? loadError.message : 'Unable to load fee records right now.',
       )
     } finally {
       setLoading(false)
@@ -57,46 +52,43 @@ function TeacherFees() {
     loadFees()
   }, [])
 
-  const filteredStudents = useMemo(() => {
-    const term = search.trim().toLowerCase()
+  const classBuckets = useMemo(() => {
+    const bucketMap = STUDENT_CLASS_OPTIONS.filter((option) => option !== 'All').reduce(
+      (accumulator, className) => {
+        accumulator[className] = {
+          className,
+          totalStudents: 0,
+          pendingCount: 0,
+          totalPendingAmount: 0,
+        }
+        return accumulator
+      },
+      {},
+    )
 
-    return students.filter((student) => {
-      if (!term) {
-        return true
+    students.forEach((student) => {
+      const bucket = bucketMap[student.className]
+
+      if (!bucket) {
+        return
       }
 
-      return (
-        student.name.toLowerCase().includes(term) ||
-        student.phone.toLowerCase().includes(term)
-      )
+      bucket.totalStudents += 1
+
+      if (student.currentFee?.status !== 'paid') {
+        bucket.pendingCount += 1
+        bucket.totalPendingAmount += Number(student.currentFee?.pendingAmount || student.totalFees || 0)
+      }
     })
-  }, [search, students])
 
-  const summary = useMemo(() => {
-    const currentMonthStudents = students.filter(Boolean)
-    const paidCount = currentMonthStudents.filter(
-      (student) => student.currentFee?.status === 'paid',
-    ).length
-    const pendingCount = currentMonthStudents.filter(
-      (student) => student.currentFee?.status !== 'paid',
-    ).length
-    const totalPendingAmount = currentMonthStudents.reduce(
-      (total, student) => total + Number(student.totalPendingAmount || 0),
-      0,
-    )
-    const totalPendingMonths = currentMonthStudents.reduce(
-      (total, student) => total + Number(student.totalPendingCount || 0),
-      0,
-    )
-
-    return {
-      totalStudents: currentMonthStudents.length,
-      paidCount,
-      pendingCount,
-      totalPendingAmount,
-      totalPendingMonths,
-    }
+    return Object.values(bucketMap)
   }, [students])
+
+  const filteredStudents = useMemo(() => {
+    return students.filter(
+      (student) => classFilter === 'All' || student.className === classFilter,
+    )
+  }, [classFilter, students])
 
   const refreshSelectedStudent = async (studentId) => {
     await loadFees(studentId)
@@ -128,11 +120,7 @@ function TeacherFees() {
       })
       await refreshSelectedStudent(studentId)
     } catch (saveError) {
-      setError(
-        saveError instanceof Error
-          ? saveError.message
-          : 'Unable to save fees right now.',
-      )
+      setError(saveError instanceof Error ? saveError.message : 'Unable to save fees right now.')
     } finally {
       setSaving(false)
     }
@@ -153,9 +141,7 @@ function TeacherFees() {
       await refreshSelectedStudent(selectedStudent.id)
     } catch (actionError) {
       setError(
-        actionError instanceof Error
-          ? actionError.message
-          : 'Unable to mark fee as paid.',
+        actionError instanceof Error ? actionError.message : 'Unable to mark fee as paid.',
       )
     } finally {
       setActionLoadingId('')
@@ -199,80 +185,61 @@ function TeacherFees() {
     }
   }
 
-  const statsCards = [
-    {
-      label: 'Total Students',
-      value: summary.totalStudents,
-    },
-    {
-      label: 'Current Month Paid',
-      value: summary.paidCount,
-    },
-    {
-      label: 'Current Month Pending',
-      value: summary.pendingCount,
-    },
-    {
-      label: 'Pending Months',
-      value: summary.totalPendingMonths,
-    },
-    {
-      label: 'Total Pending Amount',
-      value: `₹${Number(summary.totalPendingAmount).toLocaleString('en-IN')}`,
-      tone: 'text-[#f25d0d]',
-    },
-  ]
-
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(242,93,13,0.06))] p-6 sm:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <CircleDollarSign className="h-3.5 w-3.5 text-[#2563eb]" />
-                Fees management
-              </div>
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                Fees
-              </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                Track current month payments, manage old pending dues, and update partial payments from one fast workspace.
+      <SectionCard title="Fees" subtitle="Class wise categories">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
+          <button
+            type="button"
+            onClick={() => setClassFilter('All')}
+            className={[
+              'rounded-2xl border px-3 py-3 text-left shadow-soft transition-all duration-300 sm:px-4 sm:py-4',
+              classFilter === 'All'
+                ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white'
+                : 'border-slate-200 bg-white text-slate-900 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
+            ].join(' ')}
+          >
+            <p className={classFilter === 'All' ? 'text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80' : 'text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400'}>
+              All
+            </p>
+            <p className="mt-2 text-2xl font-semibold sm:mt-3 sm:text-3xl">{students.length}</p>
+            <p className={classFilter === 'All' ? 'mt-2 text-xs text-white/80 sm:mt-3 sm:text-sm' : 'mt-2 text-xs text-slate-500 sm:mt-3 sm:text-sm'}>
+              All students
+            </p>
+          </button>
+
+          {classBuckets.map((bucket) => (
+            <button
+              key={bucket.className}
+              type="button"
+              onClick={() => setClassFilter(bucket.className)}
+              className={[
+                'rounded-2xl border px-3 py-3 text-left shadow-soft transition-all duration-300 sm:px-4 sm:py-4',
+                classFilter === bucket.className
+                  ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white'
+                  : 'border-slate-200 bg-white text-slate-900 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
+              ].join(' ')}
+            >
+              <p
+                className={[
+                  'text-[10px] font-semibold uppercase tracking-[0.14em]',
+                  classFilter === bucket.className ? 'text-white/80' : 'text-slate-400',
+                ].join(' ')}
+              >
+                {bucket.className}
               </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <SearchBar
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-              <Button variant="secondary" onClick={() => navigate('/teacher/students')}>
-                <Plus className="h-4 w-4" />
-                View Students
-              </Button>
-            </div>
-          </div>
+              <p className="mt-2 text-2xl font-semibold sm:mt-3 sm:text-3xl">{bucket.totalStudents}</p>
+              <div className="mt-2 flex flex-col gap-1 text-xs sm:mt-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:text-sm">
+                <span className={classFilter === bucket.className ? 'text-white/80' : 'text-slate-500'}>
+                  Pending {bucket.pendingCount}
+                </span>
+                <span className={classFilter === bucket.className ? 'text-white' : 'text-[#f25d0d]'}>
+                  Rs. {Number(bucket.totalPendingAmount).toLocaleString('en-IN')}
+                </span>
+              </div>
+            </button>
+          ))}
         </div>
-      </section>
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        {statsCards.map((card) => (
-          <FeeSummaryCard
-            key={card.label}
-            label={card.label}
-            value={card.value}
-            tone={card.tone || 'text-slate-900'}
-          />
-        ))}
-      </div>
-
-      <SectionCard title="Student fees" subtitle="Current month view">
-        <p className="text-sm text-slate-500">
-          Current month:{' '}
-          <span className="font-semibold text-slate-700">
-            {currentMonthYear.month} {currentMonthYear.year}
-          </span>
-        </p>
       </SectionCard>
 
       {loading ? (
@@ -280,7 +247,7 @@ function TeacherFees() {
           {[...Array(6)].map((_, index) => (
             <div
               key={index}
-              className="h-64 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft"
+              className="h-52 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft sm:h-64"
             />
           ))}
         </div>
@@ -293,17 +260,13 @@ function TeacherFees() {
       ) : filteredStudents.length ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filteredStudents.map((student) => (
-            <StudentFeeCard
-              key={student.id}
-              student={student}
-              onClick={openStudentDetails}
-            />
+            <StudentFeeCard key={student.id} student={student} onClick={openStudentDetails} />
           ))}
         </div>
       ) : (
         <EmptyState
           title="No students found"
-          description="Try a different student name or phone number."
+          description="Try a different class category."
           onBack={() => navigate('/teacher/students')}
           actionLabel="Back to Students"
         />

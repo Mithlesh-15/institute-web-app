@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { studentSidebarItems } from './studentPortalConfig'
+import BrandLogo from '../BrandLogo'
 
 function getInitials(name = 'Student') {
   return name
@@ -35,11 +36,11 @@ function StudentSidebar({ open, session, onClose, onLogout }) {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-slate-200 px-5 py-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-sm font-semibold text-white shadow-[0_14px_28px_rgba(37,99,235,0.24)]">
-                RTC
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1 shadow-[0_14px_28px_rgba(37,99,235,0.24)]">
+                <BrandLogo className="h-full w-full object-contain" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-900">RTC Tuition</p>
+                <p className="text-sm font-semibold text-slate-900">Raj Tuition Classes , Durg</p>
                 <p className="text-xs text-slate-500">Student portal</p>
               </div>
             </div>
@@ -56,7 +57,7 @@ function StudentSidebar({ open, session, onClose, onLogout }) {
 
           <div className="px-5 py-5">
             <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-brand-gradient text-sm font-semibold text-white">
+              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
                 {session?.student?.photo ? (
                   <img
                     src={session.student.photo}
