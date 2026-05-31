@@ -14,7 +14,7 @@ export default defineConfig({
       ],
       manifest: {
         name: 'Raj Tuition Classes',
-        short_name: 'Raj Tuition',
+        short_name: 'Raj Tuition Classes',
         description: 'A premium mobile-first tuition management app for students and teachers.',
         theme_color: '#2563eb',
         background_color: '#f8fafc',
