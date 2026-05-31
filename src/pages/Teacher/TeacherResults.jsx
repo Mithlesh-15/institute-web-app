@@ -12,6 +12,7 @@ import {
   fetchTestDetails,
   saveTestResults,
 } from '../../utils/teacherPortal'
+import FilterTabs from '../../components/teacher-classes/FilterTabs'
 
 function AddTestModal({ open, classes, loading, onClose, onSave }) {
   const [testName, setTestName] = useState('')
@@ -149,6 +150,7 @@ function TeacherResults() {
   const [currentTest, setCurrentTest] = useState(null)
   const [students, setStudents] = useState([])
   const [studentRows, setStudentRows] = useState({})
+  const [classFilter, setClassFilter] = useState('All')
 
   const testId = params.testId || ''
 
@@ -279,10 +281,14 @@ function TeacherResults() {
   const groupedTests = useMemo(() => {
     return tests.reduce((accumulator, test) => {
       const key = test.classId || 'Unassigned'
-      const classLabel =
-        classes.find((classItem) => classItem.id === test.classId)?.className ||
-        test.className ||
-        'Unassigned'
+
+      const matchedClass = classes.find((classItem) => classItem.id === test.classId)
+      const classLevel = matchedClass?.classLevel || 'Unassigned'
+      const classLabel = matchedClass?.className || test.className || 'Unassigned'
+
+      if (classFilter !== 'All' && classLevel !== classFilter) {
+        return accumulator
+      }
 
       if (!accumulator[key]) {
         accumulator[key] = {
@@ -293,7 +299,7 @@ function TeacherResults() {
       accumulator[key].items.push(test)
       return accumulator
     }, {})
-  }, [classes, tests])
+  }, [classes, tests, classFilter])
 
   const summary = useMemo(() => {
     const presentStudents = students.filter((student) => !studentRows[student.id]?.absent)
@@ -473,6 +479,14 @@ function TeacherResults() {
         </div>
       </section>
 
+      <SectionCard title="Filter results" subtitle="Class-wise view">
+        <FilterTabs
+          value={classFilter}
+          options={['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']}
+          onChange={setClassFilter}
+        />
+      </SectionCard>
+
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[...Array(4)].map((_, index) => (
@@ -527,7 +541,9 @@ function TeacherResults() {
         </div>
       ) : (
         <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-          No tests added yet.
+          {classFilter === 'All'
+            ? 'No tests added yet.'
+            : `No tests added for Class ${classFilter} yet.`}
         </div>
       )}
 

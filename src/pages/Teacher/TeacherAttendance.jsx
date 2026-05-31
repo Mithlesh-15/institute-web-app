@@ -5,6 +5,8 @@ import AttendanceCard from '../../components/teacher-attendance/AttendanceCard'
 import AttendanceRow from '../../components/teacher-attendance/AttendanceRow'
 import DateSelector from '../../components/teacher-attendance/DateSelector'
 import EmptyState from '../../components/teacher-attendance/EmptyState'
+import SectionCard from '../../components/teacher-dashboard/SectionCard'
+import FilterTabs from '../../components/teacher-classes/FilterTabs'
 import {
   fetchAttendanceClasses,
   fetchAttendanceClass,
@@ -37,6 +39,7 @@ function TeacherAttendance() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [mode, setMode] = useState('save')
+  const [classFilter, setClassFilter] = useState('All')
 
   useEffect(() => {
     let mounted = true
@@ -71,6 +74,12 @@ function TeacherAttendance() {
       mounted = false
     }
   }, [])
+
+  const filteredClasses = useMemo(() => {
+    return classes.filter(
+      (classItem) => classFilter === 'All' || classItem.classLevel === classFilter,
+    )
+  }, [classFilter, classes])
 
   useEffect(() => {
     if (!selectedClass) {
@@ -187,9 +196,17 @@ function TeacherAttendance() {
           </h1>
         </section>
 
-        {classes.length ? (
+        <SectionCard title="Filter classes" subtitle="Class-wise view">
+          <FilterTabs
+            value={classFilter}
+            options={['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']}
+            onChange={setClassFilter}
+          />
+        </SectionCard>
+
+        {filteredClasses.length ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {classes.map((classItem) => (
+            {filteredClasses.map((classItem) => (
               <AttendanceCard
                 key={classItem.id}
                 classItem={classItem}
@@ -197,6 +214,12 @@ function TeacherAttendance() {
               />
             ))}
           </div>
+        ) : classes.length ? (
+          <EmptyState
+            title="No classes match your filters"
+            onBack={() => setClassFilter('All')}
+            actionLabel="Reset Filter"
+          />
         ) : (
           <EmptyState
             title="No classes available for attendance"
