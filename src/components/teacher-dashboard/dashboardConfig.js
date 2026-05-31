@@ -11,6 +11,7 @@ import {
   Users,
   Sparkles,
   Image,
+  Video,
 } from 'lucide-react'
 
 export const sidebarItems = [
@@ -58,6 +59,11 @@ export const sidebarItems = [
     label: 'Gallery',
     to: '/teacher/gallery',
     icon: Image,
+  },
+  {
+    label: 'Live',
+    to: '/teacher/live',
+    icon: Video,
   },
   {
     label: 'Logout',

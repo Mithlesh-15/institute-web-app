@@ -36,7 +36,10 @@ export async function fetchEvents() {
     throw new Error(error.message || 'Unable to fetch events.')
   }
 
-  return (data || []).map(normalizeEvent).filter(Boolean)
+  return (data || [])
+    .filter(row => row.type !== 'live')
+    .map(normalizeEvent)
+    .filter(Boolean)
 }
 
 export async function createEvent({ eventName, eventYear }) {
@@ -177,6 +180,70 @@ export async function deleteGalleryItem(itemId, fileUrl) {
     } catch (e) {
       console.error('Storage file deletion error:', e)
     }
+  }
+}
+
+export async function fetchLiveEvents() {
+  const { data, error } = await supabase
+    .from('event')
+    .select(`
+      *,
+      gallary (*)
+    `)
+    .eq('type', 'live')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to fetch live events.')
+  }
+
+  return (data || []).map(row => {
+    const liveLinkItem = (row.gallary || []).find(g => g.type === 'live' || g.type === 'all')
+    return {
+      id: row.id,
+      eventName: row.event_name || 'Unnamed Live Class',
+      eventYear: row.event_year ? row.event_year.split('-')[0] : '',
+      type: row.type,
+      link: liveLinkItem ? liveLinkItem.link : '',
+      createdAt: row.created_at
+    }
+  })
+}
+
+export async function createLiveEvent({ name, link }) {
+  const { data: eventData, error: eventError } = await supabase
+    .from('event')
+    .insert({
+      event_name: normalizeText(name),
+      event_year: new Date().toISOString().split('T')[0],
+      type: 'live'
+    })
+    .select('*')
+    .single()
+
+  if (eventError) {
+    throw new Error(eventError.message || 'Unable to create live event.')
+  }
+
+  const { error: gallaryError } = await supabase
+    .from('gallary')
+    .insert({
+      event_id: eventData.id,
+      type: 'live',
+      link: normalizeText(link)
+    })
+
+  if (gallaryError) {
+    await supabase.from('event').delete().eq('id', eventData.id)
+    throw new Error(gallaryError.message || 'Unable to save live link.')
+  }
+
+  return {
+    id: eventData.id,
+    eventName: eventData.event_name,
+    type: 'live',
+    link: normalizeText(link),
+    createdAt: eventData.created_at
   }
 }
 

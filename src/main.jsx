@@ -25,6 +25,7 @@ import TeacherNotices from './pages/Teacher/TeacherNotices.jsx'
 import TeacherResults from './pages/Teacher/TeacherResults.jsx'
 import TeacherStudents from './pages/Teacher/TeacherStudents.jsx'
 import TeacherGallery from './pages/Teacher/TeacherGallery.jsx'
+import TeacherLive from './pages/Teacher/TeacherLive.jsx'
 import StudentAttendance from './pages/Student/StudentAttendance.jsx'
 import StudentClasses from './pages/Student/StudentClasses.jsx'
 import StudentDashboard from './pages/Student/StudentDashboard.jsx'
@@ -32,6 +33,7 @@ import StudentFees from './pages/Student/StudentFees.jsx'
 import StudentProfile from './pages/Student/StudentProfile.jsx'
 import StudentSetup from './pages/Student/StudentSetup.jsx'
 import StudentGallery from './pages/Student/StudentGallery.jsx'
+import StudentLive from './pages/Student/StudentLive.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
 registerServiceWorker()
@@ -54,6 +56,7 @@ const router = createBrowserRouter(
           <Route path="attendance" element={<StudentAttendance />} />
           <Route path="fees" element={<StudentFees />} />
           <Route path="gallery" element={<StudentGallery />} />
+          <Route path="live" element={<StudentLive />} />
         </Route>
       </Route>
 
@@ -73,6 +76,7 @@ const router = createBrowserRouter(
           <Route path="library" element={<TeacherLibrary />} />
           <Route path="notices" element={<TeacherNotices />} />
           <Route path="gallery" element={<TeacherGallery />} />
+          <Route path="live" element={<TeacherLive />} />
         </Route>
       </Route>
 
