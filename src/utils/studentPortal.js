@@ -100,11 +100,7 @@ export const normalizeStudentProfile = (row) => {
     id: row.id,
     name: normalizeText(row.name),
     className: normalizeText(row.class || row.className),
-    phone: normalizeText(row.phone),
     photo: row.photo || '',
-    subjects: normalizeSubjects(row.subjects),
-    role: 'student',
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -118,7 +114,6 @@ export const normalizePortalClass = (row) => {
     className: normalizeText(row.class_name || row.className),
     classType: normalizeText(row.class || row.classType || row.classLevel),
     startDate: normalizeDateValue(row.start_date || row.startDate),
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -133,7 +128,6 @@ export const normalizePortalAttendance = (row) => {
     studentId: row.student_id || row.studentId || '',
     attendanceDate: normalizeDateValue(row.attendance_date || row.attendanceDate),
     status: normalizeText(row.status).toLowerCase(),
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -149,8 +143,6 @@ export const normalizePortalFee = (row) => {
     year: Number(row.year || 0),
     status: normalizeText(row.status).toLowerCase(),
     pendingAmount: Number(row.pending_amount || row.pendingAmount || 0),
-    paymentDate: normalizeDateValue(row.payment_date || row.paymentDate),
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -161,11 +153,8 @@ export const normalizePortalNotice = (row) => {
 
   return {
     id: row.id,
-    title: normalizeText(row.title || row.notice_title || row.name || 'Notice'),
-    message: normalizeText(row.message || row.notice_message || row.description),
-    date:
-      normalizeDateValue(row.notice_date || row.published_at || row.created_at || row.date) ||
-      '',
+    title: normalizeText(row.title),
+    noticeLink: normalizeText(row.link),
   }
 }
 
@@ -245,7 +234,7 @@ export async function fetchStudentClasses() {
   const session = getStudentSession()
   const { data: joinedRows, error: joinError } = await supabase
     .from(BATCH_STUDENTS_TABLE)
-    .select('class_id, created_at')
+    .select('class_id')
     .eq('student_id', session.studentId)
 
   if (joinError) {
@@ -285,7 +274,7 @@ export async function fetchStudentClasses() {
 
       return {
         ...classItem,
-        joinedAt: normalizeDateValue(assignment.created_at),
+        joinedAt: classItem.startDate,
       }
     })
     .filter(Boolean)

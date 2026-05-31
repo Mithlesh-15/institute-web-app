@@ -69,8 +69,6 @@ export const normalizeFeeRecord = (row) => {
     year: Number(row.year || 0),
     status: normalizeText(row.status),
     pendingAmount: Number(row.pending_amount || 0),
-    paymentDate: row.payment_date || row.paymentDate || null,
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -240,7 +238,7 @@ export async function saveStudentCurrentMonthFee(studentId, { status, pendingAmo
 
 export async function saveStudentFeeRecord(
   studentId,
-  { status, pendingAmount, month, year, paymentDate = null },
+  { status, pendingAmount, month, year },
 ) {
   const teacherId = getTeacherId()
 
@@ -263,10 +261,6 @@ export async function saveStudentFeeRecord(
     year: normalizedYear,
     status: nextStatus,
     pending_amount: nextStatus === 'paid' ? 0 : normalizedPendingAmount,
-    payment_date:
-      nextStatus === 'paid'
-        ? paymentDate || getTodayDateValue()
-        : null,
   }
 
   const { data, error } = await supabase
@@ -290,6 +284,5 @@ export async function markStudentFeePaid(studentId, { month, year }) {
     pendingAmount: 0,
     month,
     year,
-    paymentDate: getTodayDateValue(),
   })
 }

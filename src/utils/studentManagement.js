@@ -19,13 +19,9 @@ export const normalizeStudent = (row) => {
   return {
     id: row.id,
     name: normalizeText(row.name),
-    phone: normalizeText(row.phone),
     className: normalizeText(row.class || row.className),
-    photo: row.photo || '',
-    subjects: normalizeSubjects(row.subjects),
     totalFees: Number(row.total_fees || row.totalFees || 0),
-    role: row.role || 'student',
-    createdAt: row.created_at || row.createdAt || null,
+    photo: row.photo || '',
   }
 }
 
@@ -33,7 +29,6 @@ export async function fetchStudents() {
   const { data, error } = await supabase
     .from(STUDENT_TABLE)
     .select('*')
-    .order('created_at', { ascending: false })
 
   if (error) {
     throw new Error(error.message || 'Unable to fetch students.')
@@ -76,10 +71,6 @@ export async function updateStudentById(studentId, updates = {}) {
 
   if (Object.prototype.hasOwnProperty.call(updates, 'className')) {
     payload.class = normalizeText(updates.className)
-  }
-
-  if (Object.prototype.hasOwnProperty.call(updates, 'subjects')) {
-    payload.subjects = normalizeSubjects(updates.subjects)
   }
 
   if (Object.prototype.hasOwnProperty.call(updates, 'totalFees')) {

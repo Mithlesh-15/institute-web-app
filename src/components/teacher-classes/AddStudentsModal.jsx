@@ -31,8 +31,7 @@ function AddStudentsModal({
       }
 
       return (
-        student.name.toLowerCase().includes(term) ||
-        student.phone.toLowerCase().includes(term)
+        student.name.toLowerCase().includes(term)
       )
     })
   }, [search, students])
@@ -82,7 +81,7 @@ function AddStudentsModal({
               Add Students
             </h2>
             <p className="mt-2 text-sm text-slate-500">
-              Search by name or phone number, then select students to assign to this class.
+              Search by name, then select students to assign to this class.
             </p>
           </div>
 
@@ -101,7 +100,7 @@ function AddStudentsModal({
             <SearchBar
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search students by name or phone..."
+              placeholder="Search students by name..."
             />
             <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700">
               {selectedCount} selected
@@ -139,7 +138,6 @@ function AddStudentsModal({
                             Class {student.className || 'N/A'}
                           </span>
                         </div>
-                        <p className="mt-1 text-sm text-slate-500">{student.phone || 'No phone available'}</p>
                       </div>
                       {checked ? (
                         <Check className="h-5 w-5 text-[#2563eb]" />

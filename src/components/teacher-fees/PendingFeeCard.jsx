@@ -40,9 +40,6 @@ function PendingFeeCard({ fee, onMarkPaid, onEdit, loading = false }) {
               {fee.month} {fee.year}
             </p>
           </div>
-          <p className="mt-1 text-sm text-slate-500">
-            Last updated/payment date: {formatDisplayDate(fee.paymentDate || fee.createdAt)}
-          </p>
         </div>
         <FeeStatusBadge status={fee.status} />
       </div>

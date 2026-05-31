@@ -1,4 +1,4 @@
-import { ArrowRight, Phone, Trash2, UserCircle2 } from 'lucide-react'
+import { ArrowRight, Trash2, UserCircle2 } from 'lucide-react'
 
 const getInitials = (name = 'Student') =>
   name
@@ -47,32 +47,11 @@ function StudentCard({ student, onRemove, onViewProfile, removing = false }) {
 
             <div className="mt-3 space-y-2 text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-[#2563eb]" />
-                <span>{student.phone || 'No phone available'}</span>
-              </div>
-              <div className="flex items-center gap-2">
                 <UserCircle2 className="h-4 w-4 text-[#2563eb]" />
                 <span>Class {student.className || 'N/A'}</span>
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {(student.subjects || []).length ? (
-            student.subjects.map((subject) => (
-              <span
-                key={subject}
-                className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700"
-              >
-                {subject}
-              </span>
-            ))
-          ) : (
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-500">
-              No subjects added
-            </span>
-          )}
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-2">

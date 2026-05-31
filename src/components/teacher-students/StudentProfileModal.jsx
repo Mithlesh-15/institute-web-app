@@ -25,7 +25,6 @@ function StudentProfileModal({
   const [activeTab, setActiveTab] = useState('details')
   const [name, setName] = useState('')
   const [className, setClassName] = useState('')
-  const [subjects, setSubjects] = useState('')
   const [totalFees, setTotalFees] = useState('0')
 
   useEffect(() => {
@@ -36,7 +35,6 @@ function StudentProfileModal({
     setActiveTab('details')
     setName(studentDetail.student.name || '')
     setClassName(studentDetail.student.className || '')
-    setSubjects((studentDetail.student.subjects || []).join(', '))
     setTotalFees(String(studentDetail.student.totalFees || 0))
   }, [open, studentDetail])
 
@@ -44,20 +42,10 @@ function StudentProfileModal({
   const attendance = studentDetail?.attendance || {}
   const student = studentDetail?.student || null
 
-  const parsedSubjects = useMemo(
-    () =>
-      subjects
-        .split(',')
-        .map((subject) => subject.trim())
-        .filter(Boolean),
-    [subjects],
-  )
-
   const handleSaveProfile = async () => {
     await onSaveProfile?.({
       name,
       className,
-      subjects: parsedSubjects,
     })
   }
 
@@ -127,9 +115,6 @@ function StudentProfileModal({
                     <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                       {student?.className || 'N/A'}
                     </span>
-                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                      {student?.phone || 'No phone'}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -137,16 +122,6 @@ function StudentProfileModal({
               <div className="mt-5 grid gap-4">
                 <Input label="Name" value={name} onChange={(event) => setName(event.target.value)} />
                 <Input label="Class" value={className} onChange={(event) => setClassName(event.target.value)} />
-                <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-slate-700">Subjects</span>
-                  <textarea
-                    value={subjects}
-                    onChange={(event) => setSubjects(event.target.value)}
-                    rows={3}
-                    className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
-                    placeholder="Math, Physics, Chemistry"
-                  />
-                </label>
               </div>
 
               <div className="mt-5 flex justify-end">
@@ -166,19 +141,9 @@ function StudentProfileModal({
               <div className="grid gap-4 sm:grid-cols-2">
                 {[
                   {
-                    label: 'Phone',
-                    value: student?.phone || 'N/A',
-                    icon: Phone,
-                  },
-                  {
                     label: 'Class',
                     value: student?.className || 'N/A',
                     icon: School2,
-                  },
-                  {
-                    label: 'Subjects',
-                    value: student?.subjects?.length ? `${student.subjects.length} subjects` : 'No subjects',
-                    icon: GraduationCap,
                   },
                   {
                     label: 'Classes',
@@ -198,21 +163,6 @@ function StudentProfileModal({
                     </div>
                   )
                 })}
-              </div>
-
-              <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4">
-                <p className="text-sm font-semibold text-slate-700">Subjects</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {student?.subjects?.length ? (
-                    student.subjects.map((subject) => (
-                      <span key={subject} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
-                        {subject}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-slate-500">No subjects assigned.</span>
-                  )}
-                </div>
               </div>
             </div>
           </div>

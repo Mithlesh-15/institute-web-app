@@ -50,8 +50,7 @@ function TeacherStudents() {
       const matchesSearch =
         !term ||
         student.name.toLowerCase().includes(term) ||
-        student.phone.toLowerCase().includes(term) ||
-        (student.subjects || []).some((subject) => subject.toLowerCase().includes(term))
+        student.className.toLowerCase().includes(term)
 
       return matchesClass && matchesSearch
     })
@@ -135,7 +134,7 @@ function TeacherStudents() {
     )
   }
 
-  const handleSaveProfile = async ({ name, className, subjects }) => {
+  const handleSaveProfile = async ({ name, className }) => {
     if (!selectedStudentId) {
       return
     }
@@ -143,7 +142,7 @@ function TeacherStudents() {
     try {
       setSavingProfile(true)
       setError('')
-      await updateStudentProfile(selectedStudentId, { name, className, subjects })
+      await updateStudentProfile(selectedStudentId, { name, className })
       await refreshStudentDetail()
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save student details.')
@@ -200,7 +199,7 @@ function TeacherStudents() {
       <SectionCard>
         <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
           <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700">
-            Search by name, phone, class, or subject.
+            Search by name or class.
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">

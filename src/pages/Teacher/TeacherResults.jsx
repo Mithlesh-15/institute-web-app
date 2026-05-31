@@ -93,9 +93,8 @@ function AddTestModal({ open, classes, loading, onClose, onSave }) {
   )
 }
 
-function StudentResultRow({ student, totalMarks, onChange }) {
-  const result = student.result || {}
-  const marksDisabled = Boolean(result.absent)
+function StudentResultRow({ student, resultState, totalMarks, onChange }) {
+  const marksDisabled = Boolean(resultState.absent)
 
   return (
     <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft">
@@ -106,10 +105,10 @@ function StudentResultRow({ student, totalMarks, onChange }) {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
+          <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 cursor-pointer">
             <input
               type="checkbox"
-              checked={Boolean(result.absent)}
+              checked={Boolean(resultState.absent)}
               onChange={(event) => onChange(student.id, { absent: event.target.checked })}
               className="h-4 w-4 rounded border-slate-300 text-[#2563eb] focus:ring-[#2563eb]"
             />
@@ -125,7 +124,7 @@ function StudentResultRow({ student, totalMarks, onChange }) {
               min="0"
               max={totalMarks || undefined}
               disabled={marksDisabled}
-              value={marksDisabled ? '' : result.marks ?? ''}
+              value={marksDisabled ? '' : resultState.marks ?? ''}
               onChange={(event) => onChange(student.id, { marks: event.target.value, absent: false })}
               className="w-40 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
               placeholder="Enter marks"
@@ -277,6 +276,25 @@ function TeacherResults() {
     }
   }
 
+  const groupedTests = useMemo(() => {
+    return tests.reduce((accumulator, test) => {
+      const key = test.classId || 'Unassigned'
+      const classLabel =
+        classes.find((classItem) => classItem.id === test.classId)?.className ||
+        test.className ||
+        'Unassigned'
+
+      if (!accumulator[key]) {
+        accumulator[key] = {
+          classLabel,
+          items: [],
+        }
+      }
+      accumulator[key].items.push(test)
+      return accumulator
+    }, {})
+  }, [classes, tests])
+
   const summary = useMemo(() => {
     const presentStudents = students.filter((student) => !studentRows[student.id]?.absent)
     const absentStudents = students.filter((student) => studentRows[student.id]?.absent)
@@ -301,111 +319,50 @@ function TeacherResults() {
     currentTest?.className ||
     'Class'
 
-  return (
-    <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <ClipboardList className="h-3.5 w-3.5 text-[#2563eb]" />
-                Raj Tuition Classes
+  if (testId) {
+    return (
+      <div className="space-y-6">
+        <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+          <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl">
+                <button
+                  type="button"
+                  onClick={() => navigate('/teacher/results')}
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#2563eb]/20 hover:text-[#2563eb]"
+                >
+                  &larr; Back to Tests
+                </button>
+                <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+                  {currentTest?.testName || 'Test Details'}
+                </h1>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                  Grade this test by entering marks or marking absentees.
+                </p>
               </div>
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                Results
-              </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                Create tests, then capture marks and absentees in a clean result sheet.
-              </p>
             </div>
-
           </div>
-        </div>
-      </section>
+        </section>
 
-      {loading ? (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {[...Array(4)].map((_, index) => (
-            <div
-              key={index}
-              className="h-40 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft"
-            />
-          ))}
-        </div>
-      ) : error && !currentTest ? (
-        <SectionCard>
-          <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700">
-            {error}
+        {detailLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[...Array(4)].map((_, index) => (
+              <div
+                key={index}
+                className="h-24 animate-pulse rounded-[1.5rem] border border-slate-200 bg-slate-100"
+              />
+            ))}
           </div>
-        </SectionCard>
-      ) : (
-        <SectionCard title="All tests" subtitle="Recent assessments">
-          {tests.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {tests.map((test) => {
-                const classLabel =
-                  classes.find((classItem) => classItem.id === test.classId)?.className ||
-                  test.className ||
-                  'Class'
-
-                return (
-                  <button
-                    type="button"
-                    key={test.id}
-                    onClick={() => navigate(`/teacher/results/${test.id}`)}
-                    className="rounded-[1.75rem] border border-slate-200 bg-white p-5 text-left shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
-                          {classLabel}
-                        </p>
-                        <h3 className="mt-2 text-lg font-semibold text-slate-900">{test.testName || 'Untitled Test'}</h3>
-                      </div>
-                      <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                        {test.totalMarks || 0} marks
-                      </span>
-                    </div>
-
-                    <div className="mt-4 flex flex-wrap gap-2 text-sm text-slate-500">
-                      <span>{test.subject || 'No subject'}</span>
-                      <span>•</span>
-                      <span>{test.testDate || 'No date'}</span>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-              No tests added yet.
-            </div>
-          )}
-        </SectionCard>
-      )}
-
-      {testId ? (
-        <SectionCard
-          title={currentTest?.testName || 'Test Details'}
-          subtitle="Result sheet"
-          action={
-            currentTest ? (
+        ) : currentTest ? (
+          <SectionCard
+            title={currentTest?.testName || 'Test Details'}
+            subtitle="Result sheet"
+            action={
               <div className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 {currentClassName}
               </div>
-            ) : null
-          }
-        >
-          {detailLoading ? (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {[...Array(4)].map((_, index) => (
-                <div
-                  key={index}
-                  className="h-24 animate-pulse rounded-[1.5rem] border border-slate-200 bg-slate-100"
-                />
-              ))}
-            </div>
-          ) : currentTest ? (
+            }
+          >
             <div className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 {[
@@ -432,11 +389,11 @@ function TeacherResults() {
                     <p className="mt-2 text-sm font-semibold text-slate-900">{currentClassName}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Subject</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">Subject</p>
                     <p className="mt-2 text-sm font-semibold text-slate-900">{currentTest.subject || 'N/A'}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Total Marks</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">Total Marks</p>
                     <p className="mt-2 text-sm font-semibold text-slate-900">{currentTest.totalMarks || 0}</p>
                   </div>
                 </div>
@@ -448,6 +405,7 @@ function TeacherResults() {
                     <StudentResultRow
                       key={student.id}
                       student={student}
+                      resultState={studentRows[student.id] || { marks: '', absent: false }}
                       totalMarks={currentTest.totalMarks}
                       onChange={handleStudentChange}
                     />
@@ -484,13 +442,94 @@ function TeacherResults() {
                 </Button>
               </div>
             </div>
-          ) : (
-            <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-              Select a test to view and edit results.
+          </SectionCard>
+        ) : (
+          <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+            Select a test to view and edit results.
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+        <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
+                <ClipboardList className="h-3.5 w-3.5 text-[#2563eb]" />
+                Raj Tuition Classes
+              </div>
+              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+                Results
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                Create tests, then capture marks and absentees in a clean result sheet.
+              </p>
             </div>
-          )}
+          </div>
+        </div>
+      </section>
+
+      {loading ? (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {[...Array(4)].map((_, index) => (
+            <div
+              key={index}
+              className="h-40 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft"
+            />
+          ))}
+        </div>
+      ) : error ? (
+        <SectionCard>
+          <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700">
+            {error}
+          </div>
         </SectionCard>
-      ) : null}
+      ) : Object.keys(groupedTests).length ? (
+        <div className="space-y-5">
+          {Object.entries(groupedTests).map(([groupKey, group]) => (
+            <SectionCard
+              key={groupKey}
+              title={group.classLabel}
+              subtitle="Recent assessments"
+              className="bg-white"
+            >
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {group.items.map((test) => (
+                  <button
+                    type="button"
+                    key={test.id}
+                    onClick={() => navigate(`/teacher/results/${test.id}`)}
+                    className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-blue-300"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 className="text-lg font-semibold text-slate-900">{test.testName || 'Untitled Test'}</h3>
+                      </div>
+                      <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 shrink-0">
+                        {test.totalMarks || 0} marks
+                      </span>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2 text-sm text-slate-500">
+                      <span>{test.subject || 'No subject'}</span>
+                      <span>•</span>
+                      <span>{test.testDate || 'No date'}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </SectionCard>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+          No tests added yet.
+        </div>
+      )}
 
       <AddTestModal
         open={modalOpen}

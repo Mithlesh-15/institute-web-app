@@ -66,7 +66,6 @@ const normalizeAttendance = (row) => {
     studentId: row.student_id || row.studentId || '',
     attendanceDate: normalizeDateValue(row.attendance_date || row.attendanceDate),
     status: normalizeText(row.status).toLowerCase(),
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -84,7 +83,6 @@ const normalizeTest = (row) => {
     testName: normalizeText(row.test_name || row.testName),
     testDate: normalizeDateValue(row.test_date || row.testDate),
     totalMarks: Number(row.total_marks || row.totalMarks || 0),
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -101,8 +99,7 @@ const normalizeTestResult = (row) => {
       row.marks === null || row.marks === undefined || row.marks === ''
         ? null
         : Number(row.marks),
-    absent: Boolean(row.absent ?? row.is_absent ?? false),
-    createdAt: row.created_at || row.createdAt || null,
+    absent: Boolean(row.is_absent ?? row.absent ?? false),
   }
 }
 
@@ -115,10 +112,8 @@ const normalizeMaterial = (row) => {
     id: row.id,
     teacherId: row.teacher_id || row.teacherId || '',
     classId: row.class_id || row.classId || '',
-    className: normalizeText(row.class_name || row.className),
     materialName: normalizeText(row.material_name || row.materialName),
     materialLink: normalizeText(row.material_link || row.materialLink),
-    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -130,9 +125,8 @@ const normalizeNotice = (row) => {
   return {
     id: row.id,
     teacherId: row.teacher_id || row.teacherId || '',
-    title: normalizeText(row.title || row.notice_title || 'Notice'),
-    noticeLink: normalizeText(row.notice_link || row.noticeLink || row.link || ''),
-    createdAt: row.created_at || row.createdAt || null,
+    title: normalizeText(row.title),
+    noticeLink: normalizeText(row.link),
   }
 }
 
@@ -161,7 +155,7 @@ export async function fetchStudentDetail(studentId) {
 
   const { data: assignmentRows, error: assignmentError } = await supabase
     .from(BATCH_STUDENTS_TABLE)
-    .select('class_id, created_at')
+    .select('class_id')
     .eq('student_id', studentId)
 
   if (assignmentError) {
@@ -379,8 +373,6 @@ export async function fetchTestDetails(testId) {
 }
 
 export async function saveTestResults(testId, rows = []) {
-  const teacherId = requireTeacherId()
-
   const uniqueRows = rows
     .map((row) => ({
       test_id: testId,
@@ -389,8 +381,7 @@ export async function saveTestResults(testId, rows = []) {
         row.absent || row.marks === '' || row.marks === null || row.marks === undefined
           ? null
           : Number(row.marks),
-      absent: Boolean(row.absent),
-      teacher_id: teacherId,
+      is_absent: Boolean(row.absent),
     }))
     .filter((row) => row.student_id)
 
@@ -424,12 +415,11 @@ export async function fetchTeacherMaterials() {
   return (data || []).map(normalizeMaterial).filter(Boolean)
 }
 
-export async function createTeacherMaterial({ materialName, classId, className, materialLink }) {
+export async function createTeacherMaterial({ materialName, classId, materialLink }) {
   const teacherId = requireTeacherId()
   const payload = {
     teacher_id: teacherId,
     class_id: classId,
-    class_name: normalizeText(className),
     material_name: normalizeText(materialName),
     material_link: normalizeText(materialLink),
   }
@@ -480,7 +470,7 @@ export async function createTeacherNotice({ title, noticeLink }) {
   const payload = {
     teacher_id: teacherId,
     title: normalizeText(title),
-    notice_link: normalizeText(noticeLink),
+    link: normalizeText(noticeLink),
   }
 
   const { data, error } = await supabase
@@ -500,7 +490,7 @@ export async function updateTeacherNotice(noticeId, { title, noticeLink }) {
   const teacherId = requireTeacherId()
   const payload = {
     title: normalizeText(title),
-    notice_link: normalizeText(noticeLink),
+    link: normalizeText(noticeLink),
   }
 
   const { data, error } = await supabase

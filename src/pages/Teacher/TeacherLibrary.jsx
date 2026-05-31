@@ -10,10 +10,12 @@ import {
   fetchTeacherClassesForDropdown,
   fetchTeacherMaterials,
 } from '../../utils/teacherPortal'
+import { createClassRecord } from '../../utils/classesManagement'
+import FilterTabs from '../../components/teacher-classes/FilterTabs'
 
-function AddMaterialModal({ open, classes, loading, onClose, onSave }) {
+function AddMaterialModal({ open, loading, onClose, onSave }) {
   const [materialName, setMaterialName] = useState('')
-  const [classId, setClassId] = useState('')
+  const [selectedLevel, setSelectedLevel] = useState('6th')
   const [materialLink, setMaterialLink] = useState('')
 
   useEffect(() => {
@@ -22,20 +24,27 @@ function AddMaterialModal({ open, classes, loading, onClose, onSave }) {
     }
 
     setMaterialName('')
-    setClassId(classes[0]?.id || '')
+    setSelectedLevel('6th')
     setMaterialLink('')
-  }, [open, classes])
-
-  const selectedClass = classes.find((item) => item.id === classId)
+  }, [open])
 
   const handleSave = async () => {
+    if (!materialName.trim()) {
+      alert('Please enter a material name.')
+      return
+    }
+    if (!materialLink.trim()) {
+      alert('Please enter a material link.')
+      return
+    }
     await onSave({
       materialName,
-      classId,
-      className: selectedClass?.className || '',
+      selectedLevel,
       materialLink,
     })
   }
+
+  const levels = ['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']
 
   return (
     <Modal
@@ -50,18 +59,18 @@ function AddMaterialModal({ open, classes, loading, onClose, onSave }) {
           label="Material Name"
           value={materialName}
           onChange={(event) => setMaterialName(event.target.value)}
+          placeholder="Enter material name"
         />
         <label className="block">
           <span className="mb-2 block text-sm font-medium text-slate-700">Class</span>
           <select
-            value={classId}
-            onChange={(event) => setClassId(event.target.value)}
+            value={selectedLevel}
+            onChange={(event) => setSelectedLevel(event.target.value)}
             className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
           >
-            <option value="">Select class</option>
-            {classes.map((classItem) => (
-              <option key={classItem.id} value={classItem.id}>
-                {classItem.className || classItem.classLevel || 'Class'}
+            {levels.map((level) => (
+              <option key={level} value={level}>
+                {level}
               </option>
             ))}
           </select>
@@ -94,6 +103,7 @@ function TeacherLibrary() {
   const [error, setError] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [deletingId, setDeletingId] = useState('')
+  const [classFilter, setClassFilter] = useState('All')
 
   const loadData = async () => {
     try {
@@ -117,29 +127,72 @@ function TeacherLibrary() {
   }, [])
 
   const groupedMaterials = useMemo(() => {
-    return materials.reduce((accumulator, material) => {
-      const key = material.classId || material.className || 'Unassigned'
+    const groups = {}
+    const levelOrder = ['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']
 
-      if (!accumulator[key]) {
-        accumulator[key] = {
-          classLabel:
-            classes.find((classItem) => classItem.id === material.classId)?.className ||
-            material.className ||
-            'Unassigned',
+    materials.forEach((material) => {
+      const matchedClass = classes.find((c) => c.id === material.classId)
+      const level = matchedClass?.classLevel || 'Unassigned'
+
+      if (!groups[level]) {
+        groups[level] = {
+          classLabel: level === 'Unassigned' ? 'Unassigned' : `Class ${level}`,
           items: [],
         }
       }
+      groups[level].items.push(material)
+    })
 
-      accumulator[key].items.push(material)
-      return accumulator
-    }, {})
+    const sortedGroups = {}
+    levelOrder.forEach((level) => {
+      if (groups[level]) {
+        sortedGroups[level] = groups[level]
+      }
+    })
+
+    if (groups['Unassigned']) {
+      sortedGroups['Unassigned'] = groups['Unassigned']
+    }
+
+    Object.keys(groups).forEach((key) => {
+      if (!sortedGroups[key]) {
+        sortedGroups[key] = groups[key]
+      }
+    })
+
+    return sortedGroups
   }, [classes, materials])
 
-  const handleAddMaterial = async ({ materialName, classId, className, materialLink }) => {
+  const filteredGroupedMaterials = useMemo(() => {
+    if (classFilter === 'All') {
+      return groupedMaterials
+    }
+    const filtered = {}
+    if (groupedMaterials[classFilter]) {
+      filtered[classFilter] = groupedMaterials[classFilter]
+    }
+    return filtered
+  }, [groupedMaterials, classFilter])
+
+  const handleAddMaterial = async ({ materialName, selectedLevel, materialLink }) => {
     try {
       setSaving(true)
       setError('')
-      await createTeacherMaterial({ materialName, classId, className, materialLink })
+
+      let targetClass = classes.find((c) => c.classLevel === selectedLevel)
+      if (!targetClass) {
+        targetClass = await createClassRecord({
+          className: `Class ${selectedLevel}`,
+          classLevel: selectedLevel,
+          startDate: new Date().toISOString().split('T')[0],
+        })
+      }
+
+      await createTeacherMaterial({
+        materialName,
+        classId: targetClass.id,
+        materialLink,
+      })
       setModalOpen(false)
       await loadData()
     } catch (saveError) {
@@ -190,6 +243,14 @@ function TeacherLibrary() {
         </div>
       </section>
 
+      <SectionCard title="Filter library" subtitle="Class-wise view">
+        <FilterTabs
+          value={classFilter}
+          options={['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']}
+          onChange={setClassFilter}
+        />
+      </SectionCard>
+
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[...Array(3)].map((_, index) => (
@@ -205,9 +266,9 @@ function TeacherLibrary() {
             {error}
           </div>
         </SectionCard>
-      ) : Object.keys(groupedMaterials).length ? (
+      ) : Object.keys(filteredGroupedMaterials).length ? (
         <div className="space-y-5">
-          {Object.entries(groupedMaterials).map(([groupKey, group]) => (
+          {Object.entries(filteredGroupedMaterials).map(([groupKey, group]) => (
             <SectionCard
               key={groupKey}
               title={group.classLabel}
@@ -218,33 +279,44 @@ function TeacherLibrary() {
                 {group.items.map((material) => (
                   <div
                     key={material.id}
-                    className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm"
+                    onClick={() => {
+                      if (material.materialLink) {
+                        window.open(material.materialLink, '_blank', 'noopener,noreferrer')
+                      }
+                    }}
+                    className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm cursor-pointer hover:border-blue-300 hover:shadow-md transition-all duration-300"
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-base font-semibold text-slate-900">{material.materialName}</p>
-                        <p className="mt-2 break-all text-sm text-slate-500">{material.materialLink}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-base font-semibold text-slate-900 truncate">{material.materialName}</p>
+                        <p className="mt-2 break-all text-xs text-slate-400 truncate">{material.materialLink}</p>
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleDelete(material)}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          handleDelete(material)
+                        }}
                         disabled={deletingId === material.id}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-red-200 bg-white text-red-600 transition hover:bg-red-50"
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-red-200 bg-white text-red-600 transition hover:bg-red-50 shrink-0"
                         aria-label="Delete material"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
 
-                    <a
-                      href={material.materialLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-[#2563eb] shadow-sm transition hover:bg-blue-50"
-                    >
-                      Open Link
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                    <div className="mt-4 flex justify-end">
+                      <a
+                        href={material.materialLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(event) => event.stopPropagation()}
+                        className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-[#2563eb] shadow-sm transition hover:bg-blue-50"
+                      >
+                        Open Link
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -253,7 +325,9 @@ function TeacherLibrary() {
         </div>
       ) : (
         <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-white px-4 py-8 text-center text-sm text-slate-500 shadow-soft">
-          No study materials added yet.
+          {classFilter === 'All'
+            ? 'No study materials added yet.'
+            : `No study materials added for Class ${classFilter} yet.`}
         </div>
       )}
 
@@ -266,7 +340,6 @@ function TeacherLibrary() {
 
       <AddMaterialModal
         open={modalOpen}
-        classes={classes}
         loading={saving}
         onClose={() => setModalOpen(false)}
         onSave={handleAddMaterial}
