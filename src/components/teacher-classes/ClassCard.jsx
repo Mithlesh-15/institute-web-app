@@ -1,4 +1,4 @@
-import { CalendarDays, PencilLine, Trash2 } from 'lucide-react'
+import { CalendarDays, PencilLine, Trash2, Clock } from 'lucide-react'
 
 const formatDate = (value) => {
   if (!value) {
@@ -16,6 +16,28 @@ const formatDate = (value) => {
     month: 'short',
     year: 'numeric',
   }).format(date)
+}
+
+const formatTime = (value) => {
+  if (!value) {
+    return 'N/A'
+  }
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  try {
+    return new Intl.DateTimeFormat('en-IN', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(date)
+  } catch (e) {
+    return value
+  }
 }
 
 function ClassCard({ classItem, onEdit, onDelete, onOpen, deleting = false }) {
@@ -76,6 +98,10 @@ function ClassCard({ classItem, onEdit, onDelete, onOpen, deleting = false }) {
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4 text-[#2563eb]" />
                 <span>Starts {formatDate(classItem.startDate)}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-[#2563eb]" />
+                <span>Time: {formatTime(classItem.classTime)}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4 text-[#2563eb]" />

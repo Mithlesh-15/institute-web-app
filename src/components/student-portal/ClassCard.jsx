@@ -14,7 +14,7 @@ function ClassCard({ classItem, onClick }) {
           <div className="mt-4 space-y-2 text-sm text-slate-500">
             <div className="flex items-center gap-2">
               <Layers3 className="h-4 w-4 text-[#2563eb]" />
-              <span>{classItem.classType || 'N/A'}</span>
+              <span>Class: {classItem.classType || 'N/A'}</span>
             </div>
             <div className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4 text-[#2563eb]" />

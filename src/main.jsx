@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import {
   Navigate,
@@ -32,8 +33,6 @@ import StudentDashboard from './pages/Student/StudentDashboard.jsx'
 import StudentFees from './pages/Student/StudentFees.jsx'
 import StudentProfile from './pages/Student/StudentProfile.jsx'
 import StudentSetup from './pages/Student/StudentSetup.jsx'
-import StudentGallery from './pages/Student/StudentGallery.jsx'
-import StudentLive from './pages/Student/StudentLive.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
 // Global listener to capture PWA install prompt before React loads
@@ -63,6 +62,10 @@ const router = createBrowserRouter(
           <Route path="profile" element={<StudentProfile />} />
           <Route path="classes" element={<StudentClasses />} />
           <Route path="attendance" element={<StudentAttendance />} />
+          <Route path="results" element={<StudentResults />} />
+          <Route path="library" element={<StudentLibrary />} />
+          <Route path="notices" element={<StudentNotices />} />
+          <Route path="gallery" element={<StudentGallery />} />
           <Route path="fees" element={<StudentFees />} />
           <Route path="gallery" element={<StudentGallery />} />
           <Route path="live" element={<StudentLive />} />
@@ -94,8 +97,12 @@ const router = createBrowserRouter(
   ),
 )
 
+const queryClient = new QueryClient()
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>,
 )

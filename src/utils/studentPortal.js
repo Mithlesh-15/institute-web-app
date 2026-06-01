@@ -109,6 +109,35 @@ export const normalizeStudentProfile = (row) => {
     name: normalizeText(row.name),
     className: normalizeText(row.class || row.className),
     photo: row.photo || '',
+    phone: normalizeText(row.phone),
+    fatherName: normalizeText(row.father_name),
+    schoolName: normalizeText(row.school_name),
+    address: normalizeText(row.address),
+    board: normalizeText(row.board),
+    medium: normalizeText(row.medium),
+  }
+}
+
+export const formatPortalTime = (value) => {
+  if (!value) {
+    return 'N/A'
+  }
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  // Check if it has a valid date representation. If it is just a time string, return it.
+  try {
+    return new Intl.DateTimeFormat('en-IN', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(date)
+  } catch (e) {
+    return value
   }
 }
 
@@ -122,6 +151,7 @@ export const normalizePortalClass = (row) => {
     className: normalizeText(row.class_name || row.className),
     classType: normalizeText(row.class || row.classType || row.classLevel),
     startDate: normalizeDateValue(row.start_date || row.startDate),
+    classTime: row.Time || row.classTime || '',
   }
 }
 
@@ -207,11 +237,24 @@ export async function fetchStudentProfile() {
   return profile
 }
 
-export async function updateStudentProfile({ name, className }) {
+export async function updateStudentProfile({
+  name,
+  className,
+  fatherName,
+  schoolName,
+  address,
+  board,
+  medium,
+}) {
   const session = getStudentSession()
   const payload = {
-    name: normalizeText(name),
+    name: normalizeText(name).toUpperCase(),
     class: normalizeText(className),
+    father_name: normalizeText(fatherName).toUpperCase(),
+    school_name: normalizeText(schoolName),
+    address: normalizeText(address),
+    board: normalizeText(board),
+    medium: normalizeText(medium),
   }
 
   if (!payload.name) {
@@ -483,4 +526,161 @@ export async function fetchStudentDashboardData() {
       totalJoinedClasses: classes.length,
     },
   }
+}
+
+export async function fetchStudentTests() {
+  const session = getStudentSession()
+  const classes = await fetchStudentClasses()
+  if (!classes.length) {
+    return []
+  }
+
+  const classIds = classes.map((c) => c.id)
+
+  const { data: tests, error: testsError } = await supabase
+    .from('tests')
+    .select('*')
+    .in('class_id', classIds)
+    .order('test_date', { ascending: false })
+
+  if (testsError) {
+    throw new Error(testsError.message || 'Unable to load tests.')
+  }
+
+  return tests || []
+}
+
+export async function fetchTestLeaderboard(testId, classId) {
+  const { data: assignments, error: assignmentsError } = await supabase
+    .from(BATCH_STUDENTS_TABLE)
+    .select('student_id')
+    .eq('class_id', classId)
+
+  if (assignmentsError) {
+    throw new Error(assignmentsError.message || 'Unable to load students for this class.')
+  }
+
+  const studentIds = (assignments || []).map((row) => row.student_id).filter(Boolean)
+
+  if (!studentIds.length) {
+    return []
+  }
+
+  const { data: studentRows, error: studentError } = await supabase
+    .from('students')
+    .select('id, name, photo')
+    .in('id', studentIds)
+
+  if (studentError) {
+    throw new Error(studentError.message || 'Unable to load student profiles.')
+  }
+
+  const { data: resultRows, error: resultError } = await supabase
+    .from('test_results')
+    .select('*')
+    .eq('test_id', testId)
+
+  if (resultError) {
+    throw new Error(resultError.message || 'Unable to load test results.')
+  }
+
+  const resultsMap = new Map(
+    (resultRows || []).map((row) => [row.student_id, row])
+  )
+
+  const leaderboard = studentRows.map((student) => {
+    const res = resultsMap.get(student.id)
+    return {
+      studentId: student.id,
+      name: student.name,
+      photo: student.photo || '',
+      marks: res ? Number(res.marks || 0) : 0,
+      isAbsent: res ? Boolean(res.is_absent) : true,
+    }
+  })
+
+  const presentStudents = leaderboard.filter(s => !s.isAbsent).sort((a, b) => b.marks - a.marks)
+  const absentStudents = leaderboard.filter(s => s.isAbsent)
+
+  const rankedPresent = presentStudents.map((student, index) => {
+    return {
+      ...student,
+      position: index + 1
+    }
+  })
+
+  return [...rankedPresent, ...absentStudents.map(s => ({ ...s, position: null }))]
+}
+
+export async function fetchStudentMaterials() {
+  const session = getStudentSession()
+  const { data, error } = await supabase
+    .from('materials')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load study materials.')
+  }
+
+  return (data || []).map((row) => ({
+    id: row.id,
+    classId: row.class_id || '',
+    materialName: row.material_name || '',
+    materialLink: row.material_link || '',
+    createdAt: row.created_at || null,
+  }))
+}
+
+export async function fetchAllStudentNotices() {
+  const { data, error } = await supabase
+    .from(NOTICES_TABLE)
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load notices.')
+  }
+
+  return (data || []).map(normalizePortalNotice).filter(Boolean)
+}
+
+export async function fetchStudentEvents() {
+  const { data, error } = await supabase
+    .from('event')
+    .select('*')
+    .order('event_year', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load events.')
+  }
+
+  return (data || [])
+    .filter((row) => !row.type || String(row.type).trim() === '')
+    .map((row) => ({
+      id: row.id,
+      eventName: row.event_name || '',
+      eventYear: row.event_year || '',
+      createdAt: row.created_at || null,
+    }))
+}
+
+export async function fetchEventPhotos(eventId) {
+  const { data, error } = await supabase
+    .from('gallary')
+    .select('*')
+    .eq('event_id', eventId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load event photos.')
+  }
+
+  return (data || []).map((row) => ({
+    id: row.id,
+    eventId: row.event_id || '',
+    type: row.type || '',
+    link: row.link || '',
+    createdAt: row.created_at || null,
+  }))
 }

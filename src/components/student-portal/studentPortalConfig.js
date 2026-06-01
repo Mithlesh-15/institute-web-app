@@ -5,8 +5,6 @@ import {
   LayoutDashboard,
   LogOut,
   UserRound,
-  Image,
-  Video,
 } from 'lucide-react'
 
 export const studentSidebarItems = [
@@ -34,16 +32,6 @@ export const studentSidebarItems = [
     label: 'Fees',
     to: '/student/fees',
     icon: CreditCard,
-  },
-  {
-    label: 'Gallery',
-    to: '/student/gallery',
-    icon: Image,
-  },
-  {
-    label: 'Live',
-    to: '/student/live',
-    icon: Video,
   },
   {
     label: 'Logout',

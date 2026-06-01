@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, CalendarCheck2, CreditCard, GraduationCap, Megaphone } from 'lucide-react'
+import { ArrowRight, CalendarCheck2, CreditCard, GraduationCap, Megaphone, Video, User } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import NoticeCard from '../../components/student-portal/NoticeCard'
 import StudentStatCard from '../../components/student-portal/StudentStatCard'
@@ -21,6 +21,13 @@ const quickActions = [
     title: 'Fees Summary',
     to: '/student/fees',
     icon: CreditCard,
+    description: 'Review fee payments & status',
+  },
+  {
+    title: 'My Profile',
+    to: '/student/profile',
+    icon: User,
+    description: 'Update profile and details',
   },
 ]
 

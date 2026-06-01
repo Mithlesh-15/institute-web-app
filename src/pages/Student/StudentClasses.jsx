@@ -1,48 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { GraduationCap, X } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import ClassCard from '../../components/student-portal/ClassCard'
 import StudentStatCard from '../../components/student-portal/StudentStatCard'
-import { fetchStudentClasses, formatPortalDate } from '../../utils/studentPortal'
+import { fetchStudentClasses, formatPortalDate, formatPortalTime } from '../../utils/studentPortal'
 
 function StudentClasses() {
-  const [classes, setClasses] = useState([])
   const [selectedClass, setSelectedClass] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
 
-  useEffect(() => {
-    let mounted = true
+  const { data: classes = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['studentClasses'],
+    queryFn: fetchStudentClasses,
+    staleTime: 1 * 60 * 60 * 1000, // 2 hours
+    gcTime: 1 * 60 * 60 * 1000,    // 2 hours
+  })
 
-    const loadClasses = async () => {
-      try {
-        setLoading(true)
-        setError('')
-        const data = await fetchStudentClasses()
-
-        if (mounted) {
-          setClasses(data)
-        }
-      } catch (loadError) {
-        if (mounted) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : 'Unable to load classes right now.',
-          )
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    loadClasses()
-
-    return () => {
-      mounted = false
-    }
-  }, [])
+  const error = queryError ? (queryError.message || 'Unable to load classes right now.') : ''
 
   return (
     <div className="space-y-6">
@@ -91,7 +64,7 @@ function StudentClasses() {
       )}
 
       {selectedClass ? (
-        <div className="fixed inset-0 z-40 flex items-end justify-center bg-slate-950/40 p-4 sm:items-center">
+        <div className="fixed inset-0 z-40 flex items-end justify-center bg-slate-950/40 p-4 sm:items-center animate-fade-in">
           <div className="w-full max-w-md rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -105,7 +78,7 @@ function StudentClasses() {
               <button
                 type="button"
                 onClick={() => setSelectedClass(null)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-600"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -113,14 +86,29 @@ function StudentClasses() {
 
             <div className="mt-6 grid gap-4">
               <div className="rounded-2xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">Class Name</p>
-                <p className="mt-2 text-base font-semibold text-slate-900">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Class Name</p>
+                <p className="mt-1.5 text-base font-semibold text-slate-900">
                   {selectedClass.className}
                 </p>
               </div>
+              
               <div className="rounded-2xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">Start Date</p>
-                <p className="mt-2 text-base font-semibold text-slate-900">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Class (Batch/Standard)</p>
+                <p className="mt-1.5 text-base font-semibold text-slate-900">
+                  {selectedClass.classType || 'N/A'}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Class Time</p>
+                <p className="mt-1.5 text-base font-semibold text-slate-900">
+                  {formatPortalTime(selectedClass.classTime)}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Start Date</p>
+                <p className="mt-1.5 text-base font-semibold text-slate-900">
                   {formatPortalDate(selectedClass.startDate)}
                 </p>
               </div>
