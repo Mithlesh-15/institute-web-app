@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Menu, LogOut } from 'lucide-react'
+import { Menu, LogOut, ArrowDownToLine } from 'lucide-react'
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { getSession, logout } from '../../utils/auth'
 import { studentSidebarItems } from './studentPortalConfig'
@@ -10,6 +10,36 @@ function StudentPortalShell() {
   const location = useLocation()
   const session = getSession()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [showInstallBtn, setShowInstallBtn] = useState(false)
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+      setShowInstallBtn(true)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowInstallBtn(false)
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    }
+  }, [])
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null)
+      setShowInstallBtn(false)
+    }
+  }
 
   const currentLabel = useMemo(() => {
     const activeItem = studentSidebarItems.find((item) => {
@@ -86,14 +116,27 @@ function StudentPortalShell() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="inline-flex h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
+            <div className="flex items-center gap-3">
+              {showInstallBtn && (
+                <button
+                  type="button"
+                  onClick={handleInstallClick}
+                  className="inline-flex h-11 items-center gap-2 rounded-2xl border border-blue-200 bg-blue-50/50 px-4 text-sm font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50 hover:text-blue-800"
+                >
+                  <ArrowDownToLine className="h-4 w-4" />
+                  <span className="hidden sm:inline">Install App</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="inline-flex h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
           </div>
         </header>
 

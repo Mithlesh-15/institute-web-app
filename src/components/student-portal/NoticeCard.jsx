@@ -17,9 +17,14 @@ function NoticeCard({ notice }) {
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-semibold text-slate-900 transition-colors whitespace-normal break-words">
+          <h3 className="text-base font-semibold text-slate-900 transition-colors truncate">
             {notice.title}
           </h3>
+          {notice.noticeLink && (
+            <p className="mt-2 flex items-center gap-1.5 text-xs text-blue-600 font-medium truncate">
+              Open link <ExternalLink className="h-3 w-3" />
+            </p>
+          )}
         </div>
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
           <Bell className="h-4 w-4" />
