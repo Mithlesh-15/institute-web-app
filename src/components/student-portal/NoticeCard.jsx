@@ -1,4 +1,4 @@
-import { Bell } from 'lucide-react'
+import { Bell, ExternalLink } from 'lucide-react'
 
 function NoticeCard({ notice }) {
   const handleClick = () => {
