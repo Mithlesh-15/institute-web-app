@@ -101,6 +101,35 @@ export const normalizeStudentProfile = (row) => {
     name: normalizeText(row.name),
     className: normalizeText(row.class || row.className),
     photo: row.photo || '',
+    phone: normalizeText(row.phone),
+    fatherName: normalizeText(row.father_name),
+    schoolName: normalizeText(row.school_name),
+    address: normalizeText(row.address),
+    board: normalizeText(row.board),
+    medium: normalizeText(row.medium),
+  }
+}
+
+export const formatPortalTime = (value) => {
+  if (!value) {
+    return 'N/A'
+  }
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  // Check if it has a valid date representation. If it is just a time string, return it.
+  try {
+    return new Intl.DateTimeFormat('en-IN', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(date)
+  } catch (e) {
+    return value
   }
 }
 
@@ -114,6 +143,7 @@ export const normalizePortalClass = (row) => {
     className: normalizeText(row.class_name || row.className),
     classType: normalizeText(row.class || row.classType || row.classLevel),
     startDate: normalizeDateValue(row.start_date || row.startDate),
+    classTime: row.Time || row.classTime || '',
   }
 }
 
@@ -199,11 +229,24 @@ export async function fetchStudentProfile() {
   return profile
 }
 
-export async function updateStudentProfile({ name, className }) {
+export async function updateStudentProfile({
+  name,
+  className,
+  fatherName,
+  schoolName,
+  address,
+  board,
+  medium,
+}) {
   const session = getStudentSession()
   const payload = {
-    name: normalizeText(name),
+    name: normalizeText(name).toUpperCase(),
     class: normalizeText(className),
+    father_name: normalizeText(fatherName).toUpperCase(),
+    school_name: normalizeText(schoolName),
+    address: normalizeText(address),
+    board: normalizeText(board),
+    medium: normalizeText(medium),
   }
 
   if (!payload.name) {

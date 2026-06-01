@@ -26,6 +26,8 @@ const getTeacherId = () => {
   return session?.teacherId || "";
 };
 
+
+
 export const normalizeClass = (row) => {
   if (!row) {
     return null;
@@ -37,6 +39,7 @@ export const normalizeClass = (row) => {
     className: normalizeText(row.class_name || row.className),
     classLevel: normalizeText(row.class || row.classLevel),
     startDate: normalizeDateValue(row.start_date || row.startDate),
+    classTime: row.Time || row.classTime || "",
     createdAt: row.created_at || row.createdAt || null,
   };
 };
@@ -54,11 +57,22 @@ export const normalizeBatchStudent = (row) => {
   }
 }
 
-const buildPayload = ({ className, classLevel, startDate }) => ({
-  class_name: normalizeText(className),
-  class: normalizeText(classLevel),
-  start_date: normalizeDateValue(startDate),
-});
+const buildPayload = ({ className, classLevel, startDate, classTime }) => {
+  let timeValue = null;
+  if (startDate && classTime) {
+    try {
+      timeValue = new Date(`${startDate}T${classTime}`).toISOString();
+    } catch (e) {
+      timeValue = null;
+    }
+  }
+  return {
+    class_name: normalizeText(className),
+    class: normalizeText(classLevel),
+    start_date: normalizeDateValue(startDate),
+    Time: timeValue,
+  };
+};
 
 export async function fetchClasses() {
   const teacherId = getTeacherId();
@@ -180,8 +194,7 @@ export async function fetchAvailableStudentsForClass(classId) {
 
   return allStudents.filter((student) => !assignedStudentIds.has(student.id))
 }
-
-export async function createClassRecord({ className, classLevel, startDate }) {
+export async function createClassRecord({ className, classLevel, startDate, classTime }) {
   const teacherId = getTeacherId();
 
   if (!teacherId) {
@@ -190,7 +203,7 @@ export async function createClassRecord({ className, classLevel, startDate }) {
 
   const payload = {
     teacher_id: teacherId,
-    ...buildPayload({ className, classLevel, startDate }),
+    ...buildPayload({ className, classLevel, startDate, classTime }),
   };
 
   const { data, error } = await supabase
@@ -208,7 +221,7 @@ export async function createClassRecord({ className, classLevel, startDate }) {
 
 export async function updateClassRecord(
   classId,
-  { className, classLevel, startDate },
+  { className, classLevel, startDate, classTime },
 ) {
   const teacherId = getTeacherId();
 
@@ -218,7 +231,7 @@ export async function updateClassRecord(
 
   const payload = {
     teacher_id: teacherId,
-    ...buildPayload({ className, classLevel, startDate }),
+    ...buildPayload({ className, classLevel, startDate, classTime }),
   };
 
   const { data, error } = await supabase
