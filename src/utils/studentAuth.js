@@ -210,7 +210,7 @@ export const createStudentProfile = async ({
 
   const trimmedPhone = normalizeText(phone);
   const trimmedPassword = String(password || "");
-  const trimmedName = normalizeText(name);
+  const trimmedName = normalizeText(name).toUpperCase();
   if (!isValidPhone(trimmedPhone)) {
     throw new Error("Please enter a valid 10-digit phone number.");
   }
@@ -254,7 +254,7 @@ export const createStudentProfile = async ({
     name: trimmedName,
     role: "student",
     total_fees: 0,
-    father_name: normalizeText(fatherName),
+    father_name: normalizeText(fatherName).toUpperCase(),
     school_name: normalizeText(schoolName),
     address: normalizeText(address),
     board: normalizeText(board),
