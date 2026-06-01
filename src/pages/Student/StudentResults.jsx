@@ -132,7 +132,7 @@ function StudentResults() {
             </div>
 
             {/* Leaderboard List */}
-            <div className="flex-1 overflow-y-auto mt-4 space-y-2 pr-1 min-h-0">
+            <div className="flex-1 overflow-y-auto mt-4 space-y-2 pr-1 min-h-0 max-h-[45vh] md:max-h-[50vh]">
               {loadingLeaderboard ? (
                 [...Array(5)].map((_, index) => (
                   <div key={index} className="h-16 animate-pulse rounded-2xl bg-slate-50 border border-slate-100" />

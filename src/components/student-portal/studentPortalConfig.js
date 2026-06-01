@@ -59,11 +59,6 @@ export const studentSidebarItems = [
     icon: Image,
   },
   {
-    label: 'Live Classes',
-    to: '/student/live',
-    icon: Video,
-  },
-  {
     label: 'Logout',
     action: 'logout',
     icon: LogOut,

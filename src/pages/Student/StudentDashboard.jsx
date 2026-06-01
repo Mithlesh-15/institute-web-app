@@ -106,11 +106,49 @@ function StudentDashboard() {
   const activeLive = liveClasses.length > 0 ? liveClasses[0] : null
   const noticesList = dashboard?.notices || []
 
+  // Greeting based on time
+  const getGreeting = () => {
+    const hrs = currentTime.getHours()
+    if (hrs < 12) return 'Good Morning'
+    if (hrs < 17) return 'Good Afternoon'
+    return 'Good Evening'
+  }
+
   return (
     <div className="space-y-6">
+      {/* 1. Live Class (At the very top) */}
+      {activeLive && (
+        <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-5 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-4 animate-pulse">
+          <div className="flex items-center gap-3">
+            <span className="relative flex h-3.5 w-3.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500"></span>
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-red-600">Ongoing Live Class</p>
+              <h3 className="text-base font-bold text-red-950 mt-0.5">{activeLive.eventName}</h3>
+            </div>
+          </div>
+          {activeLive.link ? (
+            <a
+              href={activeLive.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-2xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 transition shadow-md shrink-0 w-full sm:w-auto justify-center"
+            >
+              <Video className="h-4.5 w-4.5" />
+              Join Live Class
+            </a>
+          ) : (
+            <span className="text-xs font-medium text-red-500">No link provided</span>
+          )}
+        </div>
+      )}
+
+      {/* 2. Greeting & Student Header */}
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
-          Dashboard
+          {getGreeting()},
         </p>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -122,17 +160,42 @@ function StudentDashboard() {
             </p>
           </div>
           <div className="rounded-2xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700">
-            Fast overview for classes, attendance and fees
+            Welcome to your tuition portal
           </div>
         </div>
       </section>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {/* 3. Notice Board Section */}
+      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft">
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+            <Megaphone className="h-5 w-5" />
+          </span>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Notice Board</h2>
+            <p className="mt-1 text-sm text-slate-500">Latest updates from your tuition.</p>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-4 xl:grid-cols-2 max-h-[350px] overflow-y-auto pr-1.5">
+          {noticesList.length ? (
+            noticesList.map((notice) => <NoticeCard key={notice.id} notice={notice} />)
+          ) : (
+            <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-5 text-sm text-slate-500 xl:col-span-2">
+              No notices available right now.
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 4. Stats Grid (Joined Classes, Pending Fees) */}
+      <div className="grid gap-4 md:grid-cols-2">
         <StudentStatCard
-          label="Current Month Attendance"
-          value={`${dashboard?.stats?.currentMonthAttendancePercentage || 0}%`}
-          hint="Based on marked records this month"
-          icon={CalendarCheck2}
+          label="Joined Classes"
+          value={dashboard?.stats?.totalJoinedClasses || 0}
+          hint="Total classes assigned to you"
+          icon={GraduationCap}
+          tone="slate"
         />
         <StudentStatCard
           label="Pending Fees"
@@ -141,15 +204,9 @@ function StudentDashboard() {
           icon={CreditCard}
           tone="amber"
         />
-        <StudentStatCard
-          label="Joined Classes"
-          value={dashboard?.stats?.totalJoinedClasses || 0}
-          hint="Total classes assigned to you"
-          icon={GraduationCap}
-          tone="slate"
-        />
       </div>
 
+      {/* 5. Quick Actions Section (At the end) */}
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -158,7 +215,7 @@ function StudentDashboard() {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
+        <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {quickActions.map((item) => {
             const Icon = item.icon
 
@@ -178,28 +235,6 @@ function StudentDashboard() {
               </Link>
             )
           })}
-        </div>
-      </section>
-
-      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft">
-        <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
-            <Megaphone className="h-5 w-5" />
-          </span>
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">Notice Board</h2>
-            <p className="mt-1 text-sm text-slate-500">Latest updates from your tuition.</p>
-          </div>
-        </div>
-
-        <div className="mt-5 grid gap-4 xl:grid-cols-2">
-          {dashboard?.notices?.length ? (
-            dashboard.notices.map((notice) => <NoticeCard key={notice.id} notice={notice} />)
-          ) : (
-            <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-5 text-sm text-slate-500 xl:col-span-2">
-              No notices available right now.
-            </div>
-          )}
         </div>
       </section>
     </div>
