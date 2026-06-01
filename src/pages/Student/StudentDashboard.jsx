@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ArrowRight, CalendarCheck2, CreditCard, GraduationCap, Megaphone } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import NoticeCard from '../../components/student-portal/NoticeCard'
 import StudentStatCard from '../../components/student-portal/StudentStatCard'
 import { fetchStudentDashboardData, formatPortalCurrency } from '../../utils/studentPortal'
