@@ -209,11 +209,17 @@ function TeacherGallery() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   
-  const [yearFilter, setYearFilter] = useState('All')
+  const [yearFilter, setYearFilter] = useState('')
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [addPhotoModalOpen, setAddPhotoModalOpen] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxPhotoUrl, setLightboxPhotoUrl] = useState('')
+
+  useEffect(() => {
+    if (uniqueYears.length > 0 && !yearFilter) {
+      setYearFilter(uniqueYears[0])
+    }
+  }, [uniqueYears, yearFilter])
 
   const loadEvents = async () => {
     try {
@@ -339,11 +345,12 @@ function TeacherGallery() {
 
   const uniqueYears = useMemo(() => {
     const yearsSet = new Set(events.map((e) => e.eventYear).filter(Boolean))
-    return ['All', ...Array.from(yearsSet).sort((a, b) => b.localeCompare(a))]
+    return Array.from(yearsSet).sort((a, b) => b.localeCompare(a))
   }, [events])
 
   const filteredEvents = useMemo(() => {
-    return events.filter((e) => yearFilter === 'All' || e.eventYear === yearFilter)
+    if (!yearFilter) return []
+    return events.filter((e) => e.eventYear === yearFilter)
   }, [yearFilter, events])
 
   const keyPhotos = useMemo(() => {

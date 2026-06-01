@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Image, X, Calendar, Camera, Eye, ExternalLink } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchStudentEvents, fetchEventPhotos } from '../../utils/studentPortal'
@@ -6,6 +6,7 @@ import { fetchStudentEvents, fetchEventPhotos } from '../../utils/studentPortal'
 function StudentGallery() {
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [activePhoto, setActivePhoto] = useState(null)
+  const [selectedYear, setSelectedYear] = useState(null)
 
   // 1. Fetch events (cache for 2 hours)
   const { data: events = [], isLoading: loadingEvents, error: eventsError } = useQuery({
@@ -47,25 +48,36 @@ function StudentGallery() {
     }
   }, [photos])
 
-  // Group events by year
-  const eventsByYear = useMemo(() => {
-    const groups = {}
+  // Extract unique available years that actually have events
+  const availableYears = useMemo(() => {
+    const years = new Set()
     events.forEach((event) => {
       if (!event.eventYear) return
-      const year = new Date(event.eventYear).getFullYear()
-      if (!groups[year]) {
-        groups[year] = []
+      // Handle standard format date (YYYY-MM-DD or standard year)
+      const yr = new Date(event.eventYear).getFullYear()
+      if (!isNaN(yr)) {
+        years.add(yr)
       }
-      groups[year].push(event)
     })
-    // Sort years descending
-    return Object.keys(groups)
-      .sort((a, b) => b - a)
-      .map((year) => ({
-        year,
-        list: groups[year],
-      }))
+    return Array.from(years).sort((a, b) => b - a)
   }, [events])
+
+  // Default to the first available year
+  useEffect(() => {
+    if (availableYears.length > 0 && !selectedYear) {
+      setSelectedYear(availableYears[0])
+    }
+  }, [availableYears, selectedYear])
+
+  // Filter events by selected year
+  const filteredEventsForYear = useMemo(() => {
+    if (!selectedYear) return []
+    return events.filter((event) => {
+      if (!event.eventYear) return false
+      const yr = new Date(event.eventYear).getFullYear()
+      return yr === Number(selectedYear)
+    })
+  }, [events, selectedYear])
 
   const error = eventsError ? (eventsError.message || 'Unable to load gallery right now.') : ''
 
@@ -87,57 +99,75 @@ function StudentGallery() {
         </div>
       </section>
 
-      {/* Main Events Grid divided by Year */}
+      {/* Main Events Grid with Year Selection Tabs */}
       {loadingEvents ? (
-        <div className="space-y-8">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="space-y-4">
-              <div className="h-7 w-20 animate-pulse bg-slate-200 rounded-lg" />
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {[...Array(3)].map((_, j) => (
-                  <div key={j} className="h-32 animate-pulse bg-white border border-slate-200 rounded-2xl shadow-soft" />
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-9 w-16 animate-pulse bg-slate-200 rounded-xl" />
+            ))}
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[...Array(3)].map((_, j) => (
+              <div key={j} className="h-32 animate-pulse bg-white border border-slate-200 rounded-2xl shadow-soft" />
+            ))}
+          </div>
         </div>
       ) : error ? (
         <div className="rounded-[1.5rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700">
           {error}
         </div>
-      ) : eventsByYear.length ? (
-        <div className="space-y-8">
-          {eventsByYear.map(({ year, list }) => (
-            <div key={year} className="space-y-4">
-              <h2 className="text-xl font-extrabold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-[#2563eb]" />
-                {year} Events
-              </h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {list.map((event) => (
-                  <button
-                    key={event.id}
-                    onClick={() => setSelectedEvent(event)}
-                    className="w-full text-left group overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-[#2563eb]/20 hover:shadow-md"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-2 min-w-0">
-                        <h3 className="text-lg font-bold text-slate-900 truncate group-hover:text-[#2563eb] transition-colors">
-                          {event.eventName}
-                        </h3>
-                        <p className="text-xs text-slate-500">
-                          Uploaded: {new Date(event.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
-                        </p>
-                      </div>
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#2563eb] transition">
-                        <Image className="h-4.5 w-4.5" />
-                      </span>
+      ) : availableYears.length ? (
+        <div className="space-y-6">
+          {/* Year Buttons/Tabs */}
+          <div className="flex flex-wrap gap-2 pb-2 border-b border-slate-100">
+            {availableYears.map((year) => (
+              <button
+                key={year}
+                type="button"
+                onClick={() => setSelectedYear(year)}
+                className={[
+                  'px-4 py-2 text-sm font-semibold rounded-xl border transition-all duration-200',
+                  selectedYear === year
+                    ? 'bg-[#2563eb] text-white border-[#2563eb] shadow-sm'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-[#2563eb]/25 hover:bg-slate-50',
+                ].join(' ')}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+
+          {/* Events Grid for Selected Year */}
+          {filteredEventsForYear.length ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredEventsForYear.map((event) => (
+                <button
+                  key={event.id}
+                  onClick={() => setSelectedEvent(event)}
+                  className="w-full text-left group overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-[#2563eb]/20 hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-2 min-w-0">
+                      <h3 className="text-lg font-bold text-slate-900 truncate group-hover:text-[#2563eb] transition-colors">
+                        {event.eventName}
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        Uploaded: {new Date(event.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                      </p>
                     </div>
-                  </button>
-                ))}
-              </div>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#2563eb] transition">
+                      <Image className="h-4.5 w-4.5" />
+                    </span>
+                  </div>
+                </button>
+              ))}
             </div>
-          ))}
+          ) : (
+            <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500">
+              No events found for {selectedYear}.
+            </div>
+          )}
         </div>
       ) : (
         <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500">

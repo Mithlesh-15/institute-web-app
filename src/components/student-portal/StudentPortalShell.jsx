@@ -106,7 +106,15 @@ function StudentPortalShell() {
           </div>
         </main>
 
-        <InstallAppButton />
+        {/* Floating small PWA Install Button stuck at bottom-right */}
+        <div className="fixed bottom-6 right-6 z-40">
+          <InstallAppButton
+            label="Install App"
+            compact
+            showHelperText={false}
+            className="shadow-[0_12px_40px_rgba(37,99,235,0.25)] rounded-2xl bg-white/95 backdrop-blur-md border border-slate-100 p-0.5"
+          />
+        </div>
       </div>
     </div>
   )

@@ -52,15 +52,10 @@ function StudentAttendance() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
               Attendance
             </p>
-            <h1 className="mt-2 text-3xl font-semibold text-slate-900">My attendance</h1>
+            <h1 className="mt-2 text-3xl font-semibold text-slate-900">My Attendance</h1>
           </div>
           <div className="w-full max-w-xs">
-            <StudentStatCard
-              label="Current Month Attendance"
-              value={`${monthPercentage}%`}
-              hint="Across all your joined classes"
-              icon={CalendarCheck2}
-            />
+            
           </div>
         </div>
       </section>
