@@ -33,6 +33,11 @@ import StudentDashboard from './pages/Student/StudentDashboard.jsx'
 import StudentFees from './pages/Student/StudentFees.jsx'
 import StudentProfile from './pages/Student/StudentProfile.jsx'
 import StudentSetup from './pages/Student/StudentSetup.jsx'
+import StudentResults from './pages/Student/StudentResults.jsx'
+import StudentLibrary from './pages/Student/StudentLibrary.jsx'
+import StudentNotices from './pages/Student/StudentNotices.jsx'
+import StudentGallery from './pages/Student/StudentGallery.jsx'
+import StudentLive from './pages/Student/StudentLive.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
 // Global listener to capture PWA install prompt before React loads
