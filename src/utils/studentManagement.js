@@ -73,7 +73,11 @@ export async function updateStudentById(studentId, updates = {}) {
   const payload = {}
 
   if (Object.prototype.hasOwnProperty.call(updates, 'name')) {
-    payload.name = normalizeText(updates.name)
+    payload.name = normalizeText(updates.name).toUpperCase()
+  }
+
+  if (Object.prototype.hasOwnProperty.call(updates, 'fatherName')) {
+    payload.father_name = normalizeText(updates.fatherName).toUpperCase()
   }
 
   if (Object.prototype.hasOwnProperty.call(updates, 'className')) {

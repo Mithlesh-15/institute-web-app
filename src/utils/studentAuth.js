@@ -44,7 +44,13 @@ const normalizeStudentRow = (row) => {
     className: normalizeText(row.class || row.className),
     subjects: normalizeSubjects(row.subjects),
     name: normalizeText(row.name),
-    role: "student",
+    role: row.role || "student",
+    totalFees: row.total_fees ?? 0,
+    fatherName: normalizeText(row.father_name),
+    schoolName: normalizeText(row.school_name),
+    address: normalizeText(row.address),
+    board: normalizeText(row.board),
+    medium: normalizeText(row.medium),
   };
 };
 
@@ -194,12 +200,17 @@ export const createStudentProfile = async ({
   name,
   className,
   photoFile,
+  fatherName = '',
+  schoolName = '',
+  address = '',
+  board = '',
+  medium = '',
 }) => {
   await delay(900);
 
   const trimmedPhone = normalizeText(phone);
   const trimmedPassword = String(password || "");
-  const trimmedName = normalizeText(name);
+  const trimmedName = normalizeText(name).toUpperCase();
   if (!isValidPhone(trimmedPhone)) {
     throw new Error("Please enter a valid 10-digit phone number.");
   }
@@ -233,7 +244,7 @@ export const createStudentProfile = async ({
     };
   }
 
-  const photo = photoFile ? await uploadStudentPhoto(photoFile) : "";
+  const photo = photoFile ? await uploadStudentPhoto(photoFile) : "https://xliawmwwielzegkfuhuw.supabase.co/storage/v1/object/public/student-photos/students/8869bed8-d144-43b6-9528-e8b461646542-1779721299128.png";
 
   const payload = {
     phone: trimmedPhone,
@@ -242,6 +253,12 @@ export const createStudentProfile = async ({
     class: className,
     name: trimmedName,
     role: "student",
+    total_fees: 0,
+    father_name: normalizeText(fatherName).toUpperCase(),
+    school_name: normalizeText(schoolName),
+    address: normalizeText(address),
+    board: normalizeText(board),
+    medium: normalizeText(medium),
   };
 
   const { data, error } = await supabase
