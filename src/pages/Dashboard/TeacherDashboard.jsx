@@ -185,15 +185,7 @@ function TeacherDashboard() {
                 {dateLabel}
               </p>
             </div>
-            <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                <Clock3 className="h-4 w-4 text-[#2563eb]" />
-                Coaching name
-              </div>
-              <p className="mt-2 text-sm font-semibold text-slate-900">
-                {session?.coachingName || "Raj Tuition Classes"}
-              </p>
-            </div>
+            
           </div>
         </div>
       </section>

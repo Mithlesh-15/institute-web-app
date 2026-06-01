@@ -225,7 +225,7 @@ function StudentSetup() {
   }
 
   // Phase 2: Registration details
-  const boards = ['CGBSE', 'CBSE', 'UP', 'PG']
+  const boards = ['CGBSE', 'CBSE', 'UG', 'PG']
   const mediums = ['Hindi', 'English']
 
   return (

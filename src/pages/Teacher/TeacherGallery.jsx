@@ -215,6 +215,16 @@ function TeacherGallery() {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxPhotoUrl, setLightboxPhotoUrl] = useState('')
 
+  const uniqueYears = useMemo(() => {
+    const yearsSet = new Set(events.map((e) => e.eventYear).filter(Boolean))
+    return Array.from(yearsSet).sort((a, b) => b.localeCompare(a))
+  }, [events])
+
+  const filteredEvents = useMemo(() => {
+    if (!yearFilter) return []
+    return events.filter((e) => e.eventYear === yearFilter)
+  }, [yearFilter, events])
+
   useEffect(() => {
     if (uniqueYears.length > 0 && !yearFilter) {
       setYearFilter(uniqueYears[0])
@@ -342,16 +352,6 @@ function TeacherGallery() {
     }
   }
 
-
-  const uniqueYears = useMemo(() => {
-    const yearsSet = new Set(events.map((e) => e.eventYear).filter(Boolean))
-    return Array.from(yearsSet).sort((a, b) => b.localeCompare(a))
-  }, [events])
-
-  const filteredEvents = useMemo(() => {
-    if (!yearFilter) return []
-    return events.filter((e) => e.eventYear === yearFilter)
-  }, [yearFilter, events])
 
   const keyPhotos = useMemo(() => {
     return galleryItems.filter((item) => item.type === 'key')
