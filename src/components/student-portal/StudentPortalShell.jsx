@@ -1,45 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Menu, LogOut, ArrowDownToLine } from 'lucide-react'
+import { Menu, LogOut } from 'lucide-react'
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { getSession, logout } from '../../utils/auth'
 import { studentSidebarItems } from './studentPortalConfig'
 import StudentSidebar from './StudentSidebar'
+import InstallAppButton from '../pwa/InstallAppButton'
 
 function StudentPortalShell() {
   const navigate = useNavigate()
   const location = useLocation()
   const session = getSession()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [deferredPrompt, setDeferredPrompt] = useState(null)
-  const [showInstallBtn, setShowInstallBtn] = useState(false)
-
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
-      setShowInstallBtn(true)
-    }
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setShowInstallBtn(false)
-    }
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    }
-  }, [])
-
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
-    if (outcome === 'accepted') {
-      setDeferredPrompt(null)
-      setShowInstallBtn(false)
-    }
-  }
 
   const currentLabel = useMemo(() => {
     const activeItem = studentSidebarItems.find((item) => {
@@ -117,16 +88,11 @@ function StudentPortalShell() {
             </div>
 
             <div className="flex items-center gap-3">
-              {showInstallBtn && (
-                <button
-                  type="button"
-                  onClick={handleInstallClick}
-                  className="inline-flex h-11 items-center gap-2 rounded-2xl border border-blue-200 bg-blue-50/50 px-4 text-sm font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50 hover:text-blue-800"
-                >
-                  <ArrowDownToLine className="h-4 w-4" />
-                  <span className="hidden sm:inline">Install App</span>
-                </button>
-              )}
+              <InstallAppButton
+                label="Install App"
+                compact
+                showHelperText={false}
+              />
 
               <button
                 type="button"

@@ -63,7 +63,11 @@ function StudentDashboard() {
       }
     }
 
-    loadDashboardData()
+    loadDashboard()
+
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 60000)
 
     return () => {
       mounted = false
