@@ -410,13 +410,6 @@ function Home() {
                 >
                   Learn More
                 </a>
-                
-                <InstallAppButton
-                  label="Install App"
-                  compact
-                  showHelperText={false}
-                  className="shadow-md"
-                />
               </div>
             </div>
           </div>
