@@ -63,7 +63,7 @@ function StudentDashboard() {
       }
     }
 
-    loadDashboard()
+    loadDashboardData()
 
     return () => {
       mounted = false
