@@ -177,7 +177,7 @@ function StudentSetup() {
         rightSlot={
           <div className="rounded-2xl border border-blue-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 shadow-sm">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-[#2563eb]" />
+              <ShieldCheck className="h-4 w-4 text-brand" />
               Secure Verification
             </div>
           </div>
@@ -190,7 +190,7 @@ function StudentSetup() {
           >
             <div className="space-y-6">
               <div className="flex justify-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-brand">
                   <KeyRound className="h-7 w-7" />
                 </div>
               </div>
@@ -236,7 +236,7 @@ function StudentSetup() {
       rightSlot={
         <div className="rounded-2xl border border-blue-200 bg-white px-4 py-3 text-sm font-medium text-blue-700 shadow-sm">
           <div className="flex items-center gap-2">
-            <BadgeCheck className="h-4 w-4 text-[#2563eb]" />
+            <BadgeCheck className="h-4 w-4 text-brand" />
             Quick setup
           </div>
         </div>
@@ -249,7 +249,7 @@ function StudentSetup() {
           <div className="space-y-4">
             <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-brand">
                   <UserRound className="h-5 w-5" />
                 </div>
                 <div>
@@ -282,7 +282,7 @@ function StudentSetup() {
 
             <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-brand">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div>
@@ -362,8 +362,8 @@ function StudentSetup() {
                       className={[
                         'rounded-2xl border px-4 py-3 text-sm font-semibold transition-all duration-300',
                         selected
-                          ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-[0_16px_30px_rgba(37,99,235,0.18)]'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
+                          ? 'border-brand bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-[0_16px_30px_rgba(37,99,235,0.18)]'
+                          : 'border-slate-200 bg-white text-slate-700 hover:border-brand/25 hover:bg-surface',
                       ].join(' ')}
                     >
                       {boardName}
@@ -393,8 +393,8 @@ function StudentSetup() {
                       className={[
                         'rounded-2xl border px-4 py-3 text-sm font-semibold transition-all duration-300',
                         selected
-                          ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-[0_16px_30px_rgba(37,99,235,0.18)]'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
+                          ? 'border-brand bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-[0_16px_30px_rgba(37,99,235,0.18)]'
+                          : 'border-slate-200 bg-white text-slate-700 hover:border-brand/25 hover:bg-surface',
                       ].join(' ')}
                     >
                       {mediumName}
@@ -417,7 +417,7 @@ function StudentSetup() {
                   onChange={updateField('schoolName')}
                   disabled={loading}
                   rows={2}
-                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] outline-none resize-none"
+                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-brand focus:ring-1 focus:ring-brand outline-none resize-none"
                 />
               </div>
 
@@ -432,7 +432,7 @@ function StudentSetup() {
                   onChange={updateField('address')}
                   disabled={loading}
                   rows={2}
-                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] outline-none resize-none"
+                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-brand focus:ring-1 focus:ring-brand outline-none resize-none"
                 />
               </div>
             </div>

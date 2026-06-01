@@ -5,7 +5,7 @@ function FeeStatusBadge({ status }) {
     <span
       className={[
         'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold',
-        isPaid ? 'bg-green-50 text-[#22c55e]' : 'bg-red-50 text-[#ef4444]',
+        isPaid ? 'bg-green-50 text-success' : 'bg-red-50 text-error',
       ].join(' ')}
     >
       {isPaid ? 'Paid' : 'Pending'}

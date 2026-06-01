@@ -5,7 +5,7 @@ function AttendanceCard({ classItem, onClick }) {
     <button
       type="button"
       onClick={() => onClick?.(classItem)}
-      className="w-full rounded-[1.5rem] border border-slate-200 bg-white p-5 text-left shadow-soft transition hover:-translate-y-1 hover:border-[#2563eb]/20"
+      className="w-full rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-soft transition hover:-translate-y-1 hover:border-brand/20"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
@@ -27,7 +27,7 @@ function AttendanceCard({ classItem, onClick }) {
         </div>
 
         <div className="flex flex-col items-end gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-brand">
             <ChevronRight className="h-4 w-4" />
           </span>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
@@ -36,7 +36,7 @@ function AttendanceCard({ classItem, onClick }) {
         </div>
       </div>
       <div className="mt-4 flex items-center gap-3 text-sm text-slate-500">
-        <CalendarCheck2 className="h-4 w-4 text-[#2563eb]" />
+        <CalendarCheck2 className="h-4 w-4 text-brand" />
         <span>Tap to view full history</span>
         {classItem.absentCount > 0 ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">

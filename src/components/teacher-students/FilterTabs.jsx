@@ -14,7 +14,7 @@ function FilterTabs({ value, options, onChange }) {
                 'whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300',
                 active
                   ? 'bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.95))] text-white shadow-[0_12px_24px_rgba(37,99,235,0.16)]'
-                  : 'text-slate-600 hover:text-[#2563eb]',
+                  : 'text-slate-600 hover:text-brand',
               ].join(' ')}
             >
               {option}

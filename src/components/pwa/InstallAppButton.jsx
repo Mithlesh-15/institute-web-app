@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Download } from 'lucide-react'
-import { canPromptForInstall, isStandaloneDisplay } from '../../pwa/pwa'
+import {  isStandaloneDisplay } from '../../pwa/pwa'
 
 function InstallAppButton({
   onInstalled,
@@ -106,7 +106,7 @@ function InstallAppButton({
         onClick={handleInstall}
         disabled={isBusy}
         aria-label={label}
-        className={`group inline-flex items-center justify-center gap-2 rounded-xl bg-[#2563eb] px-5 py-3 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#1d4ed8] hover:-translate-y-0.5 active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2 ${className}`}
+        className={`group inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:bg-brand-strong hover:-translate-y-0.5 active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-brand/40 focus:ring-offset-2 ${className}`}
       >
         <Download className="h-4 w-4 shrink-0" />
         <span>{isBusy ? 'Installing...' : label}</span>
@@ -124,7 +124,7 @@ function InstallAppButton({
           onClick={handleInstall}
           disabled={isBusy}
           aria-label="Install Raj Tuition Classes App"
-          className="w-full group inline-flex items-center justify-center gap-2 rounded-xl bg-[#2563eb] text-white py-3.5 px-4 font-semibold shadow-md transition-all duration-200 hover:bg-[#1d4ed8] active:scale-[0.97] disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2"
+          className="w-full group inline-flex items-center justify-center gap-2 rounded-xl bg-brand text-white py-3.5 px-4 font-semibold shadow-md transition-all duration-200 hover:bg-brand-strong active:scale-[0.97] disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-brand/40 focus:ring-offset-2"
         >
           <Download className="h-4 w-4 shrink-0" />
           <span>
@@ -140,7 +140,7 @@ function InstallAppButton({
           onClick={handleInstall}
           disabled={isBusy}
           aria-label="Install App"
-          className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#2563eb] text-white py-3 px-5 font-semibold shadow-md transition-all duration-300 hover:bg-[#1d4ed8] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2"
+          className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand text-white py-3 px-5 font-semibold shadow-md transition-all duration-300 hover:bg-brand-strong hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-brand/40 focus:ring-offset-2"
         >
           <Download className="h-4.5 w-4.5 shrink-0" />
           <span className="text-sm">

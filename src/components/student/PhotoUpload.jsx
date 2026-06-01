@@ -33,7 +33,7 @@ function PhotoUpload({ file, onChange, preview, onClear }) {
           {localPreview ? (
             <img src={localPreview} alt="Profile preview" className="h-full w-full object-cover" />
           ) : (
-          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,rgba(37,99,235,0.1),rgba(219,234,254,0.28))] text-xs font-semibold text-[#2563eb]">
+          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,rgba(37,99,235,0.1),rgba(219,234,254,0.28))] text-xs font-semibold text-brand">
             Preview
           </div>
           )}

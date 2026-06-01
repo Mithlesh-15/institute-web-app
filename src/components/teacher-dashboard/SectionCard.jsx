@@ -5,7 +5,7 @@ function SectionCard({ title, subtitle, action, children, className = '' }) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             {subtitle ? (
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
                 {subtitle}
               </p>
             ) : null}

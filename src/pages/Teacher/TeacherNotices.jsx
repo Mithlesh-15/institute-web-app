@@ -138,12 +138,12 @@ function TeacherNotices() {
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+      <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-soft">
         <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <Megaphone className="h-3.5 w-3.5 text-[#2563eb]" />
+                <Megaphone className="h-3.5 w-3.5 text-brand" />
                 Raj Tuition Classes
               </div>
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -187,7 +187,7 @@ function TeacherNotices() {
                     href={notice.noticeLink}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-2 inline-flex items-center gap-2 break-all text-sm text-slate-500 transition hover:text-[#2563eb]"
+                    className="mt-2 inline-flex items-center gap-2 break-all text-sm text-slate-500 transition hover:text-brand"
                   >
                     {notice.noticeLink || 'No link added'}
                     <ExternalLink className="h-4 w-4" />
@@ -198,7 +198,7 @@ function TeacherNotices() {
                   <button
                     type="button"
                     onClick={() => openEditModal(notice)}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 transition hover:border-brand/25 hover:text-brand"
                     aria-label="Edit notice"
                   >
                     <Pencil className="h-4 w-4" />

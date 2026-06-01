@@ -134,7 +134,7 @@ function StudentProfile() {
       {/* Left Column: View Profile Card (Read Only Details) */}
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft h-fit">
         <div className="flex flex-col items-start gap-5">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-blue-50 text-2xl font-semibold text-[#2563eb]">
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-blue-50 text-2xl font-semibold text-brand">
             {profile?.photo ? (
               <img
                 src={profile.photo}
@@ -151,14 +151,14 @@ function StudentProfile() {
               <BadgeCheck className="h-3.5 w-3.5" />
               Student Profile
             </div>
-            <h1 className="mt-4 text-2xl font-bold text-slate-900 break-words">{profile?.name}</h1>
+            <h1 className="mt-4 text-2xl font-bold text-slate-900 wrap-break-word">{profile?.name}</h1>
             <p className="mt-1 text-sm text-slate-500">Class: {profile?.className || 'N/A'}</p>
           </div>
 
           <div className="w-full space-y-4 pt-2 border-t border-slate-100">
             <div className="rounded-2xl bg-slate-50 p-4">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                <Phone className="h-4 w-4 text-[#2563eb]" />
+                <Phone className="h-4 w-4 text-brand" />
                 Phone Number (Read-Only)
               </div>
               <p className="mt-2 text-base font-semibold text-slate-900">{profile?.phone || 'N/A'}</p>
@@ -166,7 +166,7 @@ function StudentProfile() {
 
             <div className="rounded-2xl bg-slate-50 p-4">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                <UserRound className="h-4 w-4 text-[#2563eb]" />
+                <UserRound className="h-4 w-4 text-brand" />
                 Father's Name
               </div>
               <p className="mt-2 text-base font-semibold text-slate-900">{profile?.fatherName || 'N/A'}</p>
@@ -181,7 +181,7 @@ function StudentProfile() {
         className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft space-y-6"
       >
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Manage Profile
           </p>
           <h2 className="mt-2 text-2xl font-bold text-slate-900">Edit Details</h2>
@@ -244,8 +244,8 @@ function StudentProfile() {
                     className={[
                       'rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200',
                       selected
-                        ? 'border-[#2563eb] bg-[#2563eb] text-white shadow-sm'
-                        : 'border-slate-200 bg-white text-slate-700 hover:border-[#2563eb]/20 hover:bg-[#f8fafc]',
+                        ? 'border-brand bg-brand text-white shadow-sm'
+                        : 'border-slate-200 bg-white text-slate-700 hover:border-brand/20 hover:bg-surface',
                     ].join(' ')}
                   >
                     {boardName}
@@ -273,8 +273,8 @@ function StudentProfile() {
                     className={[
                       'rounded-xl border px-3 py-2 text-sm font-semibold transition-all duration-200',
                       selected
-                        ? 'border-[#2563eb] bg-[#2563eb] text-white shadow-sm'
-                        : 'border-slate-200 bg-white text-slate-700 hover:border-[#2563eb]/20 hover:bg-[#f8fafc]',
+                        ? 'border-brand bg-brand text-white shadow-sm'
+                        : 'border-slate-200 bg-white text-slate-700 hover:border-brand/20 hover:bg-surface',
                     ].join(' ')}
                   >
                     {mediumName}
@@ -300,7 +300,7 @@ function StudentProfile() {
               }}
               disabled={saving}
               rows={2}
-              className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] outline-none resize-none"
+              className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-brand focus:ring-1 focus:ring-brand outline-none resize-none"
             />
           </div>
 
@@ -320,7 +320,7 @@ function StudentProfile() {
               }}
               disabled={saving}
               rows={2}
-              className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] outline-none resize-none"
+              className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm transition-all focus:border-brand focus:ring-1 focus:ring-brand outline-none resize-none"
             />
           </div>
         </div>

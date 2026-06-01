@@ -190,7 +190,7 @@ function TeacherAttendance() {
   if (!selectedClass) {
     return (
       <div className="space-y-6">
-        <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+        <section className="rounded-4xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
             Attendance
           </h1>
@@ -233,7 +233,7 @@ function TeacherAttendance() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+      <section className="rounded-4xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
             {selectedClass.className || 'Class'}
@@ -267,7 +267,7 @@ function TeacherAttendance() {
           {[...Array(5)].map((_, index) => (
             <div
               key={index}
-              className="h-24 animate-pulse rounded-[1.5rem] border border-slate-200 bg-white shadow-soft"
+              className="h-24 animate-pulse rounded-3xl border border-slate-200 bg-white shadow-soft"
             />
           ))}
         </div>

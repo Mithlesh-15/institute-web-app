@@ -36,13 +36,13 @@ function StudentResults() {
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Academic Performance
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-900">Test Results</h1>
             <p className="text-sm text-slate-500 mt-1">View your scores, rankings, and class performance charts.</p>
           </div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-brand">
             <Award className="h-7 w-7" />
           </div>
         </div>
@@ -54,12 +54,12 @@ function StudentResults() {
           {[...Array(6)].map((_, index) => (
             <div
               key={index}
-              className="h-44 animate-pulse rounded-[1.5rem] border border-slate-200 bg-white shadow-soft"
+              className="h-44 animate-pulse rounded-3xl border border-slate-200 bg-white shadow-soft"
             />
           ))}
         </div>
       ) : testsError ? (
-        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700 flex items-center gap-3">
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-5 text-sm text-red-700 flex items-center gap-3">
           <AlertCircle className="h-5 w-5 shrink-0" />
           <span>{testsError.message || 'Unable to load test results right now.'}</span>
         </div>
@@ -69,7 +69,7 @@ function StudentResults() {
             <button
               key={test.id}
               onClick={() => setSelectedTest(test)}
-              className="w-full text-left group overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-[#2563eb]/20 hover:shadow-[0_16px_36px_rgba(15,23,42,0.08)]"
+              className="w-full text-left group overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-brand/20 hover:shadow-[0_16px_36px_rgba(15,23,42,0.08)]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-3 min-w-0">
@@ -92,7 +92,7 @@ function StudentResults() {
                     </div>
                   </div>
                 </div>
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#2563eb] transition">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-brand transition">
                   <Trophy className="h-4.5 w-4.5" />
                 </span>
               </div>
@@ -100,7 +100,7 @@ function StudentResults() {
           ))}
         </div>
       ) : (
-        <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500">
+        <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center text-sm text-slate-500">
           No tests scheduled or completed for your batches yet.
         </div>
       )}
@@ -112,10 +112,10 @@ function StudentResults() {
             {/* Modal Header */}
             <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.1em] text-[#2563eb]">
+                <span className="text-xs font-semibold uppercase tracking-widest text-brand">
                   Class Leaderboard
                 </span>
-                <h2 className="mt-1 text-2xl font-bold text-slate-900 truncate max-w-[20rem] sm:max-w-[28rem]">
+                <h2 className="mt-1 text-2xl font-bold text-slate-900 truncate max-w-[20rem] sm:max-w-md">
                   {selectedTest.test_name}
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -209,15 +209,15 @@ function StudentResults() {
 
             {/* Current Student Highlight Sticky Bar */}
             {currentStudentDetail && (
-              <div className="mt-4 border-t border-slate-200 pt-4 bg-gradient-to-r from-blue-50 to-indigo-50/50 -mx-6 -mb-6 p-6 rounded-b-[1.75rem] sticky bottom-0 z-10 shadow-[0_-12px_30px_rgba(0,0,0,0.06)] border-t border-blue-100">
-                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#2563eb]">Your Result Details</p>
+              <div className="mt-4 border-t border-slate-200 pt-4 bg-linear-to-r from-blue-50 to-indigo-50/50 -mx-6 -mb-6 p-6 rounded-b-[1.75rem] sticky bottom-0 z-10 shadow-[0_-12px_30px_rgba(0,0,0,0.06)] border-t border-blue-100">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-brand">Your Result Details</p>
                 <div className="mt-2.5 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-blue-200 bg-white">
                       {currentStudentDetail.photo ? (
                         <img src={currentStudentDetail.photo} alt={currentStudentDetail.name} className="h-full w-full object-cover" />
                       ) : (
-                        <span className="text-sm font-bold text-[#2563eb]">
+                        <span className="text-sm font-bold text-brand">
                           {currentStudentDetail.name[0]?.toUpperCase()}
                         </span>
                       )}
@@ -235,7 +235,7 @@ function StudentResults() {
                         Absent
                       </span>
                     ) : (
-                      <p className="text-lg font-black text-[#2563eb]">
+                      <p className="text-lg font-black text-brand">
                         {currentStudentDetail.marks} <span className="text-xs font-medium text-slate-400">/ {selectedTest.total_marks}</span>
                       </p>
                     )}

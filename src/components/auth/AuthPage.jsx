@@ -13,7 +13,7 @@ const roleStyles = {
   student: {
     badge: "Student access",
     badgeTone: "bg-blue-50 text-blue-700 border-blue-200",
-    accentLine: "bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]",
+    accentLine: "bg-gradient-to-r from-brand to-[#1d4ed8]",
     formTitle: "Sign in",
     formSubtitle: "Use your registered phone number and password.",
     buttonLabel: "Sign in",
@@ -21,7 +21,7 @@ const roleStyles = {
   teacher: {
     badge: "Private staff portal",
     badgeTone: "bg-slate-100 text-slate-700 border-slate-200",
-    accentLine: "bg-gradient-to-r from-[#0f172a] to-[#2563eb]",
+    accentLine: "bg-gradient-to-r from-[#0f172a] to-brand",
     formTitle: "Sign in",
     formSubtitle: "Use your registered phone number and password.",
     buttonLabel: "Sign in",
@@ -96,16 +96,16 @@ function AuthPage({ role }) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface">
       <div className="absolute inset-0 opacity-80">
-        <div className="absolute left-[-10%] top-[-8%] h-72 w-72 rounded-full bg-[#2563eb]/10 blur-3xl" />
-        <div className="absolute right-[-8%] top-[12%] h-80 w-80 rounded-full bg-[#0f172a]/8 blur-3xl" />
-        <div className="absolute bottom-[-12%] left-[18%] h-72 w-72 rounded-full bg-[#dbeafe]/40 blur-3xl" />
+        <div className="absolute left-[-10%] top-[-8%] h-72 w-72 rounded-full bg-brand/10 blur-3xl" />
+        <div className="absolute right-[-8%] top-[12%] h-80 w-80 rounded-full bg-nav/8 blur-3xl" />
+        <div className="absolute bottom-[-12%] left-[18%] h-72 w-72 rounded-full bg-brand-soft/40 blur-3xl" />
       </div>
 
       <main className="relative flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
         <section className="w-full max-w-2xl">
           <div
             className={[
-              "relative w-full rounded-[2rem] border border-white/80 bg-white/92 p-5 shadow-[0_26px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl",
+              "relative w-full rounded-4xl border border-white/80 bg-white/92 p-5 shadow-[0_26px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl",
               "sm:p-8",
               "transition-transform duration-300 ease-out hover:-translate-y-1",
             ].join(" ")}
@@ -169,7 +169,7 @@ function AuthPage({ role }) {
                 rightSlot={
                   <button
                     type="button"
-                    className="text-sm font-medium text-[#2563eb] transition hover:text-[#1d4ed8]"
+                    className="text-sm font-medium text-brand transition hover:text-brand-strong"
                     onClick={() => setShowPassword((current) => !current)}
                   >
                     {showPassword ? "Hide" : "Show"}
@@ -183,7 +183,7 @@ function AuthPage({ role }) {
                   type="checkbox"
                   checked={form.rememberSession}
                   onChange={updateField("rememberSession")}
-                  className="mt-1 h-4 w-4 rounded border-slate-300 text-[#2563eb] accent-[#2563eb]"
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-brand accent-brand"
                 />
                 <label
                   htmlFor={`${role}-remember`}

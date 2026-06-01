@@ -52,10 +52,10 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/45 p-4 backdrop-blur-sm sm:items-center">
-      <div className="flex max-h-[calc(100vh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
+      <div className="flex max-h-[calc(100vh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
         <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-5 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
               Edit previous pending
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
@@ -69,7 +69,7 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-[#2563eb]/20 hover:bg-slate-50 hover:text-[#2563eb]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-brand/20 hover:bg-slate-50 hover:text-brand"
             aria-label="Close edit pending modal"
           >
             <X className="h-5 w-5" />
@@ -77,21 +77,21 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
-          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-sm text-slate-500">Pending amount</p>
             <input
               type="number"
               min="0"
               value={pendingAmount}
               onChange={(event) => setPendingAmount(event.target.value)}
-              className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+              className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15"
             />
             <p className="mt-2 text-xs text-slate-500">
               If the amount becomes 0, the status will automatically become paid.
             </p>
           </div>
 
-          <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-4">
             <p className="text-sm font-semibold text-slate-700">Status</p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <button
@@ -100,8 +100,8 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
                 className={[
                   'rounded-2xl border px-4 py-3 text-sm font-semibold transition',
                   status === 'paid'
-                    ? 'border-[#22c55e] bg-[#22c55e] text-white'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-[#22c55e]/30 hover:text-[#22c55e]',
+                    ? 'border-success bg-success text-white'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-success/30 hover:text-success',
                 ].join(' ')}
               >
                 Paid

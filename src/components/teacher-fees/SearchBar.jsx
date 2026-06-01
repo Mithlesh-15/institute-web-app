@@ -9,7 +9,7 @@ function SearchBar({ value, onChange, placeholder = 'Search students by name or 
         onChange={onChange}
         type="search"
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+        className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-brand focus:ring-4 focus:ring-brand/15"
       />
     </div>
   )

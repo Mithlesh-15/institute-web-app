@@ -9,7 +9,7 @@ function StatsCard({ label, value, detail, trend, trendType = 'up', icon }) {
   return (
     <div className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.1)]">
       <div className="flex items-start justify-between gap-4">
-        <div className="rounded-2xl bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(29,78,216,0.08),rgba(219,234,254,0.8))] p-3 text-[#2563eb]">
+        <div className="rounded-2xl bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(29,78,216,0.08),rgba(219,234,254,0.8))] p-3 text-brand">
           <Icon className="h-5 w-5" />
         </div>
         <div className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${trendClass}`}>

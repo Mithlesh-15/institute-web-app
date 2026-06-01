@@ -22,14 +22,14 @@ function Navbar({ session, title, currentLabel, onMenuClick, onLogout }) {
           <button
             type="button"
             onClick={onMenuClick}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-[#2563eb]/25 hover:text-[#2563eb] lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-brand/25 hover:text-brand lg:hidden"
             aria-label="Open navigation menu"
           >
             <Menu className="h-5 w-5" />
           </button>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               {title}
             </p>
             <div className="mt-1 flex items-center gap-2 text-sm text-slate-500">
@@ -65,7 +65,7 @@ function Navbar({ session, title, currentLabel, onMenuClick, onLogout }) {
           <button
             type="button"
             onClick={onLogout}
-            className="inline-flex h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
+            className="inline-flex h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand/25 hover:text-brand"
           >
             <LogOut className="h-4 w-4" />
             <span className="hidden sm:inline">Logout</span>

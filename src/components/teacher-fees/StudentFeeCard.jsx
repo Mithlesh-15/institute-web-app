@@ -17,7 +17,7 @@ function StudentFeeCard({ student, onClick }) {
             {student.photo ? (
               <img src={student.photo} alt={student.name} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-[#2563eb]">
+              <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-brand">
                 {student.name?.slice(0, 2).toUpperCase() || 'ST'}
               </div>
             )}
@@ -32,11 +32,11 @@ function StudentFeeCard({ student, onClick }) {
 
             <div className="mt-3 space-y-2 text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <UserCircle2 className="h-4 w-4 text-[#2563eb]" />
+                <UserCircle2 className="h-4 w-4 text-brand" />
                 <span>Class {student.className || 'N/A'}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-[#2563eb]" />
+                <CalendarDays className="h-4 w-4 text-brand" />
                 <span>{student.previousPendingCount || 0} previous pending months</span>
               </div>
             </div>
@@ -52,7 +52,7 @@ function StudentFeeCard({ student, onClick }) {
           {currentFee?.status === 'pending' ? (
             <PendingBadge amount={currentFee.pendingAmount} />
           ) : (
-            <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-[#22c55e]">
+            <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-success">
               Current month clear
             </span>
           )}

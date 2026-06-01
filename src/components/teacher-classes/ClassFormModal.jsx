@@ -105,10 +105,10 @@ function ClassFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/45 p-4 backdrop-blur-sm sm:items-center">
-      <div className="w-full max-w-2xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
+      <div className="w-full max-w-2xl overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
         <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-5 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
               Batch details
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
@@ -122,7 +122,7 @@ function ClassFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-[#2563eb]/20 hover:bg-slate-50 hover:text-[#2563eb]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-brand/20 hover:bg-slate-50 hover:text-brand"
             aria-label="Close class form"
           >
             <X className="h-5 w-5" />
@@ -146,7 +146,7 @@ function ClassFormModal({
               value={formData.classLevel}
               onChange={handleChange('classLevel')}
               disabled={loading}
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
             >
               {['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG'].map((option) => (
                 <option key={option} value={option}>
@@ -163,7 +163,7 @@ function ClassFormModal({
               value={formData.startDate}
               onChange={handleChange('startDate')}
               disabled={loading}
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
             />
           </label>
 
@@ -174,7 +174,7 @@ function ClassFormModal({
               value={formData.classTime}
               onChange={handleChange('classTime')}
               disabled={loading}
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
             />
           </label>
 

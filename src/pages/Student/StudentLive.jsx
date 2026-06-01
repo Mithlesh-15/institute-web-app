@@ -28,12 +28,12 @@ function StudentLive() {
   return (
     <div className="space-y-6">
       {/* Header section */}
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+      <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-soft">
         <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <Video className="h-3.5 w-3.5 text-[#2563eb]" />
+                <Video className="h-3.5 w-3.5 text-brand" />
                 Raj Tuition Classes
               </div>
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -98,7 +98,7 @@ function StudentLive() {
                     href={live.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-2xl bg-[#2563eb] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-sm"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 shadow-sm"
                   >
                     Join Live Class
                     <ExternalLink className="h-4 w-4" />

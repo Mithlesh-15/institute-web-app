@@ -217,7 +217,7 @@ function TeacherClassDetails() {
   if (loading) {
     return (
       <div className="grid gap-4">
-        <div className="h-60 animate-pulse rounded-[2rem] border border-slate-200 bg-white shadow-soft" />
+        <div className="h-60 animate-pulse rounded-4xl border border-slate-200 bg-white shadow-soft" />
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[...Array(6)].map((_, index) => (
             <div
@@ -247,21 +247,21 @@ function TeacherClassDetails() {
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+      <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-soft">
         <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(242,93,13,0.06))] p-6 sm:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <button
                 type="button"
                 onClick={() => navigate('/teacher/classes')}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#2563eb]/20 hover:text-[#2563eb]"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-brand/20 hover:text-brand"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Classes
               </button>
 
               <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <BookOpen className="h-3.5 w-3.5 text-[#2563eb]" />
+                <BookOpen className="h-3.5 w-3.5 text-brand" />
                 Class details
               </div>
 
@@ -298,19 +298,19 @@ function TeacherClassDetails() {
 
       <SectionCard title="Assigned students" subtitle="Class roster">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
             <p className="text-sm text-slate-500">Total students</p>
             <p className="mt-2 text-3xl font-semibold text-slate-900">{classItem.totalStudents || 0}</p>
           </div>
-          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
             <p className="text-sm text-slate-500">Class level</p>
             <p className="mt-2 text-3xl font-semibold text-slate-900">{classItem.classLevel || 'N/A'}</p>
           </div>
-          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
             <p className="text-sm text-slate-500">Start date</p>
             <p className="mt-2 text-3xl font-semibold text-slate-900">{formatDate(classItem.startDate)}</p>
           </div>
-          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
             <p className="text-sm text-slate-500">Class name</p>
             <p className="mt-2 truncate text-lg font-semibold text-slate-900">{classItem.className || 'N/A'}</p>
           </div>

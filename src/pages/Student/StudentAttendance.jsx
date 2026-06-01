@@ -49,7 +49,7 @@ function StudentAttendance() {
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Attendance
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-900">My Attendance</h1>
@@ -65,12 +65,12 @@ function StudentAttendance() {
           {[...Array(4)].map((_, index) => (
             <div
               key={index}
-              className="h-52 animate-pulse rounded-[1.5rem] border border-slate-200 bg-white shadow-soft"
+              className="h-52 animate-pulse rounded-3xl border border-slate-200 bg-white shadow-soft"
             />
           ))}
         </div>
       ) : error ? (
-        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
           {error}
         </div>
       ) : attendance.length ? (
@@ -80,7 +80,7 @@ function StudentAttendance() {
           ))}
         </div>
       ) : (
-        <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+        <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
           No attendance records found yet.
         </div>
       )}
@@ -90,7 +90,7 @@ function StudentAttendance() {
           <div className="w-full max-w-2xl rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
                   Attendance History
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold text-slate-900">
@@ -106,7 +106,7 @@ function StudentAttendance() {
               </button>
             </div>
 
-            <div className="mt-6 max-h-[28rem] space-y-6 overflow-y-auto pr-1">
+            <div className="mt-6 max-h-112 space-y-6 overflow-y-auto pr-1">
               {selectedClass.history.length ? (
                 groupHistoryByMonth(selectedClass.history).map((group) => (
                   <div key={group.monthName} className="space-y-3">

@@ -59,13 +59,13 @@ function StudentLibrary() {
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Study Hub
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-900">E-Library</h1>
             <p className="text-sm text-slate-500 mt-1">Access notes, sample papers, and lectures uploaded by teachers.</p>
           </div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-brand">
             <Library className="h-7 w-7" />
           </div>
         </div>
@@ -84,7 +84,7 @@ function StudentLibrary() {
                 className={[
                   'rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200',
                   isSelected
-                    ? 'bg-[#2563eb] text-white shadow-md'
+                    ? 'bg-brand text-white shadow-md'
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50',
                 ].join(' ')}
               >
@@ -102,13 +102,13 @@ function StudentLibrary() {
           <div className="h-44 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft" />
         </div>
       ) : error ? (
-        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
           {error}
         </div>
       ) : (
         <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft space-y-4">
           <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-brand">
               {activeTab === 'Other' ? <FolderOpen className="h-5 w-5" /> : <BookOpen className="h-5 w-5" />}
             </span>
             <div>
@@ -129,15 +129,15 @@ function StudentLibrary() {
                   href={item.materialLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between gap-3 rounded-2xl border border-slate-150 bg-slate-50/50 p-4 transition hover:border-[#2563eb]/20 hover:bg-white hover:shadow-md group"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-slate-150 bg-slate-50/50 p-4 transition hover:border-brand/20 hover:bg-white hover:shadow-md group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <FileText className="h-5 w-5 text-slate-400 group-hover:text-[#2563eb] transition-colors shrink-0" />
+                    <FileText className="h-5 w-5 text-slate-400 group-hover:text-brand transition-colors shrink-0" />
                     <span className="text-sm font-semibold text-slate-700 truncate group-hover:text-slate-900">
                       {item.materialName}
                     </span>
                   </div>
-                  <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-[#2563eb] shrink-0 transition-colors" />
+                  <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-brand shrink-0 transition-colors" />
                 </a>
               ))
             ) : (

@@ -26,7 +26,7 @@ function PendingFeeCard({ fee, onMarkPaid, onEdit, loading = false }) {
   return (
     <div
       className={[
-        'rounded-[1.5rem] border p-4 shadow-soft transition hover:-translate-y-0.5',
+        'rounded-3xl border p-4 shadow-soft transition hover:-translate-y-0.5',
         isPaid
           ? 'border-green-200 bg-green-50/70'
           : 'border-orange-200 bg-[linear-gradient(180deg,rgba(242,93,13,0.08),rgba(255,255,255,0.98))]',
@@ -35,7 +35,7 @@ function PendingFeeCard({ fee, onMarkPaid, onEdit, loading = false }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <Wallet className="h-4 w-4 text-[#2563eb]" />
+            <Wallet className="h-4 w-4 text-brand" />
             <p className="text-base font-semibold text-slate-900">
               {fee.month} {fee.year}
             </p>
@@ -46,7 +46,7 @@ function PendingFeeCard({ fee, onMarkPaid, onEdit, loading = false }) {
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         {isPaid ? (
-          <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-[#22c55e]">
+          <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-success">
             Cleared
           </span>
         ) : (
@@ -68,7 +68,7 @@ function PendingFeeCard({ fee, onMarkPaid, onEdit, loading = false }) {
           type="button"
           onClick={() => onEdit(fee)}
           disabled={loading}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-[#2563eb]/25 hover:text-[#2563eb]"
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-brand/25 hover:text-brand"
         >
           <PencilLine className="h-4 w-4" />
           {loading ? 'Saving...' : 'Edit Pending'}

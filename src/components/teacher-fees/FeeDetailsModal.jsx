@@ -47,10 +47,10 @@ function FeeDetailsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/45 p-4 backdrop-blur-sm sm:items-center">
-      <div className="flex max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
+      <div className="flex max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
         <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-5 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
               Student fees
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
@@ -64,7 +64,7 @@ function FeeDetailsModal({
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-[#2563eb]/20 hover:bg-slate-50 hover:text-[#2563eb]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-brand/20 hover:bg-slate-50 hover:text-brand"
             aria-label="Close fee details"
           >
             <X className="h-5 w-5" />
@@ -77,7 +77,7 @@ function FeeDetailsModal({
               {student.photo ? (
                 <img src={student.photo} alt={student.name} className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-[#2563eb]">
+                <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-brand">
                   {student.name?.slice(0, 2).toUpperCase() || 'ST'}
                 </div>
               )}
@@ -92,7 +92,7 @@ function FeeDetailsModal({
             </div>
           </div>
 
-          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-sm font-semibold text-slate-700">
               Current Month: {currentMonthYear.month} {currentMonthYear.year}
             </p>
@@ -104,8 +104,8 @@ function FeeDetailsModal({
                 className={[
                   'rounded-2xl border px-4 py-3 text-sm font-semibold transition',
                   status === 'paid'
-                    ? 'border-[#22c55e] bg-[#22c55e] text-white shadow-[0_12px_24px_rgba(34,197,94,0.22)]'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-[#22c55e]/30 hover:text-[#22c55e]',
+                    ? 'border-success bg-success text-white shadow-[0_12px_24px_rgba(34,197,94,0.22)]'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-success/30 hover:text-success',
                 ].join(' ')}
               >
                 Paid
@@ -116,8 +116,8 @@ function FeeDetailsModal({
                 className={[
                   'rounded-2xl border px-4 py-3 text-sm font-semibold transition',
                   status === 'pending'
-                    ? 'border-[#ef4444] bg-[#ef4444] text-white shadow-[0_12px_24px_rgba(239,68,68,0.22)]'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-[#ef4444]/30 hover:text-[#ef4444]',
+                    ? 'border-error bg-error text-white shadow-[0_12px_24px_rgba(239,68,68,0.22)]'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-error/30 hover:text-error',
                 ].join(' ')}
               >
                 Pending
@@ -135,7 +135,7 @@ function FeeDetailsModal({
                   value={pendingAmount}
                   onChange={(event) => setPendingAmount(event.target.value)}
                   placeholder="500"
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15"
                 />
               </label>
             ) : (
@@ -145,7 +145,7 @@ function FeeDetailsModal({
             )}
           </div>
 
-          <div className="rounded-[1.5rem] border border-slate-200 bg-white p-4">
+          <div className="rounded-3xl border border-slate-200 bg-white p-4">
             <div className="flex items-center justify-between gap-3">
               <h4 className="text-base font-semibold text-slate-900">Previous Pending Months</h4>
               <div className="text-sm font-semibold text-[#f25d0d]">

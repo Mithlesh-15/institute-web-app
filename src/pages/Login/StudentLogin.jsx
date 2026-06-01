@@ -120,7 +120,7 @@ function StudentLogin() {
               rightSlot={
                 <button
                   type="button"
-                  className="text-sm font-medium text-[#2563eb] transition hover:text-[#1d4ed8]"
+                  className="text-sm font-medium text-brand transition hover:text-brand-strong"
                   onClick={() => setShowPassword((current) => !current)}
                 >
                   {showPassword ? (

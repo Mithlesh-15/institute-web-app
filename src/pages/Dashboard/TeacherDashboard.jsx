@@ -13,7 +13,6 @@ import ActionCard from "../../components/teacher-dashboard/ActionCard";
 import SectionCard from "../../components/teacher-dashboard/SectionCard";
 import {
   quickActions,
-  upcomingEvents
 } from "../../components/teacher-dashboard/dashboardConfig";
 import { getSession } from "../../utils/auth";
 import { supabase } from "../../utils/supabase";
@@ -136,7 +135,7 @@ function TeacherDashboard() {
 
       {/* 1. Live Class Alert (At the absolute top if any live stream is active) */}
       {activeLive && (
-        <div className="rounded-[1.75rem] border border-red-200 bg-gradient-to-r from-red-50 to-red-100/30 p-5 shadow-soft flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="rounded-[1.75rem] border border-red-200 bg-linear-to-r from-red-50 to-red-100/30 p-5 shadow-soft flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500 text-white shrink-0 shadow-md">
               <Video className="h-5 w-5" />
@@ -163,11 +162,11 @@ function TeacherDashboard() {
       )}
 
       {/* 2. Welcome Greeting Block */}
-      <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-blue-50/55 via-slate-50 to-indigo-50/35 p-6 sm:p-8 shadow-soft">
+      <section className="rounded-2xl border border-slate-200 bg-linear-to-br from-blue-50/55 via-slate-50 to-indigo-50/35 p-6 sm:p-8 shadow-soft">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-              <TrendingUp className="h-3.5 w-3.5 text-[#2563eb]" />
+              <TrendingUp className="h-3.5 w-3.5 text-brand" />
               Live teacher overview
             </div>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -178,7 +177,7 @@ function TeacherDashboard() {
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                <CalendarDays className="h-4 w-4 text-[#2563eb]" />
+                <CalendarDays className="h-4 w-4 text-brand" />
                 Current date
               </div>
               <p className="mt-2 text-sm font-semibold text-slate-900">
@@ -193,7 +192,7 @@ function TeacherDashboard() {
       {/* 3. Event Notices Up-to-Down Scrolling Marquee Section */}
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft">
         <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb] shrink-0">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-brand shrink-0">
             <Megaphone className="h-5 w-5" />
           </span>
           <div>
@@ -214,7 +213,7 @@ function TeacherDashboard() {
                         window.open(notice.noticeLink, "_blank", "noopener,noreferrer");
                       }
                     }}
-                    className={`flex items-start justify-between p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-sm transition hover:border-[#2563eb]/25 ${
+                    className={`flex items-start justify-between p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-sm transition hover:border-brand/25 ${
                       notice.noticeLink ? "cursor-pointer hover:bg-blue-50/10" : "cursor-default"
                     }`}
                   >
@@ -222,7 +221,7 @@ function TeacherDashboard() {
                       <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 shrink-0 mt-0.5">
                         <Bell className="h-4 w-4" />
                       </span>
-                      <span className="text-sm font-semibold text-slate-850 whitespace-normal break-words">
+                      <span className="text-sm font-semibold text-slate-850 whitespace-normal wrap-break-word">
                         {notice.title}
                       </span>
                     </div>

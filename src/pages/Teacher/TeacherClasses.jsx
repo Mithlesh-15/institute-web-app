@@ -155,13 +155,13 @@ function TeacherClasses() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+      <section className="rounded-4xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
             Classes
           </h1>
 
-          <div className="flex flex-col gap-3 sm:flex-row lg:w-[34rem]">
+          <div className="flex flex-col gap-3 sm:flex-row lg:w-136">
             <SearchBar
               value={search}
               onChange={(event) => setSearch(event.target.value)}

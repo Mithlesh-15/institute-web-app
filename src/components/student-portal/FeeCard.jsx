@@ -1,11 +1,11 @@
 import { BadgeCheck, CircleAlert, CreditCard } from 'lucide-react'
-import { formatPortalCurrency, formatPortalDate } from '../../utils/studentPortal'
+import { formatPortalCurrency } from '../../utils/studentPortal'
 
 function FeeCard({ fee }) {
   const isPaid = fee.status === 'paid'
 
   return (
-    <article className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft">
+    <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-soft">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">
@@ -21,7 +21,7 @@ function FeeCard({ fee }) {
             {isPaid ? 'Paid' : 'Pending'}
           </div>
         </div>
-        <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+        <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-brand">
           <CreditCard className="h-4 w-4" />
         </span>
       </div>

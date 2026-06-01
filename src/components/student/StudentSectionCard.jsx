@@ -4,7 +4,7 @@ function StudentSectionCard({ title, subtitle, children, className = '' }) {
       {(title || subtitle) && (
         <div>
           {subtitle ? (
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
               {subtitle}
             </p>
           ) : null}

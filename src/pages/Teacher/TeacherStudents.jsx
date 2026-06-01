@@ -260,7 +260,7 @@ function TeacherStudents() {
     <div className="space-y-6">
       {isAdding ? (
         <>
-          <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+          <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-soft">
             <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
               <div className="flex items-center gap-4">
                 <button
@@ -300,7 +300,7 @@ function TeacherStudents() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Enter full name"
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   />
                 </div>
 
@@ -313,7 +313,7 @@ function TeacherStudents() {
                     value={form.fatherName}
                     onChange={(e) => setForm({ ...form, fatherName: e.target.value })}
                     placeholder="Enter father's name"
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   />
                 </div>
 
@@ -326,7 +326,7 @@ function TeacherStudents() {
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     placeholder="Enter 10-digit phone number"
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   />
                 </div>
 
@@ -340,7 +340,7 @@ function TeacherStudents() {
                       value={form.password}
                       onChange={(e) => setForm({ ...form, password: e.target.value })}
                       placeholder="Enter portal password"
-                      className="w-full rounded-2xl border border-slate-200 bg-white pl-4 pr-12 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                      className="w-full rounded-2xl border border-slate-200 bg-white pl-4 pr-12 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                     />
                     <button
                       type="button"
@@ -360,7 +360,7 @@ function TeacherStudents() {
                     required
                     value={form.className}
                     onChange={(e) => setForm({ ...form, className: e.target.value })}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   >
                     <option value="6th">6th</option>
                     <option value="7th">7th</option>
@@ -383,7 +383,7 @@ function TeacherStudents() {
                     value={form.schoolName}
                     onChange={(e) => setForm({ ...form, schoolName: e.target.value })}
                     placeholder="Enter school name"
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   />
                 </div>
 
@@ -394,7 +394,7 @@ function TeacherStudents() {
                     required
                     value={form.board}
                     onChange={(e) => setForm({ ...form, board: e.target.value })}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   >
                     <option value="">Select Board</option>
                     <option value="CBSE">CBSE</option>
@@ -411,7 +411,7 @@ function TeacherStudents() {
                     required
                     value={form.medium}
                     onChange={(e) => setForm({ ...form, medium: e.target.value })}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   >
                     <option value="">Select Medium</option>
                     <option value="Hindi">Hindi</option>
@@ -428,7 +428,7 @@ function TeacherStudents() {
                     onChange={(e) => setForm({ ...form, address: e.target.value })}
                     placeholder="Enter address"
                     rows="2"
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   />
                 </div>
 
@@ -442,7 +442,7 @@ function TeacherStudents() {
                     value={form.totalFees}
                     onChange={(e) => setForm({ ...form, totalFees: e.target.value })}
                     placeholder="e.g. 1500"
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
                   />
                 </div>
 
@@ -454,7 +454,7 @@ function TeacherStudents() {
                     required
                     accept="image/*"
                     onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-[15px] text-slate-500 outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-[15px] text-slate-500 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
                   />
                 </div>
 
@@ -481,12 +481,12 @@ function TeacherStudents() {
         </>
       ) : (
         <>
-          <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+          <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-soft">
             <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-2xl">
                   <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                    <Users className="h-3.5 w-3.5 text-[#2563eb]" />
+                    <Users className="h-3.5 w-3.5 text-brand" />
                     Raj Tuition Classes
                   </div>
                   <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">

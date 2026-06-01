@@ -1,12 +1,12 @@
 function StudentStatCard({ label, value, hint, icon: Icon, tone = 'blue' }) {
   const toneClasses = {
-    blue: 'bg-blue-50 text-[#2563eb]',
+    blue: 'bg-blue-50 text-brand',
     amber: 'bg-amber-50 text-amber-600',
     slate: 'bg-slate-100 text-slate-700',
   }
 
   return (
-    <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft">
+    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-soft">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-slate-500">{label}</p>

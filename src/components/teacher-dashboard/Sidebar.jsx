@@ -37,7 +37,7 @@ function Sidebar({ open, session, onClose, onLogout }) {
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-600 transition hover:border-[#2563eb]/20 hover:bg-slate-50 hover:text-[#2563eb] lg:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-600 transition hover:border-brand/20 hover:bg-slate-50 hover:text-brand lg:hidden"
               aria-label="Close navigation menu"
             >
               <X className="h-5 w-5" />
@@ -93,7 +93,7 @@ function Sidebar({ open, session, onClose, onLogout }) {
                         'flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition',
                         isActive
                           ? 'bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.95))] text-white shadow-[0_14px_34px_rgba(37,99,235,0.2)]'
-                          : 'text-slate-700 hover:bg-slate-50 hover:text-[#2563eb]',
+                          : 'text-slate-700 hover:bg-slate-50 hover:text-brand',
                       ].join(' ')
                     }
                   >

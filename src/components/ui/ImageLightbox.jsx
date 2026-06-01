@@ -91,7 +91,7 @@ export default function ImageLightbox({ open, src, onClose }) {
     >
       {/* Controls Header */}
       <div
-        className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-gradient-to-b from-black/80 to-transparent select-none"
+        className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 bg-linear-to-b from-black/80 to-transparent select-none"
         style={{ zIndex: 100000 }}
       >
         <span className="text-sm font-semibold text-slate-300">

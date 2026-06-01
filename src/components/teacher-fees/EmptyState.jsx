@@ -4,7 +4,7 @@ import Button from '../ui/Button'
 function EmptyState({ title, description, onBack, actionLabel = 'Back' }) {
   return (
     <div className="rounded-[1.75rem] border border-dashed border-slate-300 bg-white/80 px-6 py-12 text-center shadow-soft">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(37,99,235,0.12),rgba(242,93,13,0.12))] text-[#2563eb]">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(37,99,235,0.12),rgba(242,93,13,0.12))] text-brand">
         <Wallet2 className="h-8 w-8" />
       </div>
       <h3 className="mt-5 text-xl font-semibold text-slate-900">{title}</h3>

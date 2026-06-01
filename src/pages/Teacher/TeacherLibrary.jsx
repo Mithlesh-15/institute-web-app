@@ -66,7 +66,7 @@ function AddMaterialModal({ open, loading, onClose, onSave }) {
           <select
             value={selectedLevel}
             onChange={(event) => setSelectedLevel(event.target.value)}
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15"
           >
             {levels.map((level) => (
               <option key={level} value={level}>
@@ -223,12 +223,12 @@ function TeacherLibrary() {
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
+      <section className="overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-soft">
         <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(219,234,254,0.45))] p-6 sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <Library className="h-3.5 w-3.5 text-[#2563eb]" />
+                <Library className="h-3.5 w-3.5 text-brand" />
                 Raj Tuition Classes
               </div>
               <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -284,7 +284,7 @@ function TeacherLibrary() {
                         window.open(material.materialLink, '_blank', 'noopener,noreferrer')
                       }
                     }}
-                    className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm cursor-pointer hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                    className="rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm cursor-pointer hover:border-blue-300 hover:shadow-md transition-all duration-300"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">

@@ -22,7 +22,7 @@ function StudentClasses() {
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               My Classes
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-900">Joined classes</h1>
@@ -43,12 +43,12 @@ function StudentClasses() {
           {[...Array(6)].map((_, index) => (
             <div
               key={index}
-              className="h-48 animate-pulse rounded-[1.5rem] border border-slate-200 bg-white shadow-soft"
+              className="h-48 animate-pulse rounded-3xl border border-slate-200 bg-white shadow-soft"
             />
           ))}
         </div>
       ) : error ? (
-        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
           {error}
         </div>
       ) : classes.length ? (
@@ -58,7 +58,7 @@ function StudentClasses() {
           ))}
         </div>
       ) : (
-        <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+        <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
           No classes joined yet.
         </div>
       )}
@@ -68,7 +68,7 @@ function StudentClasses() {
           <div className="w-full max-w-md rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
                   Class Details
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold text-slate-900">

@@ -49,7 +49,7 @@ function ClassCard({ classItem, onClick }) {
         </div>
 
         <div className="mt-4 flex items-center gap-2 text-sm text-slate-500">
-          <CalendarDays className="h-4 w-4 text-[#2563eb]" />
+          <CalendarDays className="h-4 w-4 text-brand" />
           <span>Starts {formatDate(classItem.startDate)}</span>
         </div>
       </div>

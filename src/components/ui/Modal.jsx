@@ -16,7 +16,7 @@ function Modal({ open, title, description, onClose, children, size = 'lg' }) {
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-4 backdrop-blur-sm sm:items-center">
       <div
         className={[
-          'flex max-h-[calc(100vh-2rem)] w-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]',
+          'flex max-h-[calc(100vh-2rem)] w-full flex-col overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]',
           widthClasses[size] || widthClasses.lg,
         ].join(' ')}
       >
@@ -31,7 +31,7 @@ function Modal({ open, title, description, onClose, children, size = 'lg' }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-[#2563eb]/20 hover:bg-slate-50 hover:text-[#2563eb]"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-brand/20 hover:bg-slate-50 hover:text-brand"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />

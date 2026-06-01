@@ -88,7 +88,7 @@ function StudentDashboard() {
         {[...Array(6)].map((_, index) => (
           <div
             key={index}
-            className="h-40 animate-pulse rounded-[1.5rem] border border-slate-200 bg-white shadow-soft"
+            className="h-40 animate-pulse rounded-3xl border border-slate-200 bg-white shadow-soft"
           />
         ))}
       </div>
@@ -125,7 +125,7 @@ function StudentDashboard() {
               <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500"></span>
             </span>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-red-600">Ongoing Live Class</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-red-600">Ongoing Live Class</p>
               <h3 className="text-base font-bold text-red-950 mt-0.5">{activeLive.eventName}</h3>
             </div>
           </div>
@@ -146,8 +146,8 @@ function StudentDashboard() {
       )}
 
       {/* 2. Greeting & Student Header */}
-      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+      <section className="rounded-4xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
           {getGreeting()},
         </p>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -168,7 +168,7 @@ function StudentDashboard() {
       {/* 3. Notice Board Section */}
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-soft">
         <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-brand">
             <Megaphone className="h-5 w-5" />
           </span>
           <div>
@@ -177,11 +177,11 @@ function StudentDashboard() {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4 xl:grid-cols-2 max-h-[350px] overflow-y-auto pr-1.5">
+        <div className="mt-5 grid gap-4 xl:grid-cols-2 max-h-87.5 overflow-y-auto pr-1.5">
           {noticesList.length ? (
             noticesList.map((notice) => <NoticeCard key={notice.id} notice={notice} />)
           ) : (
-            <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-5 text-sm text-slate-500 xl:col-span-2">
+            <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-5 text-sm text-slate-500 xl:col-span-2">
               No notices available right now.
             </div>
           )}
@@ -223,13 +223,13 @@ function StudentDashboard() {
               <Link
                 key={item.title}
                 to={item.to}
-                className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:border-[#2563eb]/20 hover:bg-white"
+                className="rounded-3xl border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:border-brand/20 hover:bg-white"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-brand">
                     <Icon className="h-5 w-5" />
                   </span>
-                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#2563eb] transition-colors" />
+                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-brand transition-colors" />
                 </div>
                 <h2 className="mt-5 text-base font-semibold text-slate-900">{item.title}</h2>
               </Link>

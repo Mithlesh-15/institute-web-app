@@ -11,7 +11,7 @@ function NoticeCard({ notice }) {
     <article
       onClick={handleClick}
       className={[
-        'rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300',
+        'rounded-3xl border border-slate-200 bg-white p-5 shadow-soft transition-all duration-300',
         notice.noticeLink ? 'cursor-pointer hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md' : '',
       ].join(' ')}
     >
@@ -26,7 +26,7 @@ function NoticeCard({ notice }) {
             </p>
           )}
         </div>
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-brand">
           <Bell className="h-4 w-4" />
         </span>
       </div>

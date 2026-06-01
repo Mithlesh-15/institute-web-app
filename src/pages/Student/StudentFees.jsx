@@ -30,7 +30,7 @@ function StudentFees() {
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               Fees
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-900">Fee history</h1>
@@ -52,12 +52,12 @@ function StudentFees() {
           {[...Array(4)].map((_, index) => (
             <div
               key={index}
-              className="h-48 animate-pulse rounded-[1.5rem] border border-slate-200 bg-white shadow-soft"
+              className="h-48 animate-pulse rounded-3xl border border-slate-200 bg-white shadow-soft"
             />
           ))}
         </div>
       ) : error ? (
-        <div className="rounded-[1.5rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
           {error}
         </div>
       ) : fees.length ? (
@@ -67,7 +67,7 @@ function StudentFees() {
           ))}
         </div>
       ) : (
-        <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+        <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
           No fee records found yet.
         </div>
       )}

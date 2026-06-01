@@ -203,8 +203,8 @@ function TeacherFees() {
             className={[
               'rounded-xl border p-2.5 text-left transition-all duration-300',
               classFilter === 'All'
-                ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
-                : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-[#f8fafc]',
+                ? 'border-brand bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
+                : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-surface',
             ].join(' ')}
           >
             <div className="flex items-center justify-between">
@@ -234,8 +234,8 @@ function TeacherFees() {
               className={[
                 'rounded-xl border p-2.5 text-left transition-all duration-300',
                 classFilter === bucket.className
-                  ? 'border-[#2563eb] bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
-                  : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-[#f8fafc]',
+                  ? 'border-brand bg-[linear-gradient(135deg,rgba(37,99,235,0.95),rgba(29,78,216,0.92))] text-white shadow-soft'
+                  : 'border-slate-200 bg-white text-slate-900 hover:border-blue-300 hover:bg-surface',
               ].join(' ')}
             >
               <div className="flex items-center justify-between">

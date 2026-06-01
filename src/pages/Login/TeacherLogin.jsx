@@ -112,21 +112,21 @@ function TeacherLogin() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface">
       <div className="absolute inset-0 opacity-90">
-        <div className="absolute left-[-8%] top-[-10%] h-80 w-80 rounded-full bg-[#2563eb]/10 blur-3xl" />
-        <div className="absolute right-[-10%] top-[8%] h-96 w-96 rounded-full bg-[#0f172a]/8 blur-3xl" />
-        <div className="absolute bottom-[-12%] left-[10%] h-80 w-80 rounded-full bg-[#dbeafe]/35 blur-3xl" />
+        <div className="absolute left-[-8%] top-[-10%] h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
+        <div className="absolute right-[-10%] top-[8%] h-96 w-96 rounded-full bg-nav/8 blur-3xl" />
+        <div className="absolute bottom-[-12%] left-[10%] h-80 w-80 rounded-full bg-brand-soft/35 blur-3xl" />
       </div>
 
       <main className="relative flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
         <section className="w-full max-w-xl">
-          <div className="rounded-[2rem] border border-white/80 bg-white/95 p-6 shadow-[0_30px_100px_rgba(15,23,42,0.14)] backdrop-blur-xl sm:p-8">
+          <div className="rounded-4xl border border-white/80 bg-white/95 p-6 shadow-[0_30px_100px_rgba(15,23,42,0.14)] backdrop-blur-xl sm:p-8">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1 shadow-[0_18px_34px_rgba(37,99,235,0.24)]">
                   <BrandLogo className="h-full w-full object-contain" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
                     Teacher portal
                   </p>
                   <p className="text-sm text-slate-500">Private access only</p>
@@ -139,7 +139,7 @@ function TeacherLogin() {
             </div>
 
             <div className="mt-7">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
                 Teacher sign in
               </p>
               <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -177,7 +177,7 @@ function TeacherLogin() {
                 rightSlot={
                   <button
                     type="button"
-                    className="text-sm font-medium text-[#2563eb] transition hover:text-[#1d4ed8]"
+                    className="text-sm font-medium text-brand transition hover:text-brand-strong"
                     onClick={() => setShowPassword((current) => !current)}
                   >
                     {showPassword ? 'Hide' : 'Show'}

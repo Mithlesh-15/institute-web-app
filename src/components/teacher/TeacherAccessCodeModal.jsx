@@ -34,14 +34,14 @@ function TeacherAccessCodeModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 py-6 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-[2rem] border border-white/80 bg-white p-6 shadow-[0_30px_120px_rgba(15,23,42,0.28)] sm:p-8">
+      <div className="w-full max-w-lg rounded-4xl border border-white/80 bg-white p-6 shadow-[0_30px_120px_rgba(15,23,42,0.28)] sm:p-8">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#2563eb]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-brand">
               <ShieldIcon />
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
                 Secure access
               </p>
               <h2 className="text-xl font-semibold text-slate-900">
@@ -85,7 +85,7 @@ function TeacherAccessCodeModal({
               autoComplete="off"
               className={[
                 'w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none',
-                'placeholder:text-slate-400 transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/15',
+                'placeholder:text-slate-400 transition focus:border-brand focus:ring-4 focus:ring-brand/15',
               ].join(' ')}
               placeholder="Enter access code"
             />

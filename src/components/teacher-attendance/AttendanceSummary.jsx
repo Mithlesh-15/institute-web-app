@@ -10,7 +10,7 @@ function AttendanceSummary({ totalStudents = 0, presentCount = 0, absentCount = 
       {cards.map((card) => (
         <div
           key={card.label}
-          className="rounded-[1.5rem] border border-slate-200 bg-white px-4 py-4 shadow-soft"
+          className="rounded-3xl border border-slate-200 bg-white px-4 py-4 shadow-soft"
         >
           <p className="text-sm text-slate-500">{card.label}</p>
           <p className={`mt-2 text-3xl font-semibold ${card.tone}`}>{card.value}</p>

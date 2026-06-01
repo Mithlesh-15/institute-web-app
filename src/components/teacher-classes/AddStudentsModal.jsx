@@ -71,10 +71,10 @@ function AddStudentsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/45 p-4 backdrop-blur-sm sm:items-center">
-      <div className="w-full max-w-3xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
+      <div className="w-full max-w-3xl overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.22)]">
         <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-5 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
               Student assignment
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
@@ -88,7 +88,7 @@ function AddStudentsModal({
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-[#2563eb]/20 hover:bg-slate-50 hover:text-[#2563eb]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 text-slate-500 transition hover:border-brand/20 hover:bg-slate-50 hover:text-brand"
             aria-label="Close add students modal"
           >
             <X className="h-5 w-5" />
@@ -107,7 +107,7 @@ function AddStudentsModal({
             </div>
           </div>
 
-          <div className="max-h-[50vh] overflow-y-auto rounded-[1.5rem] border border-slate-200 bg-slate-50 p-3">
+          <div className="max-h-[50vh] overflow-y-auto rounded-3xl border border-slate-200 bg-slate-50 p-3">
             {filteredStudents.length ? (
               <div className="grid gap-3">
                 {filteredStudents.map((student) => {
@@ -119,15 +119,15 @@ function AddStudentsModal({
                       className={[
                         'flex cursor-pointer items-center gap-4 rounded-[1.25rem] border bg-white p-4 transition',
                         checked
-                          ? 'border-[#2563eb] shadow-[0_10px_26px_rgba(37,99,235,0.12)]'
-                          : 'border-slate-200 hover:border-[#2563eb]/20',
+                          ? 'border-brand shadow-[0_10px_26px_rgba(37,99,235,0.12)]'
+                          : 'border-slate-200 hover:border-brand/20',
                       ].join(' ')}
                     >
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleStudent(student.id)}
-                        className="h-4 w-4 rounded border-slate-300 text-[#2563eb] focus:ring-[#2563eb]"
+                        className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand"
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-3">
@@ -140,14 +140,14 @@ function AddStudentsModal({
                         </div>
                       </div>
                       {checked ? (
-                        <Check className="h-5 w-5 text-[#2563eb]" />
+                        <Check className="h-5 w-5 text-brand" />
                       ) : null}
                     </label>
                   )
                 })}
               </div>
             ) : (
-              <div className="rounded-[1.5rem] border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-sm text-slate-500">
+              <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center text-sm text-slate-500">
                 No students match your search.
               </div>
             )}
