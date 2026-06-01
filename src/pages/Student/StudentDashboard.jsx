@@ -63,7 +63,7 @@ function StudentDashboard() {
       }
     }
 
-    loadDashboard()
+    loadDashboardData()
 
     const timer = setInterval(() => {
       setCurrentTime(new Date())
