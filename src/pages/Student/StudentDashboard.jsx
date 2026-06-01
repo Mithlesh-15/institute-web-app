@@ -244,24 +244,18 @@ function StudentDashboard() {
                         window.open(notice.noticeLink, '_blank', 'noopener,noreferrer')
                       }
                     }}
-                    className={`flex items-center justify-between p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-sm transition hover:border-[#2563eb]/25 ${
+                    className={`flex items-start justify-between p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-sm transition hover:border-[#2563eb]/25 ${
                       notice.noticeLink ? 'cursor-pointer hover:bg-blue-50/10' : 'cursor-default'
                     }`}
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 shrink-0">
+                    <div className="flex items-start gap-3 min-w-0">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 shrink-0 mt-0.5">
                         <Bell className="h-4 w-4" />
                       </span>
-                      <span className="text-sm font-semibold text-slate-850 truncate">
+                      <span className="text-sm font-semibold text-slate-850 whitespace-normal break-words">
                         {notice.title}
                       </span>
                     </div>
-                    {notice.noticeLink && (
-                      <span className="text-xs font-semibold text-[#2563eb] flex items-center gap-1 shrink-0 bg-blue-50 px-2.5 py-1.5 rounded-lg">
-                        Open Notice Link
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </span>
-                    )}
                   </div>
                 ))}
               </div>
