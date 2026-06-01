@@ -6,6 +6,7 @@ import {
   LogOut,
   UserRound,
   Trophy,
+  BookOpen,
 } from 'lucide-react'
 
 export const studentSidebarItems = [
@@ -30,14 +31,19 @@ export const studentSidebarItems = [
     icon: CalendarCheck2,
   },
   {
+    label: 'Fees',
+    to: '/student/fees',
+    icon: CreditCard,
+  },
+  {
     label: 'Test Results',
     to: '/student/results',
     icon: Trophy,
   },
   {
-    label: 'Fees',
-    to: '/student/fees',
-    icon: CreditCard,
+    label: 'Library',
+    to: '/student/library',
+    icon: BookOpen,
   },
   {
     label: 'Logout',

@@ -555,3 +555,23 @@ export async function fetchTestLeaderboard(testId, classId) {
 
   return [...rankedPresent, ...absentStudents.map(s => ({ ...s, position: null }))]
 }
+
+export async function fetchStudentMaterials() {
+  const session = getStudentSession()
+  const { data, error } = await supabase
+    .from('materials')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load study materials.')
+  }
+
+  return (data || []).map((row) => ({
+    id: row.id,
+    classId: row.class_id || '',
+    materialName: row.material_name || '',
+    materialLink: row.material_link || '',
+    createdAt: row.created_at || null,
+  }))
+}
