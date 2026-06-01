@@ -575,3 +575,56 @@ export async function fetchStudentMaterials() {
     createdAt: row.created_at || null,
   }))
 }
+
+export async function fetchAllStudentNotices() {
+  const { data, error } = await supabase
+    .from(NOTICES_TABLE)
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load notices.')
+  }
+
+  return (data || []).map(normalizePortalNotice).filter(Boolean)
+}
+
+export async function fetchStudentEvents() {
+  const { data, error } = await supabase
+    .from('event')
+    .select('*')
+    .order('event_year', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load events.')
+  }
+
+  return (data || [])
+    .filter((row) => !row.type || String(row.type).trim() === '')
+    .map((row) => ({
+      id: row.id,
+      eventName: row.event_name || '',
+      eventYear: row.event_year || '',
+      createdAt: row.created_at || null,
+    }))
+}
+
+export async function fetchEventPhotos(eventId) {
+  const { data, error } = await supabase
+    .from('gallary')
+    .select('*')
+    .eq('event_id', eventId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load event photos.')
+  }
+
+  return (data || []).map((row) => ({
+    id: row.id,
+    eventId: row.event_id || '',
+    type: row.type || '',
+    link: row.link || '',
+    createdAt: row.created_at || null,
+  }))
+}

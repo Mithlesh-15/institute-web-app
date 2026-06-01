@@ -7,6 +7,8 @@ import {
   UserRound,
   Trophy,
   BookOpen,
+  Megaphone,
+  Camera,
 } from 'lucide-react'
 
 export const studentSidebarItems = [
@@ -44,6 +46,16 @@ export const studentSidebarItems = [
     label: 'Library',
     to: '/student/library',
     icon: BookOpen,
+  },
+  {
+    label: 'Notices',
+    to: '/student/notices',
+    icon: Megaphone,
+  },
+  {
+    label: 'Gallery',
+    to: '/student/gallery',
+    icon: Camera,
   },
   {
     label: 'Logout',
