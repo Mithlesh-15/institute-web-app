@@ -108,13 +108,13 @@ export async function updateStudentById(studentId, updates = {}) {
 
 export async function createStudent(studentData) {
   const payload = {
-    name: normalizeText(studentData.name),
+    name: normalizeText(studentData.name).toUpperCase(),
     phone: normalizeText(studentData.phone),
     password: normalizeText(studentData.password),
     class: normalizeText(studentData.class || studentData.className),
     role: studentData.role || 'student',
     total_fees: Number(studentData.totalFees || studentData.total_fees || 0),
-    father_name: normalizeText(studentData.fatherName || studentData.father_name),
+    father_name: normalizeText(studentData.fatherName || studentData.father_name).toUpperCase(),
     school_name: normalizeText(studentData.schoolName || studentData.school_name),
     address: normalizeText(studentData.address),
     board: normalizeText(studentData.board),
