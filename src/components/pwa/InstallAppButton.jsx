@@ -20,6 +20,13 @@ function InstallAppButton({
       if (installed) {
         setInstallPrompt(null)
         setStatus('installed')
+        return
+      }
+
+      // Check if global prompt was already captured before this component mounted
+      if (window.deferredPrompt) {
+        setInstallPrompt(window.deferredPrompt)
+        setStatus('ready')
       }
     }
 
@@ -27,6 +34,13 @@ function InstallAppButton({
       event.preventDefault()
       setInstallPrompt(event)
       setStatus('ready')
+    }
+
+    const handlePromptReadyCustomEvent = () => {
+      if (window.deferredPrompt) {
+        setInstallPrompt(window.deferredPrompt)
+        setStatus('ready')
+      }
     }
 
     const handleAppInstalled = () => {
@@ -42,10 +56,12 @@ function InstallAppButton({
     syncInstalledState()
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('pwa-prompt-ready', handlePromptReadyCustomEvent)
     window.addEventListener('appinstalled', handleAppInstalled)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('pwa-prompt-ready', handlePromptReadyCustomEvent)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
   }, [onInstalled])

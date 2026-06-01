@@ -36,6 +36,15 @@ import StudentGallery from './pages/Student/StudentGallery.jsx'
 import StudentLive from './pages/Student/StudentLive.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
+// Global listener to capture PWA install prompt before React loads
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    window.deferredPrompt = e
+    window.dispatchEvent(new CustomEvent('pwa-prompt-ready'))
+  })
+}
+
 registerServiceWorker()
 
 const router = createBrowserRouter(
