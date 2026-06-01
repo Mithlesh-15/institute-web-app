@@ -28,6 +28,7 @@ export const normalizeStudent = (row) => {
     address: normalizeText(row.address),
     board: normalizeText(row.board),
     medium: normalizeText(row.medium),
+    createdAt: row.created_at || row.createdAt || null,
   }
 }
 
@@ -96,6 +97,38 @@ export async function updateStudentById(studentId, updates = {}) {
 
   if (error) {
     throw new Error(error.message || 'Unable to update student.')
+  }
+
+  return normalizeStudent(data)
+}
+
+export async function createStudent(studentData) {
+  const payload = {
+    name: normalizeText(studentData.name),
+    phone: normalizeText(studentData.phone),
+    password: normalizeText(studentData.password),
+    class: normalizeText(studentData.class || studentData.className),
+    role: studentData.role || 'student',
+    total_fees: Number(studentData.totalFees || studentData.total_fees || 0),
+    father_name: normalizeText(studentData.fatherName || studentData.father_name),
+    school_name: normalizeText(studentData.schoolName || studentData.school_name),
+    address: normalizeText(studentData.address),
+    board: normalizeText(studentData.board),
+    medium: normalizeText(studentData.medium),
+  }
+
+  if (studentData.photo) {
+    payload.photo = normalizeText(studentData.photo)
+  }
+
+  const { data, error } = await supabase
+    .from(STUDENT_TABLE)
+    .insert(payload)
+    .select('*')
+    .single()
+
+  if (error) {
+    throw new Error(error.message || 'Unable to create student.')
   }
 
   return normalizeStudent(data)

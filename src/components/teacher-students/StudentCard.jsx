@@ -1,4 +1,4 @@
-import { Eye, Trash2, School2 } from 'lucide-react'
+import { Eye, Trash2, School2, CalendarDays } from 'lucide-react'
 
 function getInitials(name = 'Student') {
   return name
@@ -8,6 +8,17 @@ function getInitials(name = 'Student') {
     .map((part) => part[0])
     .join('')
     .toUpperCase()
+}
+
+const formatAdmissionDate = (dateStr) => {
+  if (!dateStr) return 'N/A'
+  const date = new Date(dateStr)
+  if (Number.isNaN(date.getTime())) return 'N/A'
+  return date.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
 }
 
 function StudentCard({ student, onDelete, onViewProfile, deleting = false }) {
@@ -51,6 +62,10 @@ function StudentCard({ student, onDelete, onViewProfile, deleting = false }) {
               <div className="flex items-center gap-2">
                 <School2 className="h-4 w-4 text-[#2563eb]" />
                 <span>Class {student.className || 'N/A'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CalendarDays className="h-4 w-4 text-[#2563eb]" />
+                <span>Admission Date: {formatAdmissionDate(student.createdAt)}</span>
               </div>
             </div>
           </div>
