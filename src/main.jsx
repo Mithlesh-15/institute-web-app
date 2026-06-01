@@ -31,6 +31,7 @@ import StudentDashboard from './pages/Student/StudentDashboard.jsx'
 import StudentFees from './pages/Student/StudentFees.jsx'
 import StudentProfile from './pages/Student/StudentProfile.jsx'
 import StudentSetup from './pages/Student/StudentSetup.jsx'
+import StudentResults from './pages/Student/StudentResults.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
 
 registerServiceWorker()
@@ -51,6 +52,7 @@ const router = createBrowserRouter(
           <Route path="profile" element={<StudentProfile />} />
           <Route path="classes" element={<StudentClasses />} />
           <Route path="attendance" element={<StudentAttendance />} />
+          <Route path="results" element={<StudentResults />} />
           <Route path="fees" element={<StudentFees />} />
         </Route>
       </Route>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, CalendarCheck2, CreditCard, GraduationCap, Megaphone, Video, User } from 'lucide-react'
+import { ArrowRight, CalendarCheck2, CreditCard, GraduationCap, Megaphone, Video, User, Trophy } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import NoticeCard from '../../components/student-portal/NoticeCard'
 import { fetchStudentDashboardData, formatPortalCurrency } from '../../utils/studentPortal'
@@ -16,6 +16,12 @@ const quickActions = [
     to: '/student/attendance',
     icon: CalendarCheck2,
     description: 'Track daily attendance history',
+  },
+  {
+    title: 'Test Results',
+    to: '/student/results',
+    icon: Trophy,
+    description: 'Check scorecard & rankings',
   },
   {
     title: 'Fees Summary',
@@ -242,7 +248,7 @@ function StudentDashboard() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {quickActions.map((item) => {
             const Icon = item.icon
 

@@ -471,3 +471,87 @@ export async function fetchStudentDashboardData() {
     },
   }
 }
+
+export async function fetchStudentTests() {
+  const session = getStudentSession()
+  const classes = await fetchStudentClasses()
+  if (!classes.length) {
+    return []
+  }
+
+  const classIds = classes.map((c) => c.id)
+
+  const { data: tests, error: testsError } = await supabase
+    .from('tests')
+    .select('*')
+    .in('class_id', classIds)
+    .order('test_date', { ascending: false })
+
+  if (testsError) {
+    throw new Error(testsError.message || 'Unable to load tests.')
+  }
+
+  return tests || []
+}
+
+export async function fetchTestLeaderboard(testId, classId) {
+  const { data: assignments, error: assignmentsError } = await supabase
+    .from(BATCH_STUDENTS_TABLE)
+    .select('student_id')
+    .eq('class_id', classId)
+
+  if (assignmentsError) {
+    throw new Error(assignmentsError.message || 'Unable to load students for this class.')
+  }
+
+  const studentIds = (assignments || []).map((row) => row.student_id).filter(Boolean)
+
+  if (!studentIds.length) {
+    return []
+  }
+
+  const { data: studentRows, error: studentError } = await supabase
+    .from('students')
+    .select('id, name, photo')
+    .in('id', studentIds)
+
+  if (studentError) {
+    throw new Error(studentError.message || 'Unable to load student profiles.')
+  }
+
+  const { data: resultRows, error: resultError } = await supabase
+    .from('test_results')
+    .select('*')
+    .eq('test_id', testId)
+
+  if (resultError) {
+    throw new Error(resultError.message || 'Unable to load test results.')
+  }
+
+  const resultsMap = new Map(
+    (resultRows || []).map((row) => [row.student_id, row])
+  )
+
+  const leaderboard = studentRows.map((student) => {
+    const res = resultsMap.get(student.id)
+    return {
+      studentId: student.id,
+      name: student.name,
+      photo: student.photo || '',
+      marks: res ? Number(res.marks || 0) : 0,
+      isAbsent: res ? Boolean(res.is_absent) : true,
+    }
+  })
+
+  const presentStudents = leaderboard.filter(s => !s.isAbsent).sort((a, b) => b.marks - a.marks)
+  const absentStudents = leaderboard.filter(s => s.isAbsent)
+
+  const rankedPresent = presentStudents.map((student, index) => {
+    return {
+      ...student,
+      position: index + 1
+    }
+  })
+
+  return [...rankedPresent, ...absentStudents.map(s => ({ ...s, position: null }))]
+}

@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   LogOut,
   UserRound,
+  Trophy,
 } from 'lucide-react'
 
 export const studentSidebarItems = [
@@ -27,6 +28,11 @@ export const studentSidebarItems = [
     label: 'My Attendance',
     to: '/student/attendance',
     icon: CalendarCheck2,
+  },
+  {
+    label: 'Test Results',
+    to: '/student/results',
+    icon: Trophy,
   },
   {
     label: 'Fees',
