@@ -17,11 +17,11 @@ function NoticeCard({ notice }) {
     >
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-semibold text-slate-900 transition-colors truncate">
+          <h3 className="text-base font-semibold text-slate-900 transition-colors whitespace-pre-wrap break-words">
             {notice.title}
           </h3>
           {notice.noticeLink && (
-            <p className="mt-2 flex items-center gap-1.5 text-xs text-blue-600 font-medium truncate">
+            <p className="mt-2 flex items-center gap-1.5 text-xs text-blue-600 font-medium break-all">
               Open link <ExternalLink className="h-3 w-3" />
             </p>
           )}
