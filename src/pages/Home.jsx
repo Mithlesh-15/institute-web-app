@@ -43,17 +43,9 @@ function Home() {
   const [activeSlide, setActiveSlide] = useState(0)
   const carouselImages = [
     {
-      url: 'https://marathidesigns.com/storage/cet-result-congratulations-banner.webp',
+      url: '/Home/Banners/B1.jpeg',
       alt: 'Coaching Classroom'
     },
-    {
-      url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBsqnZNbe0xhoSeRQkyK89kPfoFq08LWGdnQ&s',
-      alt: 'Students studying together'
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80',
-      alt: 'Direct mentoring'
-    }
   ]
 
   // Refs for GSAP animations
@@ -218,29 +210,19 @@ function Home() {
   // Teachers mock database
   const teachers = [
     {
-      name: 'Prof. Rajesh Kumar',
-      role: 'Founder & Head of Mathematics',
-      qual: 'M.Sc. Mathematics (IIT Bombay)',
-      exp: '15+ Years Experience',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
-      subject: 'Mathematics'
-    },
-    {
-      name: 'Dr. Sneha Sharma',
-      role: 'Head of Science Department',
+      name: 'Yogesh Dewangan',
       qual: 'Ph.D. in Physics (DU)',
       exp: '12+ Years Experience',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-      subject: 'Physics & Chemistry'
+      image: '/Home/Teachers/T1.png',
+      subject: 'Physics & Mathematics'
     },
     {
-      name: 'Prof. Amit Patel',
-      role: 'Senior English Faculty',
-      qual: 'M.A. English Literature',
-      exp: '10+ Years Experience',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-      subject: 'English Grammar & Lit'
-    }
+      name: 'Prakash Dewangan',
+      qual: 'M.Sc. Mathematics (IIT Bombay)',
+      exp: '15+ Years Experience',
+      image: '/Home/Teachers/T2.png',
+      subject: 'Chemistry & Biology'
+    },
   ]
 
   // Fees Structure mock data
@@ -547,7 +529,7 @@ function Home() {
       </section>
 
       {/* SECTION 5: FEES STRUCTURE */}
-      <section id="fees" ref={feesRef} className="py-24 sm:py-32 bg-slate-50 relative overflow-hidden">
+      {/* <section id="fees" ref={feesRef} className="py-24 sm:py-32 bg-slate-50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Affordable Pricing</span>
@@ -594,7 +576,7 @@ function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* SECTION 6: TIME TABLE */}
       <section id="timetable" ref={timetableRef} className="py-24 sm:py-32 bg-white relative overflow-hidden">
