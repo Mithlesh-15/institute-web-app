@@ -88,12 +88,6 @@ function StudentPortalShell() {
             </div>
 
             <div className="flex items-center gap-3">
-              <InstallAppButton
-                label="Install App"
-                compact
-                showHelperText={false}
-              />
-
               <button
                 type="button"
                 onClick={handleLogout}
@@ -111,6 +105,8 @@ function StudentPortalShell() {
             <Outlet />
           </div>
         </main>
+
+        <InstallAppButton />
       </div>
     </div>
   )

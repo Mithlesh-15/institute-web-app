@@ -73,7 +73,7 @@ function Home() {
                 </p>
 
                 <div className="mt-6">
-                  <InstallAppButton />
+                  <InstallAppButton inline />
                 </div>
 
                 <div className="mt-6 grid gap-3 text-sm text-slate-600">
