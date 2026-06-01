@@ -23,7 +23,6 @@ function StudentGallery() {
     staleTime: 0,
     gcTime: 0,
   })
-  console
 
   // Filter photos based on user requirements:
   // - If type is null/empty: show as normal photo
@@ -190,9 +189,9 @@ function StudentGallery() {
                     <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
                       {normalPhotos.map((photo) => (
                         <div
-                          key={photo.id}
-                          onClick={() => setActivePhoto(photo.link)}
-                          className="group relative aspect-square overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 cursor-pointer shadow-sm hover:border-[#2563eb]/30 transition-all"
+                           key={photo.id}
+                           onClick={() => setActivePhoto(photo.link)}
+                           className="group relative aspect-square overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 cursor-pointer shadow-sm hover:border-[#2563eb]/30 transition-all"
                         >
                           <img
                             src={photo.link}

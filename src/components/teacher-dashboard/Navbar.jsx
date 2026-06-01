@@ -41,9 +41,8 @@ function Navbar({ session, title, currentLabel, onMenuClick, onLogout }) {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <InstallAppButton
-            label="Install"
-            compact
-            showHelperText={false}
+            label="Install App"
+            inline
             className="shrink-0"
           />
 

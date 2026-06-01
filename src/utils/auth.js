@@ -2,7 +2,7 @@ import { supabase } from './supabase'
 
 const AUTH_STORAGE_KEY = 'rtc_auth_session'
 const TEACHER_TABLE = 'teachers'
-const TEACHER_ACCESS_CODE = 'TEACHER2026'
+const TEACHER_ACCESS_CODE = import.meta.env.VITE_TEACHER_ACCESS_CODE
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -35,12 +35,81 @@ export const isValidPhone = (phone) => /^\d{10}$/.test(String(phone).trim())
 export const isValidTeacherAccessCode = (code) =>
   normalizeText(code).toUpperCase() === TEACHER_ACCESS_CODE
 
+const base64UrlEncode = (obj) => {
+  const str = JSON.stringify(obj)
+  const bytes = new TextEncoder().encode(str)
+  let binary = ''
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i])
+  }
+  return btoa(binary)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '')
+}
+
+const base64UrlDecode = (str) => {
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/')
+  while (base64.length % 4) {
+    base64 += '='
+  }
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i)
+  }
+  return JSON.parse(new TextDecoder().decode(bytes))
+}
+
+const getSignature = (headerB64, payloadB64, secret) => {
+  const stringToSign = `${headerB64}.${payloadB64}.${secret}`
+  let hash = 5381
+  for (let i = 0; i < stringToSign.length; i++) {
+    hash = (hash * 33) ^ stringToSign.charCodeAt(i)
+  }
+  return (hash >>> 0).toString(16)
+}
+
+const JWT_SECRET = 'rtc_super_secret_key_2026'
+
+export const encodeJWT = (payload) => {
+  const header = { alg: 'HS256', typ: 'JWT' }
+  const headerB64 = base64UrlEncode(header)
+  const payloadB64 = base64UrlEncode(payload)
+  const signature = getSignature(headerB64, payloadB64, JWT_SECRET)
+  return `${headerB64}.${payloadB64}.${signature}`
+}
+
+export const decodeJWT = (token) => {
+  if (!token || typeof token !== 'string') return null
+  const parts = token.split('.')
+  if (parts.length !== 3) return null
+
+  const [headerB64, payloadB64, signature] = parts
+  const expectedSignature = getSignature(headerB64, payloadB64, JWT_SECRET)
+
+  if (signature !== expectedSignature) {
+    console.warn('JWT signature verification failed')
+    return null
+  }
+
+  try {
+    return base64UrlDecode(payloadB64)
+  } catch (e) {
+    console.error('Error decoding JWT payload', e)
+    return null
+  }
+}
+
 export const getSession = () => {
   if (typeof window === 'undefined') {
     return null
   }
 
-  return safeParse(window.localStorage.getItem(AUTH_STORAGE_KEY))
+  const token = window.localStorage.getItem(AUTH_STORAGE_KEY)
+  if (!token) return null
+
+  return decodeJWT(token)
 }
 
 export const saveSession = (session) => {
@@ -48,7 +117,8 @@ export const saveSession = (session) => {
     return
   }
 
-  window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session))
+  const token = encodeJWT(session)
+  window.localStorage.setItem(AUTH_STORAGE_KEY, token)
 }
 
 export const clearSession = () => {

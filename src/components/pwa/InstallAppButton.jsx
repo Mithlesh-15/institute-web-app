@@ -3,16 +3,14 @@ import { Download } from 'lucide-react'
 import { canPromptForInstall, isStandaloneDisplay } from '../../pwa/pwa'
 
 function InstallAppButton({
-  label = 'Install Student App',
-  className = '',
   onInstalled,
-  compact = false,
-  showHelperText = true,
+  inline = false,
+  label = 'Install App',
+  className = '',
 }) {
   const [installPrompt, setInstallPrompt] = useState(null)
   const [isInstalled, setIsInstalled] = useState(false)
   const [status, setStatus] = useState('idle')
-  const [supportHint, setSupportHint] = useState('')
 
   useEffect(() => {
     const syncInstalledState = () => {
@@ -22,7 +20,13 @@ function InstallAppButton({
       if (installed) {
         setInstallPrompt(null)
         setStatus('installed')
-        setSupportHint('')
+        return
+      }
+
+      // Check if global prompt was already captured before this component mounted
+      if (window.deferredPrompt) {
+        setInstallPrompt(window.deferredPrompt)
+        setStatus('ready')
       }
     }
 
@@ -30,14 +34,19 @@ function InstallAppButton({
       event.preventDefault()
       setInstallPrompt(event)
       setStatus('ready')
-      setSupportHint('')
+    }
+
+    const handlePromptReadyCustomEvent = () => {
+      if (window.deferredPrompt) {
+        setInstallPrompt(window.deferredPrompt)
+        setStatus('ready')
+      }
     }
 
     const handleAppInstalled = () => {
       setIsInstalled(true)
       setInstallPrompt(null)
       setStatus('installed')
-      setSupportHint('')
 
       if (typeof onInstalled === 'function') {
         onInstalled()
@@ -47,22 +56,21 @@ function InstallAppButton({
     syncInstalledState()
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('pwa-prompt-ready', handlePromptReadyCustomEvent)
     window.addEventListener('appinstalled', handleAppInstalled)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('pwa-prompt-ready', handlePromptReadyCustomEvent)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
   }, [onInstalled])
 
-  const handleInstall = async () => {
+  const handleInstall = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
     if (!installPrompt) {
-      setStatus('unavailable')
-      setSupportHint(
-        canPromptForInstall()
-          ? 'Install is preparing in your browser. Try again in a moment.'
-          : 'Use your browser menu to install this app.',
-      )
       return
     }
 
@@ -74,8 +82,6 @@ function InstallAppButton({
       setIsInstalled(true)
       setInstallPrompt(null)
       setStatus('installed')
-      setSupportHint('')
-
       if (typeof onInstalled === 'function') {
         onInstalled()
       }
@@ -85,59 +91,64 @@ function InstallAppButton({
     setStatus('ready')
   }
 
+  // If already installed or browser hasn't fired beforeinstallprompt, return null
   if (isInstalled || !installPrompt) {
-    if (isInstalled) {
-      return (
-        <div className={`inline-flex items-center rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 ${className}`}>
-          App installed
-        </div>
-      )
-    }
+    return null
   }
 
   const isBusy = status === 'prompting'
-  const helperTextClass = compact ? 'text-xs' : 'text-xs'
-  const buttonTone =
-    status === 'unavailable'
-      ? 'opacity-90 ring-1 ring-[#2563eb]/20'
-      : ''
 
-  return (
-    <div className={`inline-flex flex-col gap-2 ${className}`}>
+  // Inline mode: standard button inside layout flow (e.g. landing page)
+  if (inline) {
+    return (
       <button
         type="button"
         onClick={handleInstall}
         disabled={isBusy}
-        className={[
-          'group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#2563eb] via-[#1d4ed8] to-[#0f172a] font-semibold text-white shadow-[0_18px_40px_rgba(37,99,235,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_48px_rgba(37,99,235,0.3)] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70',
-          buttonTone,
-          compact ? 'px-4 py-2.5 text-sm' : 'px-6 py-3 text-sm',
-        ].join(' ')}
-        aria-label={status === 'installed' ? 'App installed' : label}
-        title={
-          status === 'unavailable'
-            ? supportHint || 'Install option will appear when your browser allows it.'
-            : undefined
-        }
+        aria-label={label}
+        className={`group inline-flex items-center justify-center gap-2 rounded-xl bg-[#2563eb] px-5 py-3 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#1d4ed8] hover:-translate-y-0.5 active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2 ${className}`}
       >
         <Download className="h-4 w-4 shrink-0" />
-        <span className="transition-transform duration-300 group-hover:scale-[1.01]">
-          {isBusy ? 'Preparing install...' : label}
-        </span>
+        <span>{isBusy ? 'Installing...' : label}</span>
       </button>
+    )
+  }
 
-      {showHelperText ? (
-        status === 'installed' ? (
-          <p className={`font-medium text-emerald-600 ${helperTextClass}`}>Installed successfully.</p>
-        ) : status === 'unavailable' ? (
-          <p className={`font-medium text-slate-500 ${helperTextClass}`}>{supportHint}</p>
-        ) : (
-          <p className={`font-medium text-slate-500 ${helperTextClass}`}>
-            Install for faster access, offline-ready browsing, and app-like use.
-          </p>
-        )
-      ) : null}
-    </div>
+  // Global Floating / Sticky mode (responsive layout)
+  return (
+    <>
+      {/* 1. Mobile Design: Sticky Bottom Bar (Small screens) */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 border-t border-slate-100 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] z-50 flex flex-col gap-1 md:hidden">
+        <button
+          type="button"
+          onClick={handleInstall}
+          disabled={isBusy}
+          aria-label="Install Raj Tuition Classes App"
+          className="w-full group inline-flex items-center justify-center gap-2 rounded-xl bg-[#2563eb] text-white py-3.5 px-4 font-semibold shadow-md transition-all duration-200 hover:bg-[#1d4ed8] active:scale-[0.97] disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2"
+        >
+          <Download className="h-4 w-4 shrink-0" />
+          <span>
+            {isBusy ? 'Installing...' : 'Install Raj Tuition Classes App'}
+          </span>
+        </button>
+      </div>
+
+      {/* 2. Desktop Design: Floating Action Button (FAB) (Large screens) */}
+      <div className="hidden md:block fixed bottom-6 right-6 z-50">
+        <button
+          type="button"
+          onClick={handleInstall}
+          disabled={isBusy}
+          aria-label="Install App"
+          className="group inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#2563eb] text-white py-3 px-5 font-semibold shadow-md transition-all duration-300 hover:bg-[#1d4ed8] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:ring-offset-2"
+        >
+          <Download className="h-4.5 w-4.5 shrink-0" />
+          <span className="text-sm">
+            {isBusy ? 'Installing...' : 'Install App'}
+          </span>
+        </button>
+      </div>
+    </>
   )
 }
 

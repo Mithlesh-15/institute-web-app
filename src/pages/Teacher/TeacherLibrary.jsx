@@ -44,7 +44,7 @@ function AddMaterialModal({ open, loading, onClose, onSave }) {
     })
   }
 
-  const levels = ['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']
+  const levels = ['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG', 'Other']
 
   return (
     <Modal
@@ -128,7 +128,7 @@ function TeacherLibrary() {
 
   const groupedMaterials = useMemo(() => {
     const groups = {}
-    const levelOrder = ['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']
+    const levelOrder = ['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG', 'Other']
 
     materials.forEach((material) => {
       const matchedClass = classes.find((c) => c.id === material.classId)
@@ -136,7 +136,7 @@ function TeacherLibrary() {
 
       if (!groups[level]) {
         groups[level] = {
-          classLabel: level === 'Unassigned' ? 'Unassigned' : `Class ${level}`,
+          classLabel: level === 'Unassigned' ? 'Unassigned' : level === 'Other' ? 'Other' : `Class ${level}`,
           items: [],
         }
       }
@@ -246,7 +246,7 @@ function TeacherLibrary() {
       <SectionCard title="Filter library" subtitle="Class-wise view">
         <FilterTabs
           value={classFilter}
-          options={['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']}
+          options={['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG', 'Other']}
           onChange={setClassFilter}
         />
       </SectionCard>
@@ -303,19 +303,6 @@ function TeacherLibrary() {
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
-                    </div>
-
-                    <div className="mt-4 flex justify-end">
-                      <a
-                        href={material.materialLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(event) => event.stopPropagation()}
-                        className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-[#2563eb] shadow-sm transition hover:bg-blue-50"
-                      >
-                        Open Link
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
                     </div>
                   </div>
                 ))}

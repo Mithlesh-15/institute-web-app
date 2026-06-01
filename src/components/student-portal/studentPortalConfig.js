@@ -6,9 +6,10 @@ import {
   LogOut,
   UserRound,
   Trophy,
-  BookOpen,
+  Library,
   Megaphone,
-  Camera,
+  Image,
+  Video,
 } from 'lucide-react'
 
 export const studentSidebarItems = [
@@ -43,9 +44,9 @@ export const studentSidebarItems = [
     icon: Trophy,
   },
   {
-    label: 'Library',
+    label: 'E-Library',
     to: '/student/library',
-    icon: BookOpen,
+    icon: Library,
   },
   {
     label: 'Notices',
@@ -55,7 +56,7 @@ export const studentSidebarItems = [
   {
     label: 'Gallery',
     to: '/student/gallery',
-    icon: Camera,
+    icon: Image,
   },
   {
     label: 'Logout',

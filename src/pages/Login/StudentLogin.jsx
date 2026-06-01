@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, GraduationCap, ShieldCheck } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import StudentPageShell from '../../components/student/StudentPageShell'

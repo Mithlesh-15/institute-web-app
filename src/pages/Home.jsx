@@ -395,7 +395,7 @@ function Home() {
                 for secondary and higher secondary grades. Experience excellence in Physics, Chemistry, Math, and English.
               </p>
               
-              <div className="hero-anim-fade mt-8 flex flex-wrap justify-center gap-4">
+              <div className="hero-anim-fade mt-8 flex flex-wrap justify-center gap-4 items-center">
                 <Link
                   to="/login/student"
                   className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl text-base font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-xl shadow-blue-600/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-blue-600/30"
@@ -410,6 +410,13 @@ function Home() {
                 >
                   Learn More
                 </a>
+                
+                <InstallAppButton
+                  label="Install App"
+                  compact
+                  showHelperText={false}
+                  className="shadow-md"
+                />
               </div>
             </div>
           </div>

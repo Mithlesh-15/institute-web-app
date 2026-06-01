@@ -15,13 +15,13 @@ function NoticeCard({ notice }) {
         notice.noticeLink ? 'cursor-pointer hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md' : '',
       ].join(' ')}
     >
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-semibold text-slate-900 transition-colors whitespace-pre-wrap break-words">
+          <h3 className="text-base font-semibold text-slate-900 transition-colors truncate">
             {notice.title}
           </h3>
           {notice.noticeLink && (
-            <p className="mt-2 flex items-center gap-1.5 text-xs text-blue-600 font-medium break-all">
+            <p className="mt-2 flex items-center gap-1.5 text-xs text-blue-600 font-medium truncate">
               Open link <ExternalLink className="h-3 w-3" />
             </p>
           )}

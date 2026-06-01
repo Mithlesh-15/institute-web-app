@@ -26,3 +26,7 @@ build-ssr
 *.sln
 *.sw?
 .env
+
+dev-dist/
+dev-dist/sw.js
+dev-dist/workbox-8414606a.js

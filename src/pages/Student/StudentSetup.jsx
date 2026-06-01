@@ -109,6 +109,14 @@ function StudentSetup() {
       setError('Please enter the student name.')
       return
     }
+    if (!form.fatherName.trim()) {
+      setError("Please enter the father's name.")
+      return
+    }
+    if (!form.photoFile) {
+      setError('Please upload a profile photo.')
+      return
+    }
     if (!form.className) {
       setError('Please select a class.')
       return
@@ -119,6 +127,14 @@ function StudentSetup() {
     }
     if (!form.medium) {
       setError('Please select a medium.')
+      return
+    }
+    if (!form.schoolName.trim()) {
+      setError('Please enter your school name.')
+      return
+    }
+    if (!form.address.trim()) {
+      setError('Please enter your address.')
       return
     }
 
@@ -185,6 +201,7 @@ function StudentSetup() {
               </div>
 
               <Input
+              type="password"
                 id="access-code"
                 label="Student Access Code"
                 placeholder="e.g. YYY-C-XXXXXX"

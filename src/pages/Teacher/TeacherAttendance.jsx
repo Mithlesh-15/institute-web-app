@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, CalendarCheck2 } from 'lucide-react'
 import Button from '../../components/ui/Button'
-import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import AttendanceCard from '../../components/teacher-attendance/AttendanceCard'
 import AttendanceRow from '../../components/teacher-attendance/AttendanceRow'
-import AttendanceSummary from '../../components/teacher-attendance/AttendanceSummary'
 import DateSelector from '../../components/teacher-attendance/DateSelector'
 import EmptyState from '../../components/teacher-attendance/EmptyState'
+import SectionCard from '../../components/teacher-dashboard/SectionCard'
+import FilterTabs from '../../components/teacher-classes/FilterTabs'
 import {
   fetchAttendanceClasses,
   fetchAttendanceClass,
@@ -40,7 +39,7 @@ function TeacherAttendance() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [mode, setMode] = useState('save')
-  const [loadedDateKey, setLoadedDateKey] = useState('')
+  const [classFilter, setClassFilter] = useState('All')
 
   useEffect(() => {
     let mounted = true
@@ -76,6 +75,12 @@ function TeacherAttendance() {
     }
   }, [])
 
+  const filteredClasses = useMemo(() => {
+    return classes.filter(
+      (classItem) => classFilter === 'All' || classItem.classLevel === classFilter,
+    )
+  }, [classFilter, classes])
+
   useEffect(() => {
     if (!selectedClass) {
       return
@@ -101,7 +106,6 @@ function TeacherAttendance() {
         setStudents(classStudents)
         setStatuses(buildInitialStatuses(classStudents, attendanceRecords))
         setMode(attendanceRecords.length ? 'update' : 'save')
-        setLoadedDateKey(`${selectedClass.id}-${attendanceDate}`)
       } catch (loadError) {
         if (mounted) {
           setError(
@@ -124,25 +128,12 @@ function TeacherAttendance() {
     }
   }, [attendanceDate, selectedClass?.id])
 
-  const totalStudents = students.length
-
-  const presentCount = useMemo(
-    () => Object.values(statuses).filter((status) => status === 'present').length,
-    [statuses],
-  )
-
-  const absentCount = useMemo(
-    () => Object.values(statuses).filter((status) => status === 'absent').length,
-    [statuses],
-  )
-
   const handleClassSelect = (classItem) => {
     setSelectedClass(classItem)
     setStatuses({})
     setStudents([])
     setError('')
     setMode('save')
-    setLoadedDateKey('')
   }
 
   const handleBack = () => {
@@ -151,7 +142,6 @@ function TeacherAttendance() {
     setStatuses({})
     setError('')
     setMode('save')
-    setLoadedDateKey('')
   }
 
   const handleStatusChange = (studentId, status) => {
@@ -200,28 +190,23 @@ function TeacherAttendance() {
   if (!selectedClass) {
     return (
       <div className="space-y-6">
-        <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-          <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(242,93,13,0.06))] p-6 sm:p-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                  <CalendarCheck2 className="h-3.5 w-3.5 text-[#2563eb]" />
-                  Attendance management
-                </div>
-                <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                  Attendance
-                </h1>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                  Select a class to mark present and absent records for today or any past date.
-                </p>
-              </div>
-            </div>
-          </div>
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            Attendance
+          </h1>
         </section>
 
-        {classes.length ? (
+        <SectionCard title="Filter classes" subtitle="Class-wise view">
+          <FilterTabs
+            value={classFilter}
+            options={['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG']}
+            onChange={setClassFilter}
+          />
+        </SectionCard>
+
+        {filteredClasses.length ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {classes.map((classItem) => (
+            {filteredClasses.map((classItem) => (
               <AttendanceCard
                 key={classItem.id}
                 classItem={classItem}
@@ -229,10 +214,15 @@ function TeacherAttendance() {
               />
             ))}
           </div>
+        ) : classes.length ? (
+          <EmptyState
+            title="No classes match your filters"
+            onBack={() => setClassFilter('All')}
+            actionLabel="Reset Filter"
+          />
         ) : (
           <EmptyState
             title="No classes available for attendance"
-            description="Create a class first, then you can manage attendance from here."
             onBack={() => navigate('/teacher/classes')}
             actionLabel="Back to Classes"
           />
@@ -243,71 +233,33 @@ function TeacherAttendance() {
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(242,93,13,0.06))] p-6 sm:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl">
-              <button
-                type="button"
-                onClick={handleBack}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#2563eb]/20 hover:text-[#2563eb]"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Classes
-              </button>
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            {selectedClass.className || 'Class'}
+          </h1>
 
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <CalendarCheck2 className="h-3.5 w-3.5 text-[#2563eb]" />
-                Attendance for {attendanceDate}
-              </div>
-
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                {selectedClass.className || 'Class'}
-              </h1>
-
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-                  Class {selectedClass.classLevel || 'N/A'}
-                </span>
-                <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
-                  {totalStudents} total students
-                </span>
-                <span className="rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-semibold text-[#f25d0d]">
-                  {loadedDateKey ? mode.toUpperCase() : 'READY'}
-                </span>
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2 lg:w-[24rem]">
-              <DateSelector
-                value={attendanceDate}
-                onChange={(event) => setAttendanceDate(event.target.value)}
-              />
-              <Button
-                onClick={handleSaveAttendance}
-                loading={saving}
-                loadingLabel="Saving attendance..."
-                className="hidden lg:inline-flex"
-              >
-                {mode === 'update' ? 'Update Attendance' : 'Save Attendance'}
-              </Button>
-            </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:w-[24rem]">
+            <DateSelector
+              value={attendanceDate}
+              onChange={(event) => setAttendanceDate(event.target.value)}
+            />
+            <Button
+              onClick={handleSaveAttendance}
+              loading={saving}
+              loadingLabel="Saving attendance..."
+              className="hidden lg:inline-flex"
+            >
+              {mode === 'update' ? 'Update Attendance' : 'Save Attendance'}
+            </Button>
           </div>
         </div>
       </section>
 
-      <AttendanceSummary
-        totalStudents={totalStudents}
-        presentCount={presentCount}
-        absentCount={absentCount}
-      />
-
       {error ? (
-        <SectionCard>
-          <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700">
-            {error}
-          </div>
-        </SectionCard>
+        <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700 shadow-soft">
+          {error}
+        </div>
       ) : null}
 
       {loadingAttendance ? (

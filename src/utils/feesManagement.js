@@ -149,10 +149,10 @@ export async function fetchFeesRecords(studentIds = []) {
 }
 
 export async function ensureCurrentMonthFees(students = []) {
-  const teacherId = getTeacherId()
+  const session = getSession()
 
-  if (!teacherId) {
-    throw new Error('Teacher session not found. Please log in again.')
+  if (!session) {
+    throw new Error('Session not found. Please log in again.')
   }
 
   const currentMonthYear = getCurrentMonthYear()
@@ -167,7 +167,7 @@ export async function ensureCurrentMonthFees(students = []) {
     .select('student_id')
     .in('student_id', studentIds)
     .eq('month', currentMonthYear.month)
-    .eq('year', currentMonthYear.year)
+    .eq('year', String(currentMonthYear.year))
 
   if (error) {
     throw new Error(error.message || 'Unable to verify current month fees.')
@@ -180,11 +180,11 @@ export async function ensureCurrentMonthFees(students = []) {
       const student = students.find((item) => item.id === studentId)
 
       return {
-      student_id: studentId,
-      month: currentMonthYear.month,
-      year: currentMonthYear.year,
-      status: 'pending',
-      pending_amount: Number(student?.totalFees || 0),
+        student_id: studentId,
+        month: currentMonthYear.month,
+        year: String(currentMonthYear.year),
+        status: 'pending',
+        pending_amount: Number(student?.totalFees || 0),
       }
     })
 

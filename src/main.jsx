@@ -25,6 +25,8 @@ import TeacherLibrary from './pages/Teacher/TeacherLibrary.jsx'
 import TeacherNotices from './pages/Teacher/TeacherNotices.jsx'
 import TeacherResults from './pages/Teacher/TeacherResults.jsx'
 import TeacherStudents from './pages/Teacher/TeacherStudents.jsx'
+import TeacherGallery from './pages/Teacher/TeacherGallery.jsx'
+import TeacherLive from './pages/Teacher/TeacherLive.jsx'
 import StudentAttendance from './pages/Student/StudentAttendance.jsx'
 import StudentClasses from './pages/Student/StudentClasses.jsx'
 import StudentDashboard from './pages/Student/StudentDashboard.jsx'
@@ -35,7 +37,17 @@ import StudentResults from './pages/Student/StudentResults.jsx'
 import StudentLibrary from './pages/Student/StudentLibrary.jsx'
 import StudentNotices from './pages/Student/StudentNotices.jsx'
 import StudentGallery from './pages/Student/StudentGallery.jsx'
+import StudentLive from './pages/Student/StudentLive.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
+
+// Global listener to capture PWA install prompt before React loads
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    window.deferredPrompt = e
+    window.dispatchEvent(new CustomEvent('pwa-prompt-ready'))
+  })
+}
 
 registerServiceWorker()
 
@@ -60,6 +72,8 @@ const router = createBrowserRouter(
           <Route path="notices" element={<StudentNotices />} />
           <Route path="gallery" element={<StudentGallery />} />
           <Route path="fees" element={<StudentFees />} />
+          <Route path="gallery" element={<StudentGallery />} />
+          <Route path="live" element={<StudentLive />} />
         </Route>
       </Route>
 
@@ -78,10 +92,12 @@ const router = createBrowserRouter(
           <Route path="results/:testId" element={<TeacherResults />} />
           <Route path="library" element={<TeacherLibrary />} />
           <Route path="notices" element={<TeacherNotices />} />
+          <Route path="gallery" element={<TeacherGallery />} />
+          <Route path="live" element={<TeacherLive />} />
         </Route>
       </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
     </Route>,
   ),
 )

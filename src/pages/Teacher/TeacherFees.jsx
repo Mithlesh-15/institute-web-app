@@ -5,6 +5,7 @@ import EmptyState from '../../components/teacher-fees/EmptyState'
 import EditPendingModal from '../../components/teacher-fees/EditPendingModal'
 import FeeDetailsModal from '../../components/teacher-fees/FeeDetailsModal'
 import StudentFeeCard from '../../components/teacher-fees/StudentFeeCard'
+import SearchBar from '../../components/teacher-students/SearchBar'
 import { STUDENT_CLASS_OPTIONS } from '../../utils/studentManagement'
 import {
   fetchFeesOverview,
@@ -21,6 +22,7 @@ function TeacherFees() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [classFilter, setClassFilter] = useState('All')
+  const [search, setSearch] = useState('')
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [editPendingOpen, setEditPendingOpen] = useState(false)
@@ -85,10 +87,16 @@ function TeacherFees() {
   }, [students])
 
   const filteredStudents = useMemo(() => {
-    return students.filter(
-      (student) => classFilter === 'All' || student.className === classFilter,
-    )
-  }, [classFilter, students])
+    const term = search.trim().toLowerCase()
+    return students.filter((student) => {
+      const matchesClass = classFilter === 'All' || student.className === classFilter
+      const matchesSearch =
+        !term ||
+        student.name.toLowerCase().includes(term) ||
+        (student.phone && student.phone.includes(term))
+      return matchesClass && matchesSearch
+    })
+  }, [classFilter, search, students])
 
   const refreshSelectedStudent = async (studentId) => {
     await loadFees(studentId)
@@ -257,6 +265,14 @@ function TeacherFees() {
         </div>
       </SectionCard>
 
+      <SectionCard>
+        <SearchBar
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search students by name or phone..."
+        />
+      </SectionCard>
+
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[...Array(6)].map((_, index) => (
@@ -281,9 +297,9 @@ function TeacherFees() {
       ) : (
         <EmptyState
           title="No students found"
-          description="Try a different class category."
-          onBack={() => navigate('/teacher/students')}
-          actionLabel="Back to Students"
+          description={students.length ? 'Try a different search term or class filter.' : 'Try a different class category.'}
+          onBack={search ? () => setSearch('') : () => navigate('/teacher/students')}
+          actionLabel={search ? 'Reset Search' : 'Back to Students'}
         />
       )}
 

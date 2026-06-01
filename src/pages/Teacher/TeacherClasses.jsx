@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BookOpen, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import ClassCard from '../../components/teacher-classes/ClassCard'
@@ -84,8 +84,6 @@ function TeacherClasses() {
     })
   }, [classFilter, classes, search])
 
-  const totalClasses = classes.length
-
   const openCreateModal = () => {
     setEditingClass(null)
     setModalOpen(true)
@@ -155,50 +153,28 @@ function TeacherClasses() {
     }
   }
 
-  const activeCountLabel = classFilter === 'All' ? 'All classes' : `${classFilter} batches`
-
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft">
-        <div className="bg-[linear-gradient(135deg,rgba(37,99,235,0.09),rgba(29,78,216,0.06),rgba(242,93,13,0.06))] p-6 sm:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
-                <BookOpen className="h-3.5 w-3.5 text-[#2563eb]" />
-                Batch planning
-              </div>
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                Classes
-              </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                Create and manage tuition batches, keep start dates organized, and filter by class in seconds.
-              </p>
+      <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            Classes
+          </h1>
 
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
-                  {totalClasses} total classes
-                </div>
-                <div className="rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-semibold text-[#f25d0d]">
-                  {activeCountLabel}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2 lg:w-[34rem] lg:max-w-none">
-              <SearchBar
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-              <Button onClick={openCreateModal} className="w-full sm:w-auto">
-                <Plus className="h-4 w-4" />
-                Create Class
-              </Button>
-            </div>
+          <div className="flex flex-col gap-3 sm:flex-row lg:w-[34rem]">
+            <SearchBar
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <Button onClick={openCreateModal} className="w-full sm:w-auto">
+              <Plus className="h-4 w-4" />
+              Create Class
+            </Button>
           </div>
         </div>
       </section>
 
-      <SectionCard title="Filter classes" subtitle="Class-wise view">
+      <SectionCard title="Class wise classification">
         <FilterTabs value={classFilter} options={CLASS_OPTIONS} onChange={setClassFilter} />
       </SectionCard>
 
@@ -233,12 +209,10 @@ function TeacherClasses() {
       ) : classes.length ? (
         <EmptyState
           title="No classes match your filters"
-          description="Try a different search term or switch to another class tab."
         />
       ) : (
         <EmptyState
           title="No classes yet"
-          description="Create your first batch to start organizing tuition groups, start dates, and class levels."
           onCreate={openCreateModal}
         />
       )}
