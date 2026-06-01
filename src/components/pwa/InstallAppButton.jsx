@@ -93,6 +93,7 @@ function InstallAppButton({
         </div>
       )
     }
+    return null
   }
 
   const isBusy = status === 'prompting'
