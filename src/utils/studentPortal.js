@@ -68,6 +68,14 @@ const getCurrentMonthRange = () => {
   }
 }
 
+const getCurrentMonthYear = () => {
+  const today = new Date()
+  return {
+    month: MONTH_NAMES[today.getMonth()],
+    year: today.getFullYear(),
+  }
+}
+
 const formatCurrency = (amount) => `₹${Number(amount || 0).toLocaleString('en-IN')}`
 
 export const formatPortalDate = (value, options = {}) => {
@@ -354,6 +362,54 @@ export async function fetchStudentAttendanceData() {
 
 export async function fetchStudentFees() {
   const session = getStudentSession()
+  const currentMonthYear = getCurrentMonthYear()
+
+  // 1. Fetch student's current total_fees from database to be absolutely accurate
+  const { data: studentData, error: studentError } = await supabase
+    .from(STUDENTS_TABLE)
+    .select('total_fees')
+    .eq('id', session.studentId)
+    .maybeSingle()
+
+  if (studentError) {
+    throw new Error(studentError.message || 'Unable to load student details for fees.')
+  }
+
+  const totalFees = Number(studentData?.total_fees || 0)
+
+  // 2. Check if the fee record for the current month and year already exists
+  const { data: feeData, error: feeError } = await supabase
+    .from(FEES_TABLE)
+    .select('id')
+    .eq('student_id', session.studentId)
+    .eq('month', currentMonthYear.month)
+    .eq('year', String(currentMonthYear.year))
+    .maybeSingle()
+
+  if (feeError) {
+    throw new Error(feeError.message || 'Unable to check current month fee status.')
+  }
+
+  // 3. If it doesn't exist, create it automatically
+  if (!feeData) {
+    const { error: insertError } = await supabase
+      .from(FEES_TABLE)
+      .insert({
+        student_id: session.studentId,
+        month: currentMonthYear.month,
+        year: String(currentMonthYear.year),
+        status: 'pending',
+        pending_amount: totalFees,
+      })
+
+    if (insertError) {
+      if (!insertError.message.toLowerCase().includes('unique_student_month_fee')) {
+        throw new Error(insertError.message || 'Unable to create current month fee record.')
+      }
+    }
+  }
+
+  // 4. Fetch and return all fee records
   const { data, error } = await supabase
     .from(FEES_TABLE)
     .select('*')
