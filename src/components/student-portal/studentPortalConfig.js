@@ -5,6 +5,11 @@ import {
   LayoutDashboard,
   LogOut,
   UserRound,
+  Trophy,
+  Library,
+  Megaphone,
+  Image,
+  Video,
 } from 'lucide-react'
 
 export const studentSidebarItems = [
@@ -32,6 +37,31 @@ export const studentSidebarItems = [
     label: 'Fees',
     to: '/student/fees',
     icon: CreditCard,
+  },
+  {
+    label: 'Test Results',
+    to: '/student/results',
+    icon: Trophy,
+  },
+  {
+    label: 'E-Library',
+    to: '/student/library',
+    icon: Library,
+  },
+  {
+    label: 'Notices',
+    to: '/student/notices',
+    icon: Megaphone,
+  },
+  {
+    label: 'Gallery',
+    to: '/student/gallery',
+    icon: Image,
+  },
+  {
+    label: 'Live Classes',
+    to: '/student/live',
+    icon: Video,
   },
   {
     label: 'Logout',
