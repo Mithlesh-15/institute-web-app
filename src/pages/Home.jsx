@@ -30,11 +30,6 @@ gsap.registerPlugin(ScrollTrigger)
 function Home() {
   const session = getSession()
 
-  // Redirect if logged in
-  if (session?.token) {
-    return <Navigate to={`/${session.role}/dashboard`} replace />
-  }
-
   // Navbar and Mobile Menu States
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -188,6 +183,11 @@ function Home() {
     }
   }, [])
 
+  // Redirect if logged in
+  if (session?.token) {
+    return <Navigate to={`/${session.role}/dashboard`} replace />
+  }
+
   // Navigation handlers
   const scrollToSection = (e, sectionId) => {
     e.preventDefault()
@@ -275,7 +275,7 @@ function Home() {
                   key={link.id}
                   href={`#${link.id}`}
                   onClick={(e) => scrollToSection(e, link.id)}
-                  className="text-sm font-semibold tracking-wide hover:text-blue-400 transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-blue-500 after:transition-all duration-300"
+                  className="text-sm font-semibold tracking-wide hover:text-blue-400 transition-colors relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-blue-500 after:transition-all duration-300"
                 >
                   {link.label}
                 </a>
@@ -337,7 +337,7 @@ function Home() {
       </header>
 
       {/* SECTION 2: HERO SECTION WITH CAROUSEL */}
-      <section id="home" ref={heroRef} className="w-full bg-white pt-[76px] lg:pt-[84px]">
+      <section id="home" ref={heroRef} className="w-full bg-white pt-19 lg:pt-21">
         {/* Top: 100% Fully Visible Banner Slider (No overlay text, slides horizontally) */}
         <div className="relative h-[45vh] sm:h-[60vh] lg:h-[70vh] w-full overflow-hidden bg-slate-100 border-b border-slate-200">
           <div 
@@ -347,7 +347,7 @@ function Home() {
             {carouselImages.map((img, idx) => (
               <div
                 key={idx}
-                className="h-full w-full flex-shrink-0 bg-cover bg-center"
+                className="h-full w-full shrink-0 bg-cover bg-center"
                 style={{ backgroundImage: `url('${img.url}')` }}
                 role="img"
                 aria-label={img.alt}
@@ -373,7 +373,7 @@ function Home() {
         {/* Bottom: Hero Content Overlays (Lighter theme, no dark overlays on banners) */}
         <div 
           ref={heroContentRef} 
-          className="py-16 sm:py-24 bg-gradient-to-b from-white to-slate-50 border-b border-slate-200"
+          className="py-16 sm:py-24 bg-linear-to-b from-white to-slate-50 border-b border-slate-200"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
             <div className="max-w-4xl mx-auto text-center">
@@ -457,7 +457,7 @@ function Home() {
                   }
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4">
-                    <div className="flex-shrink-0 h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
+                    <div className="shrink-0 h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
                       <item.icon className="h-6 w-6" />
                     </div>
                     <div>
@@ -640,7 +640,7 @@ function Home() {
             </p>
           </div>
 
-          <div className="relative rounded-[2rem] overflow-hidden border border-slate-200 bg-white p-3 shadow-xl h-[450px]">
+          <div className="relative rounded-4xl overflow-hidden border border-slate-200 bg-white p-3 shadow-xl h-112.5">
             <iframe
              src="https://maps.google.com/maps?q=Raj%20Tuition%20Classes%20RTC%20Durg&t=&z=17&ie=UTF8&iwloc=&output=embed"
               width="100%"
@@ -715,7 +715,7 @@ function Home() {
                       <item.icon className="h-5 w-5" />
                     </div>
                     <h3 className="text-sm font-bold text-slate-900">{item.title}</h3>
-                    <p className="text-base font-extrabold text-blue-600 mt-1 break-words">{item.value}</p>
+                    <p className="text-base font-extrabold text-blue-600 mt-1 wrap-break-word">{item.value}</p>
                     <p className="text-xs text-slate-500 mt-1">{item.desc}</p>
                   </a>
                 ))}
@@ -734,7 +734,7 @@ function Home() {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.4),transparent_50%),radial-gradient(circle_at_bottom_left,rgba(37,99,235,0.2),transparent_40%)]" />
         
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 p-8 sm:p-16 text-center shadow-2xl relative overflow-hidden">
+          <div className="rounded-[2.5rem] bg-linear-to-br from-blue-600 to-indigo-700 p-8 sm:p-16 text-center shadow-2xl relative overflow-hidden">
             
             {/* Design accents */}
             <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 blur-xl" />
