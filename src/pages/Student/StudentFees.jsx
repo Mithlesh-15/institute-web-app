@@ -1,47 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { CreditCard } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import FeeCard from '../../components/student-portal/FeeCard'
 import StudentStatCard from '../../components/student-portal/StudentStatCard'
 import { fetchStudentFees, formatPortalCurrency } from '../../utils/studentPortal'
 
 function StudentFees() {
-  const [fees, setFees] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const { data: fees = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['studentFees'],
+    queryFn: fetchStudentFees,
+    staleTime: 3 * 60 * 60 * 1000, // 3 hours
+    gcTime: 3 * 60 * 60 * 1000,    // 3 hours
+  })
 
-  useEffect(() => {
-    let mounted = true
-
-    const loadFees = async () => {
-      try {
-        setLoading(true)
-        setError('')
-        const data = await fetchStudentFees()
-
-        if (mounted) {
-          setFees(data)
-        }
-      } catch (loadError) {
-        if (mounted) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : 'Unable to load fees right now.',
-          )
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    loadFees()
-
-    return () => {
-      mounted = false
-    }
-  }, [])
+  const error = queryError ? (queryError.message || 'Unable to load fees right now.') : ''
 
   const totalPendingAmount = useMemo(() => {
     return fees.reduce((total, fee) => {
