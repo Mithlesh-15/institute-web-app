@@ -70,7 +70,7 @@ const getSignature = (headerB64, payloadB64, secret) => {
   return (hash >>> 0).toString(16)
 }
 
-const JWT_SECRET = 'rtc_super_secret_key_2026'
+const JWT_SECRET = import.meta.env.VITE_JWT_SECRET
 
 export const encodeJWT = (payload) => {
   const header = { alg: 'HS256', typ: 'JWT' }

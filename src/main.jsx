@@ -39,7 +39,7 @@ import StudentNotices from './pages/Student/StudentNotices.jsx'
 import StudentGallery from './pages/Student/StudentGallery.jsx'
 import StudentLive from './pages/Student/StudentLive.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
-import { Analytics } from "@vercel/analytics/react"
+  
 
 // Global listener to capture PWA install prompt before React loads
 if (typeof window !== 'undefined') {
@@ -109,7 +109,6 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <Analytics />
     </QueryClientProvider>
   </StrictMode>,
 )
