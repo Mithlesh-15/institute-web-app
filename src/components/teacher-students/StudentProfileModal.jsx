@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
-import { GraduationCap, Phone, Save, School2, Users } from 'lucide-react'
+import { useEffect, useMemo, useState, useRef } from 'react'
+import { GraduationCap, Phone, Save, School2, Users, Camera, Loader2 } from 'lucide-react'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import Modal from '../ui/Modal'
+import { convertHeicToJpeg } from '../../utils/studentAuth'
 
 const tabs = [
   { key: 'details', label: 'Student Details' },
@@ -21,12 +22,17 @@ function StudentProfileModal({
   onClose,
   onSaveProfile,
   onSaveFees,
+  onUpdatePhoto,
 }) {
   const [activeTab, setActiveTab] = useState('details')
   const [name, setName] = useState('')
   const [className, setClassName] = useState('')
   const [totalFees, setTotalFees] = useState('0')
   const [selectedClassId, setSelectedClassId] = useState(null)
+  
+  const fileInputRef = useRef(null)
+  const [photoUploading, setPhotoUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
 
   useEffect(() => {
     if (!open || !studentDetail?.student) {
@@ -38,6 +44,8 @@ function StudentProfileModal({
     setClassName(studentDetail.student.className || '')
     setTotalFees(String(studentDetail.student.totalFees || 0))
     setSelectedClassId(null)
+    setPhotoUploading(false)
+    setUploadError('')
   }, [open, studentDetail])
 
   const classCount = studentDetail?.classes?.length || 0
@@ -89,6 +97,35 @@ function StudentProfileModal({
     })
   }
 
+  const handlePhotoClick = () => {
+    if (photoUploading) return
+    fileInputRef.current?.click()
+  }
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    try {
+      setPhotoUploading(true)
+      setUploadError('')
+      
+      const processedFile = await convertHeicToJpeg(file)
+      
+      if (onUpdatePhoto) {
+        await onUpdatePhoto(processedFile)
+      }
+    } catch (err) {
+      console.error(err)
+      setUploadError(err instanceof Error ? err.message : 'Failed to update profile photo.')
+    } finally {
+      setPhotoUploading(false)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
+
   return (
     <Modal
       open={open}
@@ -131,15 +168,41 @@ function StudentProfileModal({
           <div className="space-y-6">
             <div className="overflow-hidden rounded-4xl border border-slate-200 bg-white p-5 shadow-soft sm:p-6">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                <div className="h-24 w-24 shrink-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(219,234,254,0.35))]">
+                <div 
+                  onClick={handlePhotoClick}
+                  className="group relative h-24 w-24 shrink-0 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-[linear-gradient(135deg,rgba(37,99,235,0.08),rgba(219,234,254,0.35))] cursor-pointer hover:border-brand/40 transition duration-300"
+                >
                   {student?.photo ? (
-                    <img src={student.photo} alt={student?.name} className="h-full w-full object-cover" />
+                    <img src={student.photo} alt={student?.name} className="h-full w-full object-cover transition group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-2xl font-semibold text-brand">
                       {student?.name?.slice(0, 2).toUpperCase() || 'ST'}
                     </div>
                   )}
+
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white opacity-0 transition group-hover:opacity-100">
+                    <Camera className="h-5 w-5" />
+                    <span className="mt-1 text-[10px] font-bold uppercase tracking-wider">Change</span>
+                  </div>
+
+                  {/* Loading Overlay */}
+                  {photoUploading && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 text-white">
+                      <Loader2 className="h-6 w-6 animate-spin text-white" />
+                      <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-slate-200">Updating...</span>
+                    </div>
+                  )}
                 </div>
+
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handlePhotoChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
                     Student Profile
@@ -150,6 +213,9 @@ function StudentProfileModal({
                       Class {student?.className || 'N/A'}
                     </span>
                   </div>
+                  {uploadError && (
+                    <p className="mt-2 text-xs font-semibold text-red-600">{uploadError}</p>
+                  )}
                 </div>
               </div>
 

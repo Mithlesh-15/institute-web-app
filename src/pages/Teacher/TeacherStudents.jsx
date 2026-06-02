@@ -238,6 +238,28 @@ function TeacherStudents() {
     }
   }
 
+  const handleUpdatePhoto = async (photoFile) => {
+    if (!selectedStudentId) {
+      return
+    }
+
+    try {
+      setSavingProfile(true)
+      setError('')
+      const photoUrl = await uploadStudentPhoto(photoFile)
+      if (!photoUrl) {
+        throw new Error('Failed to upload photo')
+      }
+      await updateStudentProfile(selectedStudentId, { photo: photoUrl })
+      await refreshStudentDetail()
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Unable to update photo.')
+      throw saveError
+    } finally {
+      setSavingProfile(false)
+    }
+  }
+
   const handleSaveFees = async ({ totalFees }) => {
     if (!selectedStudentId) {
       return
@@ -598,6 +620,7 @@ function TeacherStudents() {
             onClose={closeProfile}
             onSaveProfile={handleSaveProfile}
             onSaveFees={handleSaveFees}
+            onUpdatePhoto={handleUpdatePhoto}
           />
         </>
       )}
