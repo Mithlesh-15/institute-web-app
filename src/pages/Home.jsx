@@ -233,28 +233,37 @@ function Home() {
     { class: 'Class 12', price: '₹1,800', period: 'month', features: ['Targeted Board Exam Strategy', 'Full mock exam series', 'Personalized academic counseling', 'Extended doubt assistance'] }
   ]
 
-  // Timetable mock data
-  const timetable = [
-    { subject: 'Mathematics', time: '5 PM – 6 PM', days: 'Mon, Wed, Fri', teacher: 'Prof. Rajesh Kumar' },
-    { subject: 'Science', time: '6 PM – 7 PM', days: 'Mon, Wed, Fri', teacher: 'Dr. Sneha Sharma' },
-    { subject: 'English', time: '7 PM – 8 PM', days: 'Tue, Thu, Sat', teacher: 'Prof. Amit Patel' }
-  ]
+
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
       
       {/* SECTION 1: STICKY NAVBAR */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900 text-white shadow-lg py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900 text-white shadow-lg">
+        {/* Top Announcement Bar */}
+        <a 
+          href="https://drive.google.com/file/d/1KJDTwE1v02CZQlZXjuMYtZqCDFkXetFC/view" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="block w-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white text-center py-2 px-4 text-xs sm:text-sm font-extrabold tracking-wide hover:opacity-95 transition-opacity shadow-inner animate-pulse relative z-50"
+        >
+          <span className="inline-flex items-center justify-center gap-2">
+            <Sparkles className="h-4 w-4 text-white animate-bounce" />
+            🎉 ADMISSION OPEN 2026-27: Click here to download prospectus & register! 🎓
+            <ArrowUpRight className="h-4 w-4" />
+          </span>
+        </a>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a 
+             <a 
               href="#home" 
               onClick={(e) => scrollToSection(e, 'home')}
               className="flex items-center gap-3 group"
             >
-              <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center p-1.5 shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-                <BrandLogo className="h-full w-full object-contain filter brightness-0 invert" />
+              <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center p-1 shadow-md group-hover:scale-105 transition-transform">
+                <BrandLogo className="h-full w-full object-contain" />
               </div>
               <span className="text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
                 Raj Tuition Classes
@@ -267,7 +276,7 @@ function Home() {
                 { label: 'Home', id: 'home' },
                 { label: 'About', id: 'about' },
                 { label: 'Teachers', id: 'teachers' },
-                { label: 'Fees', id: 'fees' },
+                // { label: 'Fees', id: 'fees' },
                 { label: 'Time Table', id: 'timetable' },
                 { label: 'Contact', id: 'contact' }
               ].map((link) => (
@@ -311,7 +320,7 @@ function Home() {
               { label: 'Home', id: 'home' },
               { label: 'About', id: 'about' },
               { label: 'Teachers', id: 'teachers' },
-              { label: 'Fees', id: 'fees' },
+              // { label: 'Fees', id: 'fees' },
               { label: 'Time Table', id: 'timetable' },
               { label: 'Contact', id: 'contact' }
             ].map((link) => (
@@ -337,7 +346,7 @@ function Home() {
       </header>
 
       {/* SECTION 2: HERO SECTION WITH CAROUSEL */}
-      <section id="home" ref={heroRef} className="w-full bg-white pt-19 lg:pt-21">
+      <section id="home" ref={heroRef} className="w-full bg-white pt-28 lg:pt-32">
         {/* Top: 100% Fully Visible Banner Slider (No overlay text, slides horizontally) */}
         <div className="relative h-[45vh] sm:h-[60vh] lg:h-[70vh] w-full overflow-hidden bg-slate-100 border-b border-slate-200">
           <div 
@@ -347,7 +356,7 @@ function Home() {
             {carouselImages.map((img, idx) => (
               <div
                 key={idx}
-                className="h-full w-full shrink-0 bg-cover bg-center"
+                className="h-full w-full shrink-0 bg-contain bg-center bg-no-repeat bg-slate-900"
                 style={{ backgroundImage: `url('${img.url}')` }}
                 role="img"
                 aria-label={img.alt}
@@ -581,49 +590,68 @@ function Home() {
       {/* SECTION 6: TIME TABLE */}
       <section id="timetable" ref={timetableRef} className="py-24 sm:py-32 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Structured Batches</span>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-2">
-              Class Time Table
-            </h2>
-            <p className="text-lg text-slate-500 mt-4">
-              Check out our standard daily timings carefully planned to not interfere with school schedules.
-            </p>
+          
+          {/* Header Row with View More Button */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+            <div>
+              <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Structured Batches</span>
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-2">
+                Class Time Table
+              </h2>
+              <p className="text-lg text-slate-500 mt-3 max-w-xl">
+                Timings for Class 11th & 12th regular batches. Click View Full Timetable to check grades 6th to 10th.
+              </p>
+            </div>
+            
+            <Link
+              to="/timetable"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-650 hover:bg-blue-600 text-white font-bold rounded-xl text-sm shadow-md transition-all duration-300 hover:-translate-y-0.5"
+            >
+              View Full Timetable (6th - 12th)
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {timetable.map((slot, index) => (
-              <div
-                key={index}
-                className="timetable-anim bg-slate-50 rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between hover:bg-blue-50/50 hover:border-blue-300 transition-all duration-300"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 uppercase tracking-wider">
-                      {slot.subject}
-                    </span>
-                    <Clock className="h-5 w-5 text-blue-600" />
-                  </div>
-
-                  <h3 className="text-2xl font-bold text-slate-900 mb-1">{slot.time}</h3>
-                  <p className="text-sm font-medium text-slate-500 flex items-center gap-1.5 mt-2">
-                    <Calendar className="h-4 w-4" />
-                    {slot.days}
-                  </p>
-                </div>
-
-                <div className="border-t border-slate-200 mt-6 pt-4 flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs">
-                    {slot.teacher.charAt(5)}
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500">Taught by</p>
-                    <p className="text-sm font-bold text-slate-800">{slot.teacher}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* Timetable Table */}
+          <div className="timetable-anim bg-slate-50 rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm max-w-5xl mx-auto overflow-x-auto">
+            <table className="w-full min-w-[500px] text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                  <th className="py-4 px-4">Subject</th>
+                  <th className="py-4 px-4">Class 11 Timing</th>
+                  <th className="py-4 px-4">Class 12 Timing</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm font-medium text-slate-700">
+                {[
+                  { subject: 'Physics', class11: '3 PM – 4 PM', class12: '5 PM – 6 PM' },
+                  { subject: 'Chemistry', class11: '4 PM – 5 PM', class12: '6 PM – 7 PM' },
+                  { subject: 'Mathematics', class11: '5 PM – 6 PM', class12: '7 PM – 8 PM' },
+                  { subject: 'Biology', class11: '6 PM – 7 PM', class12: '4 PM – 5 PM' }
+                ].map((row, index) => (
+                  <tr key={index} className="hover:bg-slate-100/40 transition-colors">
+                    <td className="py-5 px-4 font-bold text-slate-900 flex items-center gap-2">
+                      <BookOpen className="h-4 w-4 text-blue-600" />
+                      {row.subject}
+                    </td>
+                    <td className="py-5 px-4">
+                      <span className="inline-flex items-center gap-1.5 text-blue-600 bg-blue-50/50 px-3 py-1 rounded-lg">
+                        <Clock className="h-3.5 w-3.5" />
+                        {row.class11}
+                      </span>
+                    </td>
+                    <td className="py-5 px-4">
+                      <span className="inline-flex items-center gap-1.5 text-emerald-600 bg-emerald-50/50 px-3 py-1 rounded-lg">
+                        <Clock className="h-3.5 w-3.5" />
+                        {row.class12}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+
         </div>
       </section>
 
@@ -698,7 +726,7 @@ function Home() {
                   },
                   {
                     title: 'Institute Address',
-                    value: '123 Education Hub, Mumbai',
+                    value: 'Rajiv Nagar, Durg, Chhattisgarh 491001',
                     desc: 'Sector 15, Near City Center',
                     link: '#',
                     icon: MapPin
@@ -796,7 +824,7 @@ function Home() {
                   { label: 'Home', id: 'home' },
                   { label: 'About', id: 'about' },
                   { label: 'Teachers', id: 'teachers' },
-                  { label: 'Fees', id: 'fees' },
+                  // { label: 'Fees', id: 'fees' },
                   { label: 'Contact', id: 'contact' }
                 ].map((link) => (
                   <li key={link.id}>
@@ -837,7 +865,7 @@ function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-blue-500" />
-                  <span className="text-slate-300">123 Education Hub, Sector 15, Near City Center, Mumbai</span>
+                  <span className="text-slate-300">Rajiv Nagar, Durg, Chhattisgarh 491001</span>
                 </li>
               </ul>
             </div>

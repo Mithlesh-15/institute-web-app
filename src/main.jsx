@@ -15,6 +15,7 @@ import StudentPortalShell from './components/student-portal/StudentPortalShell.j
 import TeacherDashboardShell from './components/teacher-dashboard/TeacherDashboardShell.jsx'
 import TeacherDashboard from './pages/Dashboard/TeacherDashboard.jsx'
 import Home from './pages/Home.jsx'
+import Timetable from './pages/Timetable.jsx'
 import StudentLogin from './pages/Login/StudentLogin.jsx'
 import TeacherLogin from './pages/Login/TeacherLogin.jsx'
 import TeacherAttendance from './pages/Teacher/TeacherAttendance.jsx'
@@ -56,6 +57,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
+      <Route path="timetable" element={<Timetable />} />
       <Route path="login" element={<Navigate to="/login/student" replace />} />
       <Route path="login/student" element={<StudentLogin />} />
       <Route path="login/teacher" element={<TeacherLogin />} />

@@ -117,18 +117,18 @@ function InstallAppButton({
   // Global Floating / Sticky mode (responsive layout)
   return (
     <>
-      {/* 1. Mobile Design: Sticky Bottom Bar (Small screens) */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 border-t border-slate-100 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] z-50 flex flex-col gap-1 md:hidden">
+      {/* 1. Mobile Design: Compact Floating Action Button on side (Small screens) */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden">
         <button
           type="button"
           onClick={handleInstall}
           disabled={isBusy}
           aria-label="Install Raj Tuition Classes App"
-          className="w-full group inline-flex items-center justify-center gap-2 rounded-xl bg-brand text-white py-3.5 px-4 font-semibold shadow-md transition-all duration-200 hover:bg-brand-strong active:scale-[0.97] disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-brand/40 focus:ring-offset-2"
+          className="group inline-flex items-center justify-center gap-2 rounded-xl bg-brand text-white py-3 px-4 text-sm font-semibold shadow-lg shadow-brand/20 transition-all duration-200 hover:bg-brand-strong active:scale-[0.97] disabled:opacity-75 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-brand/40"
         >
           <Download className="h-4 w-4 shrink-0" />
           <span>
-            {isBusy ? 'Installing...' : 'Install Raj Tuition Classes App'}
+            {isBusy ? 'Installing...' : 'Install App'}
           </span>
         </button>
       </div>
