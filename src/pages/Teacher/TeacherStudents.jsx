@@ -8,7 +8,7 @@ import StudentCard from '../../components/teacher-students/StudentCard'
 import StudentProfileModal from '../../components/teacher-students/StudentProfileModal'
 import { STUDENT_CLASS_OPTIONS, deleteStudentById, fetchStudents, createStudent } from '../../utils/studentManagement'
 import { fetchStudentDetail, updateStudentFees, updateStudentProfile } from '../../utils/teacherPortal'
-import { uploadStudentPhoto } from '../../utils/studentAuth'
+import { uploadStudentPhoto, convertHeicToJpeg } from '../../utils/studentAuth'
 
 function TeacherStudents() {
   const [students, setStudents] = useState([])
@@ -27,6 +27,7 @@ function TeacherStudents() {
   const [saving, setSaving] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [photoFile, setPhotoFile] = useState(null)
+  const [convertingPhoto, setConvertingPhoto] = useState(false)
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -453,9 +454,33 @@ function TeacherStudents() {
                     type="file"
                     required
                     accept="image/*"
-                    onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-[15px] text-slate-500 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
+                    disabled={convertingPhoto}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0] || null
+                      if (file) {
+                        try {
+                          setConvertingPhoto(true)
+                          setError('')
+                          const converted = await convertHeicToJpeg(file)
+                          setPhotoFile(converted)
+                        } catch (err) {
+                          console.error(err)
+                          setError(err.message || 'HEIC image conversion failed.')
+                          alert(err.message || 'HEIC image conversion failed.')
+                          setPhotoFile(null)
+                          e.target.value = ''
+                        } finally {
+                          setConvertingPhoto(false)
+                        }
+                      } else {
+                        setPhotoFile(null)
+                      }
+                    }}
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-[15px] text-slate-500 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 file:mr-4 file:rounded-xl file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
                   />
+                  {convertingPhoto && (
+                    <p className="mt-1 text-xs font-semibold text-blue-600 animate-pulse">⏳ Converting HEIC image to JPEG...</p>
+                  )}
                 </div>
 
               </div>
@@ -464,16 +489,17 @@ function TeacherStudents() {
                 <button
                   type="button"
                   onClick={() => setIsAdding(false)}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  disabled={convertingPhoto || saving}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={saving}
+                  disabled={saving || convertingPhoto}
                   className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:bg-blue-400"
                 >
-                  {saving ? 'Saving Student...' : 'Add Student'}
+                  {convertingPhoto ? 'Converting Image...' : saving ? 'Saving Student...' : 'Add Student'}
                 </button>
               </div>
             </form>

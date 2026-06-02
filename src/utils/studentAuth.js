@@ -1,6 +1,34 @@
 import { supabase } from "./supabase";
 import { getSession, isValidPhone, saveSession } from "./auth";
 
+export const convertHeicToJpeg = async (file) => {
+  if (!file) return null;
+  const nameLower = file.name.toLowerCase();
+  if (
+    nameLower.endsWith(".heic") ||
+    nameLower.endsWith(".heif") ||
+    file.type === "image/heic" ||
+    file.type === "image/heif"
+  ) {
+    try {
+      const heic2any = (await import("heic2any")).default;
+      const convertedBlob = await heic2any({
+        blob: file,
+        toType: "image/jpeg",
+        quality: 0.8,
+      });
+      const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+      const newName = file.name.replace(/\.(heic|heif)$/i, ".jpg");
+      const finalName = newName.toLowerCase().endsWith(".jpg") ? newName : `${newName}.jpg`;
+      return new File([blob], finalName, { type: "image/jpeg" });
+    } catch (error) {
+      console.error("HEIC conversion failed:", error);
+      throw new Error("HEIC image conversion failed. Please try another image.");
+    }
+  }
+  return file;
+};
+
 const STUDENT_TABLE = "students";
 const STUDENT_DRAFT_KEY = "rtc_student_setup_draft";
 const STUDENT_PHOTO_BUCKET = "student-photos";
