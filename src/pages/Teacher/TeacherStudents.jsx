@@ -73,17 +73,19 @@ function TeacherStudents() {
     if (!form.medium.trim()) return setError('Medium is required.')
     if (!form.address.trim()) return setError('Address is required.')
     if (!form.totalFees.trim()) return setError('Monthly fees are required.')
-    if (!photoFile) return setError('Profile photo is required.')
 
     try {
       setSaving(true)
       setError('')
 
-      // 1. Upload photo to Supabase storage bucket 'student-photos'
-      const photoUrl = await uploadStudentPhoto(photoFile)
-
-      if (!photoUrl) {
-        throw new Error('Failed to retrieve photo upload URL.')
+      // 1. Upload photo to Supabase storage bucket 'student-photos' if provided, otherwise use default
+      let photoUrl = "https://xliawmwwielzegkfuhuw.supabase.co/storage/v1/object/public/student-photos/students/8869bed8-d144-43b6-9528-e8b461646542-1779721299128.png"
+      if (photoFile) {
+        const uploadedUrl = await uploadStudentPhoto(photoFile)
+        if (!uploadedUrl) {
+          throw new Error('Failed to retrieve photo upload URL.')
+        }
+        photoUrl = uploadedUrl
       }
 
       // 2. Create student record
@@ -471,10 +473,9 @@ function TeacherStudents() {
 
                 {/* 11. Profile Photo */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700">Profile Photo *</label>
+                  <label className="block text-sm font-medium text-slate-700">Profile Photo (Optional)</label>
                   <input
                     type="file"
-                    required
                     accept="image/*"
                     disabled={convertingPhoto}
                     onChange={async (e) => {

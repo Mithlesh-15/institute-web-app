@@ -670,7 +670,7 @@ function Home() {
 
           <div className="relative rounded-4xl overflow-hidden border border-slate-200 bg-white p-3 shadow-xl h-112.5">
             <iframe
-             src="https://maps.google.com/maps?q=Raj%20Tuition%20Classes%20RTC%20Durg&t=&z=17&ie=UTF8&iwloc=&output=embed"
+             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1366.8392153363873!2d81.26086172693046!3d21.19366036466824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a293d849c55e091%3A0x6c5beb2f8eac33b1!2sRAJ%20TUITION%20CLASSES%2CDURG!5e0!3m2!1sen!2sin!4v1780480021702!5m2!1sen!2sin"
               width="100%"
               height="100%"
               style={{ border: 0 }}

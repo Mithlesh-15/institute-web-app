@@ -113,10 +113,6 @@ function StudentSetup() {
       setError("Please enter the father's name.")
       return
     }
-    if (!form.photoFile) {
-      setError('Please upload a profile photo.')
-      return
-    }
     if (!form.className) {
       setError('Please select a class.')
       return
