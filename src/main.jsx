@@ -40,6 +40,7 @@ import StudentNotices from './pages/Student/StudentNotices.jsx'
 import StudentGallery from './pages/Student/StudentGallery.jsx'
 import StudentLive from './pages/Student/StudentLive.jsx'
 import { registerServiceWorker } from './pwa/registerSW.js'
+import SeoLandingPage from './pages/SEO/SeoLandingPage.jsx'
   
 
 // Global listener to capture PWA install prompt before React loads
@@ -99,7 +100,7 @@ const router = createBrowserRouter(
           <Route path="live" element={<TeacherLive />} />
         </Route>
       </Route>
-
+      <Route path=":slug" element={<SeoLandingPage />} />
       {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
     </Route>,
   ),

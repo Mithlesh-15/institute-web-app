@@ -23,6 +23,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import InstallAppButton from "../components/pwa/InstallAppButton.jsx";
 import BrandLogo from "../components/BrandLogo.jsx";
+import Footer from "../components/Footer.jsx";
 import { getSession } from "../utils/auth";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -913,101 +914,7 @@ function Home() {
       </section>
 
       {/* SECTION 9: FOOTER */}
-      <footer className="bg-slate-950 text-slate-400 py-16 border-t border-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            {/* Col 1 Brand */}
-            <div>
-              <a
-                href="#home"
-                onClick={(e) => scrollToSection(e, "home")}
-                className="flex items-center gap-3 mb-6"
-              >
-                <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center p-1 shadow-sm">
-                  <BrandLogo className="h-full w-full object-contain filter brightness-0 invert" />
-                </div>
-                <span className="text-lg font-bold text-white tracking-tight">
-                  Raj Tuition Classes
-                </span>
-              </a>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Empowering students of grades 9-12 with deep concept clarity,
-                regular tests, and target-oriented mentoring.
-              </p>
-            </div>
-
-            {/* Col 2 Quick Links */}
-            <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">
-                Quick Links
-              </h3>
-              <ul className="space-y-3.5 text-sm">
-                {[
-                  { label: "Home", id: "home" },
-                  { label: "About", id: "about" },
-                  { label: "Teachers", id: "teachers" },
-                  // { label: 'Fees', id: 'fees' },
-                  { label: "Contact", id: "contact" },
-                ].map((link) => (
-                  <li key={link.id}>
-                    <a
-                      href={`#${link.id}`}
-                      onClick={(e) => scrollToSection(e, link.id)}
-                      className="hover:text-blue-500 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Col 3 Timings */}
-            <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">
-                Office Hours
-              </h3>
-              <ul className="space-y-3 text-sm text-slate-500">
-                <li>Monday – Saturday:</li>
-                <li className="text-white font-semibold">9:00 AM – 8:00 PM</li>
-                <li className="pt-2">Sundays:</li>
-                <li className="text-amber-500 font-semibold">Closed</li>
-              </ul>
-            </div>
-
-            {/* Col 4 Quick Contact */}
-            <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">
-                Support
-              </h3>
-              <ul className="space-y-3 text-sm text-slate-500">
-                <li className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-blue-500" />
-                  <span className="text-slate-300 font-medium">
-                    +91 88393 66658, +91 96692 77630
-                  </span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-blue-500" />
-                  <span className="text-slate-300">
-                    ward no 1, Sabji market, Panchsheel Nagar, Durg, Chhattisgarh 491001
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <hr className="border-slate-900 my-8" />
-
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
-            <p>
-              © {new Date().getFullYear()} Raj Tuition Classes. All rights
-              reserved.
-            </p>
-            <p>Designed with ❤️ for absolute academic success.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

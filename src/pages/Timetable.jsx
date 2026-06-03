@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Clock, Calendar, Sparkles, BookOpen } from 'lucide-react'
 import BrandLogo from '../components/BrandLogo'
+import Footer from '../components/Footer'
 
 function Timetable() {
   const categories = [
@@ -147,12 +148,8 @@ function Timetable() {
           ))}
         </div>
       </main>
-
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
-        <p>© {new Date().getFullYear()} Raj Tuition Classes. All rights reserved.</p>
-      </footer>
-
+      <Footer />
     </div>
   )
 }

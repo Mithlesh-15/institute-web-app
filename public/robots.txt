@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /student/
+Disallow: /teacher/
+Disallow: /login/
+
+Sitemap: https://rtcdurg.vercel.app/sitemap.xml

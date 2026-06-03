@@ -1,96 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
->
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://rtcdurg.vercel.app/</loc>
+    <loc>https://rtcdurg.vercel.app</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/login/student</loc>
+    <loc>https://rtcdurg.vercel.app/timetable</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/login/teacher</loc>
+    <loc>https://rtcdurg.vercel.app/about</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/student/setup</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/contact</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/student/dashboard</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/maths-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/setup</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/physics-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/chemistry-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/dashboard</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/biology-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/students</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/english-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/classes</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/commerce-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/attendance</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/accountancy-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/fees</loc>
-    <priority>0.7</priority>
+    <loc>https://rtcdurg.vercel.app/class-6-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/results</loc>
-    <priority>0.6</priority>
+    <loc>https://rtcdurg.vercel.app/class-7-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/homework</loc>
-    <priority>0.6</priority>
+    <loc>https://rtcdurg.vercel.app/class-8-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/study-material</loc>
-    <priority>0.6</priority>
+    <loc>https://rtcdurg.vercel.app/class-9-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/notices</loc>
-    <priority>0.6</priority>
+    <loc>https://rtcdurg.vercel.app/class-10-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/analytics</loc>
-    <priority>0.6</priority>
+    <loc>https://rtcdurg.vercel.app/class-11-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://rtcdurg.vercel.app/teacher/settings</loc>
-    <priority>0.6</priority>
+    <loc>https://rtcdurg.vercel.app/class-12-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
-
+  <url>
+    <loc>https://rtcdurg.vercel.app/ug-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://rtcdurg.vercel.app/pg-tuition-durg</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
