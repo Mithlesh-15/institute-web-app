@@ -272,7 +272,7 @@ export const createStudentProfile = async ({
     };
   }
 
-  const photo = photoFile ? await uploadStudentPhoto(photoFile) : "https://xliawmwwielzegkfuhuw.supabase.co/storage/v1/object/public/student-photos/students/8869bed8-d144-43b6-9528-e8b461646542-1779721299128.png";
+  const photo = photoFile ? await uploadStudentPhoto(photoFile) : "https://xliawmwwielzegkfuhuw.supabase.co/storage/v1/object/public/student-photos/students/rtc%20logo.png";
 
   const payload = {
     phone: trimmedPhone,

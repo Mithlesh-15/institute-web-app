@@ -78,7 +78,7 @@ function TeacherStudents() {
       setSaving(true)
       setError('')
 
-      // 1. Upload photo to Supabase storage bucket 'student-photos' if provided, otherwise use default
+      // 1. Upload photo to Supabase storage bucket 'student-photos' if provided, otherwise default to empty string
       let photoUrl = "https://xliawmwwielzegkfuhuw.supabase.co/storage/v1/object/public/student-photos/students/rtc%20logo.png"
       if (photoFile) {
         const uploadedUrl = await uploadStudentPhoto(photoFile)
