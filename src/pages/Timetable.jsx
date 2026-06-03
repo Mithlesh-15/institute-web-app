@@ -8,28 +8,31 @@ function Timetable() {
       title: 'Junior Classes (Grade 6 - 8)',
       grades: ['Class 6', 'Class 7', 'Class 8'],
       schedule: [
-        { subject: 'Science', time: '3 PM – 4 PM' },
-        { subject: 'Mathematics', time: '4 PM – 5 PM' },
-        { subject: 'English', time: '5 PM – 6 PM' }
+        { subject: 'Daily Batches', time: '5:00 PM' }
       ]
     },
     {
-      title: 'Secondary Classes (Grade 9 - 10)',
-      grades: ['Class 9', 'Class 10'],
+      title: 'Secondary Classes (Grade 9)',
+      grades: ['Class 9'],
       schedule: [
-        { subject: 'Mathematics', time: '5 PM – 6 PM' },
-        { subject: 'Science', time: '6 PM – 7 PM' },
-        { subject: 'English', time: '7 PM – 8 PM' }
+        { subject: 'Daily timing', time: '5:30 PM' },
+      ]
+    },
+    {
+      title: 'Secondary Classes (Grade 10)',
+      grades: ['Class 10'],
+      schedule: [
+        { subject: 'Daily timing', time: '5:30 PM' }
       ]
     },
     {
       title: 'Senior Secondary (Grade 11 - 12)',
       grades: ['Class 11', 'Class 12'],
       schedule: [
-        { subject: 'Physics', class11: '3 PM – 4 PM', class12: '5 PM – 6 PM' },
-        { subject: 'Chemistry', class11: '4 PM – 5 PM', class12: '6 PM – 7 PM' },
-        { subject: 'Mathematics', class11: '5 PM – 6 PM', class12: '7 PM – 8 PM' },
-        { subject: 'Biology', class11: '6 PM – 7 PM', class12: '4 PM – 5 PM' }
+        { subject: 'Mathematics', class11: '6:00 PM – 7:00 PM', class12: '6:00 PM – 7:00 PM' },
+        { subject: 'Biology', class11: '6:00 PM – 7:00 PM', class12: '9:00 PM – 10:00 PM' },
+        { subject: 'Physics', class11: '8:00 PM – 9:00 PM', class12: '7:00 PM – 8:00 PM' },
+        { subject: 'Chemistry', class11: '7:00 PM – 8:00 PM', class12: '8:00 PM – 9:00 PM' }
       ]
     }
   ]
@@ -91,7 +94,7 @@ function Timetable() {
 
               {/* Responsive Schedule Table */}
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[500px] text-left border-collapse">
+                <table className="w-full min-w-125 text-left border-collapse">
                   <thead>
                     <tr className="border-b border-slate-200 text-slate-400 text-xs font-bold uppercase tracking-wider">
                       <th className="py-4 px-4">Subject</th>

@@ -1,255 +1,306 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link, Navigate } from 'react-router-dom'
-import { 
-  BookOpen, 
-  Users, 
-  Award, 
-  Clock, 
-  CheckCircle, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  MessageSquare, 
-  Menu, 
-  X, 
-  ArrowRight, 
-  GraduationCap, 
+import { useState, useEffect, useRef } from "react";
+import { Link, Navigate } from "react-router-dom";
+import {
+  BookOpen,
+  Users,
+  Award,
+  Clock,
+  CheckCircle,
+  Phone,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Menu,
+  X,
+  ArrowRight,
+  GraduationCap,
   Calendar,
   Layers,
   Sparkles,
-  ArrowUpRight
-} from 'lucide-react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import InstallAppButton from '../components/pwa/InstallAppButton.jsx'
-import BrandLogo from '../components/BrandLogo.jsx'
-import { getSession } from '../utils/auth'
+  ArrowUpRight,
+} from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import InstallAppButton from "../components/pwa/InstallAppButton.jsx";
+import BrandLogo from "../components/BrandLogo.jsx";
+import { getSession } from "../utils/auth";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 function Home() {
-  const session = getSession()
+  const session = getSession();
 
   // Navbar and Mobile Menu States
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Carousel States
-  const [activeSlide, setActiveSlide] = useState(0)
+  const [activeSlide, setActiveSlide] = useState(0);
   const carouselImages = [
     {
-      url: '/Home/Banners/B1.jpeg',
-      alt: 'Coaching Classroom'
+      url: "/Home/Banners/B1.jpeg",
+      alt: "Coaching Classroom",
     },
-  ]
+  ];
 
   // Refs for GSAP animations
-  const heroRef = useRef(null)
-  const heroContentRef = useRef(null)
-  const aboutRef = useRef(null)
-  const teachersRef = useRef(null)
-  const feesRef = useRef(null)
-  const timetableRef = useRef(null)
-  const contactRef = useRef(null)
+  const heroRef = useRef(null);
+  const heroContentRef = useRef(null);
+  const aboutRef = useRef(null);
+  const teachersRef = useRef(null);
+  const feesRef = useRef(null);
+  const timetableRef = useRef(null);
+  const contactRef = useRef(null);
 
   // Track scroll position for navbar transparency
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
-        setIsScrolled(true)
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false)
+        setIsScrolled(false);
       }
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Auto slide effect
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % carouselImages.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [carouselImages.length])
+      setActiveSlide((prev) => (prev + 1) % carouselImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [carouselImages.length]);
 
   // GSAP Entrance and Scroll Animations
   useEffect(() => {
     // 1. Hero Entrance Animations
     const heroCtx = gsap.context(() => {
-      const tl = gsap.timeline()
-      tl.fromTo('.hero-anim-fade', 
+      const tl = gsap.timeline();
+      tl.fromTo(
+        ".hero-anim-fade",
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.2 }
-      )
-    }, heroContentRef)
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out", stagger: 0.2 },
+      );
+    }, heroContentRef);
 
     // 2. About Section Reveal
     const aboutCtx = gsap.context(() => {
-      gsap.fromTo('.about-reveal-left',
+      gsap.fromTo(
+        ".about-reveal-left",
         { opacity: 0, x: -50 },
         {
           opacity: 1,
           x: 0,
           duration: 1,
-          ease: 'power2.out',
+          ease: "power2.out",
           scrollTrigger: {
             trigger: aboutRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-      gsap.fromTo('.about-reveal-right',
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+      gsap.fromTo(
+        ".about-reveal-right",
         { opacity: 0, x: 50 },
         {
           opacity: 1,
           x: 0,
           duration: 1,
-          ease: 'power2.out',
+          ease: "power2.out",
           scrollTrigger: {
             trigger: aboutRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-    }, aboutRef)
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+    }, aboutRef);
 
     // 3. Teachers Cards Stagger
     const teachersCtx = gsap.context(() => {
-      gsap.fromTo('.teacher-card-anim',
+      gsap.fromTo(
+        ".teacher-card-anim",
         { opacity: 0, y: 50 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
           stagger: 0.2,
-          ease: 'power3.out',
+          ease: "power3.out",
           scrollTrigger: {
             trigger: teachersRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-    }, teachersRef)
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+    }, teachersRef);
 
     // 4. Fees Section Fade Up
     const feesCtx = gsap.context(() => {
-      gsap.fromTo('.fees-anim',
+      gsap.fromTo(
+        ".fees-anim",
         { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
           stagger: 0.15,
-          ease: 'power2.out',
+          ease: "power2.out",
           scrollTrigger: {
             trigger: feesRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-    }, feesRef)
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+    }, feesRef);
 
     // 5. Timetable Fade Up
     const timetableCtx = gsap.context(() => {
-      gsap.fromTo('.timetable-anim',
+      gsap.fromTo(
+        ".timetable-anim",
         { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
           stagger: 0.15,
-          ease: 'power2.out',
+          ease: "power2.out",
           scrollTrigger: {
             trigger: timetableRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-    }, timetableRef)
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+    }, timetableRef);
 
     // Clean up animations on unmount
     return () => {
-      heroCtx.revert()
-      aboutCtx.revert()
-      teachersCtx.revert()
-      feesCtx.revert()
-      timetableCtx.revert()
-    }
-  }, [])
+      heroCtx.revert();
+      aboutCtx.revert();
+      teachersCtx.revert();
+      feesCtx.revert();
+      timetableCtx.revert();
+    };
+  }, []);
 
   // Redirect if logged in
   if (session?.token) {
-    return <Navigate to={`/${session.role}/dashboard`} replace />
+    return <Navigate to={`/${session.role}/dashboard`} replace />;
   }
 
   // Navigation handlers
   const scrollToSection = (e, sectionId) => {
-    e.preventDefault()
-    setMobileMenuOpen(false)
-    const element = document.getElementById(sectionId)
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80
-      const bodyRect = document.body.getBoundingClientRect().top
-      const elementRect = element.getBoundingClientRect().top
-      const elementPosition = elementRect - bodyRect
-      const offsetPosition = elementPosition - offset
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
-      })
+        behavior: "smooth",
+      });
     }
-  }
+  };
 
   // Teachers mock database
   const teachers = [
     {
-      name: 'Yogesh Dewangan',
-      qual: 'Ph.D. in Physics (DU)',
-      exp: '12+ Years Experience',
-      image: '/Home/Teachers/T1.png',
-      subject: 'Physics & Mathematics'
+      name: "Yogesh Dewangan",
+      qual: "M.Sc. Mathematics & B.Ed",
+      exp: "17+ Years Teaching Experience",
+      image: "/Home/Teachers/T1.png",
+      subject: "Physics & Mathematics",
     },
     {
-      name: 'Prakash Dewangan',
-      qual: 'M.Sc. Mathematics (IIT Bombay)',
-      exp: '15+ Years Experience',
-      image: '/Home/Teachers/T2.png',
-      subject: 'Chemistry & Biology'
+      name: "Prakash Dewangan",
+      qual: "M.Sc. Chemistry",
+      exp: "11+ Years Teaching Experience",
+      image: "/Home/Teachers/T2.png",
+      subject: "Chemistry & Biology",
     },
-  ]
+    {
+      name: "Namrata Dewangan",
+      qual: "M.Com. & B.Ed",
+      exp: "12+ Years Teaching Experience",
+      image: "/Home/Teachers/T3.jpeg",
+      subject: "Commerce & Accountancy",
+    },
+  ];
 
   // Fees Structure mock data
   const fees = [
-    { class: 'Class 9', price: '₹1,000', period: 'month', features: ['Complete Syllabus coverage', 'Weekly Chapter Tests', 'Mathematics & Science focus', 'Printed study notes'] },
-    { class: 'Class 10', price: '₹1,200', period: 'month', features: ['Board Exam Preparation', 'Previous Year Papers solving', 'Weekly Tests & Feedback', 'Special doubt-clearing sessions'] },
-    { class: 'Class 11', price: '₹1,500', period: 'month', features: ['Advanced Math & Science stream', 'Competitive exam foundation', 'Bi-weekly tests & parent updates', 'Detailed study materials'] },
-    { class: 'Class 12', price: '₹1,800', period: 'month', features: ['Targeted Board Exam Strategy', 'Full mock exam series', 'Personalized academic counseling', 'Extended doubt assistance'] }
-  ]
-
-
+    {
+      class: "Class 9",
+      price: "₹1,000",
+      period: "month",
+      features: [
+        "Complete Syllabus coverage",
+        "Weekly Chapter Tests",
+        "Mathematics & Science focus",
+        "Printed study notes",
+      ],
+    },
+    {
+      class: "Class 10",
+      price: "₹1,200",
+      period: "month",
+      features: [
+        "Board Exam Preparation",
+        "Previous Year Papers solving",
+        "Weekly Tests & Feedback",
+        "Special doubt-clearing sessions",
+      ],
+    },
+    {
+      class: "Class 11",
+      price: "₹1,500",
+      period: "month",
+      features: [
+        "Advanced Math & Science stream",
+        "Competitive exam foundation",
+        "Bi-weekly tests & parent updates",
+        "Detailed study materials",
+      ],
+    },
+    {
+      class: "Class 12",
+      price: "₹1,800",
+      period: "month",
+      features: [
+        "Targeted Board Exam Strategy",
+        "Full mock exam series",
+        "Personalized academic counseling",
+        "Extended doubt assistance",
+      ],
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
-      
       {/* SECTION 1: STICKY NAVBAR */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900 text-white shadow-lg">
         {/* Top Announcement Bar */}
-        <a 
-          href="https://drive.google.com/file/d/1KJDTwE1v02CZQlZXjuMYtZqCDFkXetFC/view" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="block w-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white text-center py-2 px-4 text-xs sm:text-sm font-extrabold tracking-wide hover:opacity-95 transition-opacity shadow-inner animate-pulse relative z-50"
+        <a
+          href="https://drive.google.com/file/d/1KJDTwE1v02CZQlZXjuMYtZqCDFkXetFC/view"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full bg-linear-to-r from-amber-500 via-orange-500 to-rose-500 text-white text-center py-2 px-4 text-xs sm:text-sm font-extrabold tracking-wide hover:opacity-95 transition-opacity shadow-inner animate-pulse relative z-50"
         >
           <span className="inline-flex items-center justify-center gap-2">
             <Sparkles className="h-4 w-4 text-white animate-bounce" />
-            🎉 ADMISSION OPEN 2026-27: Click here to download prospectus & register! 🎓
+            🎉 ADMISSION OPEN 2026-27: Click here to download prospectus &
+            register! 🎓
             <ArrowUpRight className="h-4 w-4" />
           </span>
         </a>
@@ -257,9 +308,9 @@ function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-             <a 
-              href="#home" 
-              onClick={(e) => scrollToSection(e, 'home')}
+            <a
+              href="#home"
+              onClick={(e) => scrollToSection(e, "home")}
               className="flex items-center gap-3 group"
             >
               <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center p-1 shadow-md group-hover:scale-105 transition-transform">
@@ -273,12 +324,12 @@ function Home() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
               {[
-                { label: 'Home', id: 'home' },
-                { label: 'About', id: 'about' },
-                { label: 'Teachers', id: 'teachers' },
+                { label: "Home", id: "home" },
+                { label: "About", id: "about" },
+                { label: "Teachers", id: "teachers" },
                 // { label: 'Fees', id: 'fees' },
-                { label: 'Time Table', id: 'timetable' },
-                { label: 'Contact', id: 'contact' }
+                { label: "Time Table", id: "timetable" },
+                { label: "Contact", id: "contact" },
               ].map((link) => (
                 <a
                   key={link.id}
@@ -308,7 +359,11 @@ function Home() {
               className="md:hidden p-2 rounded-lg hover:bg-slate-800 text-white transition-colors"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -317,12 +372,12 @@ function Home() {
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-slate-900 border-t border-slate-800 shadow-2xl py-6 px-4 flex flex-col gap-4">
             {[
-              { label: 'Home', id: 'home' },
-              { label: 'About', id: 'about' },
-              { label: 'Teachers', id: 'teachers' },
+              { label: "Home", id: "home" },
+              { label: "About", id: "about" },
+              { label: "Teachers", id: "teachers" },
               // { label: 'Fees', id: 'fees' },
-              { label: 'Time Table', id: 'timetable' },
-              { label: 'Contact', id: 'contact' }
+              { label: "Time Table", id: "timetable" },
+              { label: "Contact", id: "contact" },
             ].map((link) => (
               <a
                 key={link.id}
@@ -346,10 +401,14 @@ function Home() {
       </header>
 
       {/* SECTION 2: HERO SECTION WITH CAROUSEL */}
-      <section id="home" ref={heroRef} className="w-full bg-white pt-28 lg:pt-32">
+      <section
+        id="home"
+        ref={heroRef}
+        className="w-full bg-white pt-28 lg:pt-32"
+      >
         {/* Top: 100% Fully Visible Banner Slider (No overlay text, slides horizontally) */}
         <div className="relative h-[45vh] sm:h-[60vh] lg:h-[70vh] w-full overflow-hidden bg-slate-100 border-b border-slate-200">
-          <div 
+          <div
             className="flex h-full w-full transition-transform duration-700 ease-in-out"
             style={{ transform: `translateX(-${activeSlide * 100}%)` }}
           >
@@ -371,7 +430,9 @@ function Home() {
                 key={idx}
                 onClick={() => setActiveSlide(idx)}
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  idx === activeSlide ? 'w-8 bg-blue-600' : 'w-2 bg-white/60 hover:bg-white shadow-sm'
+                  idx === activeSlide
+                    ? "w-8 bg-blue-600"
+                    : "w-2 bg-white/60 hover:bg-white shadow-sm"
                 }`}
                 aria-label={`Slide ${idx + 1}`}
               />
@@ -380,8 +441,8 @@ function Home() {
         </div>
 
         {/* Bottom: Hero Content Overlays (Lighter theme, no dark overlays on banners) */}
-        <div 
-          ref={heroContentRef} 
+        <div
+          ref={heroContentRef}
           className="py-16 sm:py-24 bg-linear-to-b from-white to-slate-50 border-b border-slate-200"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
@@ -390,20 +451,22 @@ function Home() {
                 <Sparkles className="h-4 w-4" />
                 Top Coaching Center in Town
               </div>
-              
+
               <h1 className="hero-anim-fade text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-none">
                 Raj Tuition Classes
               </h1>
-              
+
               <p className="hero-anim-fade text-xl sm:text-2xl md:text-3xl font-semibold text-blue-600 mt-4 tracking-tight">
                 Empowering Students Through Quality Education
               </p>
-              
+
               <p className="hero-anim-fade text-base sm:text-lg text-slate-600 mt-6 leading-relaxed max-w-2xl mx-auto">
-                We specialize in offering premium mentoring, structured learning, and personalized attention 
-                for secondary and higher secondary grades. Experience excellence in Physics, Chemistry, Math, and English.
+                We specialize in offering premium mentoring, structured
+                learning, and personalized attention for secondary and higher
+                secondary grades. Experience excellence in Physics, Chemistry,
+                Math, and English.
               </p>
-              
+
               <div className="hero-anim-fade mt-8 flex flex-wrap justify-center gap-4 items-center">
                 <Link
                   to="/login/student"
@@ -414,7 +477,7 @@ function Home() {
                 </Link>
                 <a
                   href="#about"
-                  onClick={(e) => scrollToSection(e, 'about')}
+                  onClick={(e) => scrollToSection(e, "about")}
                   className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl text-base font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-all duration-300 hover:-translate-y-1"
                 >
                   Learn More
@@ -426,74 +489,87 @@ function Home() {
       </section>
 
       {/* SECTION 3: ABOUT US */}
-      <section id="about" ref={aboutRef} className="py-24 sm:py-32 relative overflow-hidden bg-slate-50">
+      <section
+        id="about"
+        ref={aboutRef}
+        className="py-24 sm:py-32 relative overflow-hidden bg-slate-50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            
             {/* Left Column: Text Content */}
             <div className="about-reveal-left">
-              <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Who We Are</span>
+              <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+                Who We Are
+              </span>
               <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-2 mb-6">
                 About Raj Tuition Classes
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed mb-8">
-                For over a decade, Raj Tuition Classes has been the cornerstone of academic success for thousands of students. 
-                Our pedagogy blends traditional rigor with modern technology to deliver learning that goes beyond textbooks.
+                For over a decade, Raj Tuition Classes has been the cornerstone
+                of academic success for thousands of students. Our pedagogy
+                blends traditional rigor with modern technology to deliver
+                learning that goes beyond textbooks.
               </p>
 
               {/* Unique Offerings List */}
               <div className="space-y-6">
                 {[
                   {
-                    title: 'Student-focused learning',
-                    desc: 'We adapt our teaching speed and examples to ensure every student understands complex core topics.',
-                    icon: Users
+                    title: "Student-focused learning",
+                    desc: "We adapt our teaching speed and examples to ensure every student understands complex core topics.",
+                    icon: Users,
                   },
                   {
-                    title: 'Experienced faculty',
-                    desc: 'Learn directly from subject matter experts and graduates of tier-1 colleges with years of teaching experience.',
-                    icon: GraduationCap
+                    title: "Experienced faculty",
+                    desc: "Learn directly from subject matter experts and graduates of tier-1 colleges with years of teaching experience.",
+                    icon: GraduationCap,
                   },
                   {
-                    title: 'Regular tests & assessment',
-                    desc: 'Weekly topic evaluations and comprehensive monthly tests with detailed feedback help students track progress.',
-                    icon: Award
+                    title: "Regular tests & assessment",
+                    desc: "Weekly topic evaluations and comprehensive monthly tests with detailed feedback help students track progress.",
+                    icon: Award,
                   },
                   {
-                    title: 'Personal attention',
-                    desc: 'Small batch sizes enable direct doubt resolution and custom study planning tailored to individual student needs.',
-                    icon: CheckCircle
-                  }
+                    title: "Personal attention",
+                    desc: "Small batch sizes enable direct doubt resolution and custom study planning tailored to individual student needs.",
+                    icon: CheckCircle,
+                  },
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4">
                     <div className="shrink-0 h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
                       <item.icon className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
+                      <h3 className="text-lg font-bold text-slate-900">
+                        {item.title}
+                      </h3>
                       <p className="text-slate-600 mt-1">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-
-           
-
           </div>
         </div>
       </section>
 
       {/* SECTION 4: OUR TEACHERS */}
-      <section id="teachers" ref={teachersRef} className="py-24 sm:py-32 bg-white relative overflow-hidden">
+      <section
+        id="teachers"
+        ref={teachersRef}
+        className="py-24 sm:py-32 bg-white relative overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Our Mentors</span>
+            <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+              Our Mentors
+            </span>
             <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-2">
               Meet Our Teachers
             </h2>
             <p className="text-lg text-slate-500 mt-4">
-              Dedicated educators committed to guiding your child towards complete concept mastery.
+              Dedicated educators committed to guiding your child towards
+              complete concept mastery.
             </p>
           </div>
 
@@ -505,8 +581,8 @@ function Home() {
               >
                 {/* Teacher Photo */}
                 <div className="relative h-72 overflow-hidden bg-slate-200">
-                  <img 
-                    src={teacher.image} 
+                  <img
+                    src={teacher.image}
                     alt={teacher.name}
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
@@ -517,9 +593,13 @@ function Home() {
 
                 {/* Teacher Details */}
                 <div className="p-6">
-                  <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">{teacher.role}</span>
-                  <h3 className="text-xl font-bold text-slate-900 mt-1">{teacher.name}</h3>
-                  
+                  <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
+                    {teacher.role}
+                  </span>
+                  <h3 className="text-xl font-bold text-slate-900 mt-1">
+                    {teacher.name}
+                  </h3>
+
                   <div className="mt-4 space-y-2 text-sm text-slate-600 border-t border-slate-200/60 pt-4">
                     <div className="flex items-center gap-2">
                       <GraduationCap className="h-4 w-4 text-blue-500" />
@@ -588,21 +668,27 @@ function Home() {
       </section> */}
 
       {/* SECTION 6: TIME TABLE */}
-      <section id="timetable" ref={timetableRef} className="py-24 sm:py-32 bg-white relative overflow-hidden">
+      <section
+        id="timetable"
+        ref={timetableRef}
+        className="py-24 sm:py-32 bg-white relative overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* Header Row with View More Button */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
             <div>
-              <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Structured Batches</span>
+              <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+                Structured Batches
+              </span>
               <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-2">
                 Class Time Table
               </h2>
               <p className="text-lg text-slate-500 mt-3 max-w-xl">
-                Timings for Class 11th & 12th regular batches. Click View Full Timetable to check grades 6th to 10th.
+                Timings for Class 11th & 12th regular batches. Click View Full
+                Timetable to check grades 6th to 10th.
               </p>
             </div>
-            
+
             <Link
               to="/timetable"
               className="inline-flex items-center gap-2 px-6 py-3 bg-blue-650 hover:bg-blue-600 text-white font-bold rounded-xl text-sm shadow-md transition-all duration-300 hover:-translate-y-0.5"
@@ -614,7 +700,7 @@ function Home() {
 
           {/* Timetable Table */}
           <div className="timetable-anim bg-slate-50 rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm max-w-5xl mx-auto overflow-x-auto">
-            <table className="w-full min-w-[500px] text-left border-collapse">
+            <table className="w-full min-w-125 text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-400 text-xs font-bold uppercase tracking-wider">
                   <th className="py-4 px-4">Subject</th>
@@ -624,12 +710,31 @@ function Home() {
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm font-medium text-slate-700">
                 {[
-                  { subject: 'Physics', class11: '3 PM – 4 PM', class12: '5 PM – 6 PM' },
-                  { subject: 'Chemistry', class11: '4 PM – 5 PM', class12: '6 PM – 7 PM' },
-                  { subject: 'Mathematics', class11: '5 PM – 6 PM', class12: '7 PM – 8 PM' },
-                  { subject: 'Biology', class11: '6 PM – 7 PM', class12: '4 PM – 5 PM' }
+                  {
+                    subject: "Mathematics",
+                    class11: "6:00 PM - 7:00 PM",
+                    class12: "6:00 PM - 7:00 PM",
+                  },
+                  {
+                    subject: "Biology",
+                    class11: "6:00 PM - 7:00 PM",
+                    class12: "9:00 PM - 10:00 PM",
+                  },
+                  {
+                    subject: "Physics",
+                    class11: "8:00 PM - 9:00 PM",
+                    class12: "7:00 PM - 8:00 PM",
+                  },
+                  {
+                    subject: "Chemistry",
+                    class11: "7:00 PM - 8:00 PM",
+                    class12: "8:00 PM - 9:00 PM",
+                  },
                 ].map((row, index) => (
-                  <tr key={index} className="hover:bg-slate-100/40 transition-colors">
+                  <tr
+                    key={index}
+                    className="hover:bg-slate-100/40 transition-colors"
+                  >
                     <td className="py-5 px-4 font-bold text-slate-900 flex items-center gap-2">
                       <BookOpen className="h-4 w-4 text-blue-600" />
                       {row.subject}
@@ -651,15 +756,19 @@ function Home() {
               </tbody>
             </table>
           </div>
-
         </div>
       </section>
 
       {/* SECTION 6.5: MAP LOCATION */}
-      <section id="location" className="py-20 bg-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        id="location"
+        className="py-20 bg-white relative overflow-hidden"
+      >
+        <div  className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Our Location</span>
+            <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+              Our Location
+            </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-2">
               Find Us on Google Maps
             </h2>
@@ -670,7 +779,7 @@ function Home() {
 
           <div className="relative rounded-4xl overflow-hidden border border-slate-200 bg-white p-3 shadow-xl h-112.5">
             <iframe
-             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1366.8392153363873!2d81.26086172693046!3d21.19366036466824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a293d849c55e091%3A0x6c5beb2f8eac33b1!2sRAJ%20TUITION%20CLASSES%2CDURG!5e0!3m2!1sen!2sin!4v1780480021702!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1366.8392153363873!2d81.26086172693046!3d21.19366036466824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a293d849c55e091%3A0x6c5beb2f8eac33b1!2sRAJ%20TUITION%20CLASSES%2CDURG!5e0!3m2!1sen!2sin!4v1780480021702!5m2!1sen!2sin"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -685,73 +794,80 @@ function Home() {
       </section>
 
       {/* SECTION 7: CONTACT US */}
-      <section id="contact" ref={contactRef} className="py-24 sm:py-32 bg-slate-50 relative overflow-hidden">
+      <section
+        id="contact"
+        ref={contactRef}
+        className="py-24 sm:py-32 bg-slate-50 relative overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
-            
             {/* Left Column Info */}
             <div>
-              <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">Get In Touch</span>
+              <span className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+                Get In Touch
+              </span>
               <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-2 mb-6">
                 Contact Us
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed mb-8">
-                Have questions about our batch timings, fees, or course curriculum? 
-                Feel free to connect with our administrative desk. We are here to help!
+                Have questions about our batch timings, fees, or course
+                curriculum? Feel free to connect with our administrative desk.
+                We are here to help!
               </p>
 
               {/* Direct Info Blocks */}
               <div className="grid sm:grid-cols-2 gap-8">
                 {[
                   {
-                    title: 'Phone Call',
-                    value: '+91 98765 43210',
-                    desc: 'Mon - Sat: 9 AM to 8 PM',
-                    link: 'tel:+919876543210',
-                    icon: Phone
+                    title: "Phone Call",
+                    value: "+91 96692 77630",
+                    desc: "Mon - Sat: 8 AM to 8 PM",
+                    link: "tel:+919669277630",
+                    icon: Phone,
                   },
                   {
-                    title: 'WhatsApp Chat',
-                    value: '+91 98765 43210',
-                    desc: 'Quick query replies',
-                    link: 'https://wa.me/919876543210',
-                    icon: MessageSquare
+                    title: "Phone Call",
+                    value: "+91 88393 66658",
+                    desc: "Mon - Sat: 8 AM to 8 PM",
+                    link: "tel:+918839366658",
+                    icon: Phone,
                   },
                   {
-                    title: 'Email Address',
-                    value: 'info@rajtuitionclasses.com',
-                    desc: 'Drop in a line anytime',
-                    link: 'mailto:info@rajtuitionclasses.com',
-                    icon: Mail
+                    title: "WhatsApp Chat",
+                    value: "+91 96692 77630",
+                    desc: "Quick query replies",
+                    link: "https://wa.me/919669277630",
+                    icon: MessageSquare,
                   },
                   {
-                    title: 'Institute Address',
-                    value: 'Rajiv Nagar, Durg, Chhattisgarh 491001',
-                    desc: 'Sector 15, Near City Center',
-                    link: '#',
-                    icon: MapPin
-                  }
+                    title: "Institute Address",
+                    value: "Sabji market, Panchsheel Nagar",
+                    desc: "Durg, Chhattisgarh 491001",
+                    link: "#location",
+                    icon: MapPin,
+                  },
                 ].map((item, idx) => (
                   <a
                     key={idx}
                     href={item.link}
-                    target={item.link.startsWith('http') ? '_blank' : undefined}
+                    target={item.link.startsWith("http") ? "_blank" : undefined}
                     rel="noopener noreferrer"
                     className="group block p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-blue-500 hover:shadow-md transition-all duration-300"
                   >
                     <div className="h-10 w-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                       <item.icon className="h-5 w-5" />
                     </div>
-                    <h3 className="text-sm font-bold text-slate-900">{item.title}</h3>
-                    <p className="text-base font-extrabold text-blue-600 mt-1 wrap-break-word">{item.value}</p>
+                    <h3 className="text-sm font-bold text-slate-900">
+                      {item.title}
+                    </h3>
+                    <p className="text-base font-extrabold text-blue-600 mt-1 wrap-break-word">
+                      {item.value}
+                    </p>
                     <p className="text-xs text-slate-500 mt-1">{item.desc}</p>
                   </a>
                 ))}
               </div>
             </div>
-
-           
-
           </div>
         </div>
       </section>
@@ -760,10 +876,9 @@ function Home() {
       <section className="py-20 relative bg-slate-900 overflow-hidden text-white">
         {/* Glow Effects */}
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.4),transparent_50%),radial-gradient(circle_at_bottom_left,rgba(37,99,235,0.2),transparent_40%)]" />
-        
+
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="rounded-[2.5rem] bg-linear-to-br from-blue-600 to-indigo-700 p-8 sm:p-16 text-center shadow-2xl relative overflow-hidden">
-            
             {/* Design accents */}
             <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 blur-xl" />
             <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-white/10 blur-xl" />
@@ -771,14 +886,14 @@ function Home() {
             <span className="inline-flex items-center gap-1 bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-6">
               Admissions Open 2026-27
             </span>
-            
+
             <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
               Ready to Join Raj Tuition Classes?
             </h2>
-            
+
             <p className="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Start your learning journey today. Get high-quality tutoring, regular tests, 
-              and step closer to your academic goals.
+              Start your learning journey today. Get high-quality tutoring,
+              regular tests, and step closer to your academic goals.
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
@@ -793,7 +908,6 @@ function Home() {
                 <InstallAppButton />
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -801,35 +915,43 @@ function Home() {
       {/* SECTION 9: FOOTER */}
       <footer className="bg-slate-950 text-slate-400 py-16 border-t border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             {/* Col 1 Brand */}
             <div>
-              <a href="#home" onClick={(e) => scrollToSection(e, 'home')} className="flex items-center gap-3 mb-6">
+              <a
+                href="#home"
+                onClick={(e) => scrollToSection(e, "home")}
+                className="flex items-center gap-3 mb-6"
+              >
                 <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center p-1 shadow-sm">
                   <BrandLogo className="h-full w-full object-contain filter brightness-0 invert" />
                 </div>
-                <span className="text-lg font-bold text-white tracking-tight">Raj Tuition Classes</span>
+                <span className="text-lg font-bold text-white tracking-tight">
+                  Raj Tuition Classes
+                </span>
               </a>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Empowering students of grades 9-12 with deep concept clarity, regular tests, and target-oriented mentoring.
+                Empowering students of grades 9-12 with deep concept clarity,
+                regular tests, and target-oriented mentoring.
               </p>
             </div>
 
             {/* Col 2 Quick Links */}
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Quick Links</h3>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">
+                Quick Links
+              </h3>
               <ul className="space-y-3.5 text-sm">
                 {[
-                  { label: 'Home', id: 'home' },
-                  { label: 'About', id: 'about' },
-                  { label: 'Teachers', id: 'teachers' },
+                  { label: "Home", id: "home" },
+                  { label: "About", id: "about" },
+                  { label: "Teachers", id: "teachers" },
                   // { label: 'Fees', id: 'fees' },
-                  { label: 'Contact', id: 'contact' }
+                  { label: "Contact", id: "contact" },
                 ].map((link) => (
                   <li key={link.id}>
-                    <a 
-                      href={`#${link.id}`} 
+                    <a
+                      href={`#${link.id}`}
                       onClick={(e) => scrollToSection(e, link.id)}
                       className="hover:text-blue-500 transition-colors"
                     >
@@ -842,7 +964,9 @@ function Home() {
 
             {/* Col 3 Timings */}
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Office Hours</h3>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">
+                Office Hours
+              </h3>
               <ul className="space-y-3 text-sm text-slate-500">
                 <li>Monday – Saturday:</li>
                 <li className="text-white font-semibold">9:00 AM – 8:00 PM</li>
@@ -853,36 +977,39 @@ function Home() {
 
             {/* Col 4 Quick Contact */}
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">Support</h3>
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6">
+                Support
+              </h3>
               <ul className="space-y-3 text-sm text-slate-500">
                 <li className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-blue-500" />
-                  <span className="text-slate-300 font-medium">+91 98765 43210</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-blue-500" />
-                  <span className="text-slate-300 font-medium">info@rajtuitionclasses.com</span>
+                  <span className="text-slate-300 font-medium">
+                    +91 88393 66658, +91 96692 77630
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-blue-500" />
-                  <span className="text-slate-300">Rajiv Nagar, Durg, Chhattisgarh 491001</span>
+                  <span className="text-slate-300">
+                    ward no 1, Sabji market, Panchsheel Nagar, Durg, Chhattisgarh 491001
+                  </span>
                 </li>
               </ul>
             </div>
           </div>
 
           <hr className="border-slate-900 my-8" />
-          
+
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
-            <p>© {new Date().getFullYear()} Raj Tuition Classes. All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} Raj Tuition Classes. All rights
+              reserved.
+            </p>
             <p>Designed with ❤️ for absolute academic success.</p>
           </div>
-
         </div>
       </footer>
-
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
