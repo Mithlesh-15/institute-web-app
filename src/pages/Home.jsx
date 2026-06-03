@@ -218,7 +218,8 @@ function Home() {
   const teachers = [
     {
       name: "Yogesh Dewangan",
-      qual: "M.Sc. Mathematics & B.Ed",
+      qual: "M.Sc. Mathematics",
+      qual2:"B.Ed. , D.El.Ed. , B.Lib. & ISc",
       exp: "17+ Years Teaching Experience",
       image: "/Home/Teachers/T1.png",
       subject: "Physics & Mathematics",
@@ -606,6 +607,10 @@ function Home() {
                       <GraduationCap className="h-4 w-4 text-blue-500" />
                       <span>{teacher.qual}</span>
                     </div>
+                    {teacher.qual2 ? <div className="flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4 text-blue-500" />
+                      <span>{teacher.qual2}</span>
+                    </div>:""}
                     <div className="flex items-center gap-2">
                       <Award className="h-4 w-4 text-amber-500" />
                       <span>{teacher.exp}</span>
@@ -713,23 +718,23 @@ function Home() {
                 {[
                   {
                     subject: "Mathematics",
-                    class11: "6:00 PM - 7:00 PM",
-                    class12: "6:00 PM - 7:00 PM",
+                    class11: "6:00 AM - 7:00 AM",
+                    class12: "6:00 AM - 7:00 AM",
                   },
                   {
                     subject: "Biology",
-                    class11: "6:00 PM - 7:00 PM",
-                    class12: "9:00 PM - 10:00 PM",
+                    class11: "6:00 AM - 7:00 AM",
+                    class12: "9:00 AM - 10:00 AM",
                   },
                   {
                     subject: "Physics",
-                    class11: "8:00 PM - 9:00 PM",
-                    class12: "7:00 PM - 8:00 PM",
+                    class11: "8:00 AM - 9:00 AM",
+                    class12: "7:00 AM - 8:00 AM",
                   },
                   {
                     subject: "Chemistry",
-                    class11: "7:00 PM - 8:00 PM",
-                    class12: "8:00 PM - 9:00 PM",
+                    class11: "7:00 AM - 8:00 AM",
+                    class12: "8:00 AM - 9:00 AM",
                   },
                 ].map((row, index) => (
                   <tr
@@ -822,14 +827,14 @@ function Home() {
                   {
                     title: "Phone Call",
                     value: "+91 96692 77630",
-                    desc: "Mon - Sat: 8 AM to 8 PM",
+                    desc: "Mon - Sat: 8 AM to 8 AM",
                     link: "tel:+919669277630",
                     icon: Phone,
                   },
                   {
                     title: "Phone Call",
                     value: "+91 88393 66658",
-                    desc: "Mon - Sat: 8 AM to 8 PM",
+                    desc: "Mon - Sat: 8 AM to 8 AM",
                     link: "tel:+918839366658",
                     icon: Phone,
                   },

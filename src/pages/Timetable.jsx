@@ -30,10 +30,10 @@ function Timetable() {
       title: 'Senior Secondary (Grade 11 - 12)',
       grades: ['Class 11', 'Class 12'],
       schedule: [
-        { subject: 'Mathematics', class11: '6:00 PM – 7:00 PM', class12: '6:00 PM – 7:00 PM' },
-        { subject: 'Biology', class11: '6:00 PM – 7:00 PM', class12: '9:00 PM – 10:00 PM' },
-        { subject: 'Physics', class11: '8:00 PM – 9:00 PM', class12: '7:00 PM – 8:00 PM' },
-        { subject: 'Chemistry', class11: '7:00 PM – 8:00 PM', class12: '8:00 PM – 9:00 PM' }
+        { subject: 'Mathematics', class11: '6:00 AM – 7:00 AM', class12: '6:00 AM – 7:00 AM' },
+        { subject: 'Biology', class11: '6:00 AM – 7:00 AM', class12: '9:00 AM – 10:00 AM' },
+        { subject: 'Physics', class11: '8:00 AM – 9:00 AM', class12: '7:00 AM – 8:00 AM' },
+        { subject: 'Chemistry', class11: '7:00 AM – 8:00 AM', class12: '8:00 AM – 9:00 AM' }
       ]
     }
   ]
