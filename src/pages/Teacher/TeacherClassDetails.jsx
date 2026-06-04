@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Plus, PencilLine } from 'lucide-react'
 import Button from '../../components/ui/Button'
@@ -41,9 +42,7 @@ const formatDate = (value) => {
 function TeacherClassDetails() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [classItem, setClassItem] = useState(null)
-  const [students, setStudents] = useState([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [editModalOpen, setEditModalOpen] = useState(false)
@@ -55,55 +54,52 @@ function TeacherClassDetails() {
   const [removingId, setRemovingId] = useState('')
 
   const [profileOpen, setProfileOpen] = useState(false)
-  const [profileLoading, setProfileLoading] = useState(false)
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingFees, setSavingFees] = useState(false)
-  const [selectedStudentDetail, setSelectedStudentDetail] = useState(null)
   const [selectedStudentId, setSelectedStudentId] = useState('')
 
-  const openProfile = async (student) => {
+  const { data: classData, isLoading: classLoading } = useQuery({
+    queryKey: ['classDetail', id],
+    queryFn: () => fetchClassById(id),
+    enabled: !!id,
+    staleTime: 2 * 65 * 60 * 1000, // 2 hours
+  })
+
+  const { data: students = [], isLoading: studentsLoading } = useQuery({
+    queryKey: ['classStudents', id],
+    queryFn: () => fetchClassStudents(id),
+    enabled: !!id,
+    staleTime: 2 * 65 * 60 * 1000, // 2 hours
+  })
+
+  const { data: selectedStudentDetail, isLoading: profileLoading } = useQuery({
+    queryKey: ['studentDetail', selectedStudentId],
+    queryFn: () => fetchStudentDetail(selectedStudentId),
+    enabled: !!selectedStudentId,
+    staleTime: 2 * 65 * 60 * 1000, // 2 hours
+  })
+
+  const loading = classLoading || studentsLoading
+
+  const classItem = useMemo(() => {
+    if (!classData) return null
+    return {
+      ...classData,
+      totalStudents: students.length,
+    }
+  }, [classData, students])
+
+  const openProfile = (student) => {
     setSelectedStudentId(student.id)
     setProfileOpen(true)
-    setProfileLoading(true)
     setError('')
-
-    try {
-      const detail = await fetchStudentDetail(student.id)
-      setSelectedStudentDetail(detail)
-    } catch (profileError) {
-      setError(
-        profileError instanceof Error ? profileError.message : 'Unable to load student profile.',
-      )
-      setSelectedStudentDetail({
-        student,
-        classes: [],
-        attendance: {
-          totalPresent: 0,
-          totalAbsent: 0,
-          attendancePercentage: 0,
-          totalCount: 0,
-        },
-      })
-    } finally {
-      setProfileLoading(false)
-    }
   }
 
   const closeProfile = () => {
     setProfileOpen(false)
-    setSelectedStudentDetail(null)
     setSelectedStudentId('')
-    setProfileLoading(false)
     setSavingProfile(false)
     setSavingFees(false)
-  }
-
-  const refreshStudentDetail = async () => {
-    if (!selectedStudentId) {
-      return
-    }
-    const detail = await fetchStudentDetail(selectedStudentId)
-    setSelectedStudentDetail(detail)
   }
 
   const handleSaveProfile = async ({ name, className, createdAt }) => {
@@ -111,7 +107,8 @@ function TeacherClassDetails() {
     try {
       setSavingProfile(true)
       await updateStudentProfile(selectedStudentId, { name, className, createdAt })
-      await refreshStudentDetail()
+      queryClient.invalidateQueries({ queryKey: ['studentDetail', selectedStudentId] })
+      queryClient.invalidateQueries({ queryKey: ['classStudents', id] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save student details.')
     } finally {
@@ -126,7 +123,8 @@ function TeacherClassDetails() {
       const photoUrl = await uploadStudentPhoto(photoFile)
       if (!photoUrl) throw new Error('Failed to upload photo')
       await updateStudentProfile(selectedStudentId, { photo: photoUrl })
-      await refreshStudentDetail()
+      queryClient.invalidateQueries({ queryKey: ['studentDetail', selectedStudentId] })
+      queryClient.invalidateQueries({ queryKey: ['classStudents', id] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to update photo.')
       throw saveError
@@ -140,56 +138,14 @@ function TeacherClassDetails() {
     try {
       setSavingFees(true)
       await updateStudentFees(selectedStudentId, totalFees)
-      await refreshStudentDetail()
+      queryClient.invalidateQueries({ queryKey: ['studentDetail', selectedStudentId] })
+      queryClient.invalidateQueries({ queryKey: ['classStudents', id] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save fee settings.')
     } finally {
       setSavingFees(false)
     }
   }
-
-  const loadClassDetails = async () => {
-    if (!id) {
-      setError('Class not found.')
-      setLoading(false)
-      return
-    }
-
-    try {
-      setLoading(true)
-      setError('')
-
-      const [classData, studentData] = await Promise.all([
-        fetchClassById(id),
-        fetchClassStudents(id),
-      ])
-
-      if (!classData) {
-        setClassItem(null)
-        setStudents([])
-        setError('Class not found or you do not have access to it.')
-        return
-      }
-
-      setClassItem({
-        ...classData,
-        totalStudents: studentData.length,
-      })
-      setStudents(studentData)
-    } catch (loadError) {
-      setError(
-        loadError instanceof Error
-          ? loadError.message
-          : 'Unable to load class details right now.',
-      )
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadClassDetails()
-  }, [id])
 
   const filteredStudents = useMemo(() => {
     const term = search.trim().toLowerCase()
@@ -246,12 +202,8 @@ function TeacherClassDetails() {
     setError('')
 
     try {
-      const updatedClass = await updateClassRecord(classItem.id, values)
-      setClassItem((current) => ({
-        ...(current || {}),
-        ...updatedClass,
-        totalStudents: current?.totalStudents || students.length,
-      }))
+      await updateClassRecord(classItem.id, values)
+      queryClient.invalidateQueries({ queryKey: ['classDetail', id] })
       closeEditModal()
     } finally {
       setSavingClass(false)
@@ -268,7 +220,7 @@ function TeacherClassDetails() {
 
     try {
       await addStudentsToClass(classItem.id, selectedStudentIds)
-      await loadClassDetails()
+      queryClient.invalidateQueries({ queryKey: ['classStudents', id] })
       closeAddModal()
     } finally {
       setSavingAssignments(false)
@@ -292,10 +244,7 @@ function TeacherClassDetails() {
       setRemovingId(student.id)
       setError('')
       await removeStudentFromClass(classItem.id, student.id)
-      setStudents((current) => current.filter((item) => item.id !== student.id))
-      setClassItem((current) =>
-        current ? { ...current, totalStudents: Math.max((current.totalStudents || 1) - 1, 0) } : current,
-      )
+      queryClient.invalidateQueries({ queryKey: ['classStudents', id] })
     } catch (removeError) {
       setError(
         removeError instanceof Error

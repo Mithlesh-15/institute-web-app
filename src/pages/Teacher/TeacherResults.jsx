@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ClipboardList, Plus, Save } from 'lucide-react'
 import Button from '../../components/ui/Button'
@@ -140,53 +141,44 @@ function StudentResultRow({ student, resultState, totalMarks, onChange }) {
 function TeacherResults() {
   const navigate = useNavigate()
   const params = useParams()
-  const [tests, setTests] = useState([])
-  const [classes, setClasses] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [detailLoading, setDetailLoading] = useState(false)
+  const queryClient = useQueryClient()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  const [currentTest, setCurrentTest] = useState(null)
-  const [students, setStudents] = useState([])
   const [studentRows, setStudentRows] = useState({})
   const [classFilter, setClassFilter] = useState('All')
 
   const testId = params.testId || ''
 
-  const loadOverview = async () => {
-    try {
-      setLoading(true)
-      setError('')
+  const { data: overviewData, isLoading: loading } = useQuery({
+    queryKey: ['teacherResultsOverview'],
+    queryFn: async () => {
       const [testRows, classRows] = await Promise.all([
         fetchTeacherTests(),
         fetchTeacherClassesForDropdown(),
       ])
-      setTests(testRows)
-      setClasses(classRows)
-    } catch (overviewError) {
-      setError(overviewError instanceof Error ? overviewError.message : 'Unable to load results.')
-    } finally {
-      setLoading(false)
-    }
-  }
+      return { testRows, classRows }
+    },
+    staleTime: 2 * 60 * 60 * 1000,
+  })
 
-  const loadDetail = async (selectedTestId) => {
-    if (!selectedTestId) {
-      setCurrentTest(null)
-      setStudents([])
-      setStudentRows({})
-      return
-    }
+  const tests = overviewData?.testRows || []
+  const classes = overviewData?.classRows || []
 
-    try {
-      setDetailLoading(true)
-      setError('')
-      const detail = await fetchTestDetails(selectedTestId)
-      setCurrentTest(detail.test)
-      setStudents(detail.students)
+  const { data: detailData, isLoading: detailLoading } = useQuery({
+    queryKey: ['teacherResultDetail', testId],
+    queryFn: () => fetchTestDetails(testId),
+    enabled: !!testId,
+    staleTime: 2 * 60 * 60 * 1000,
+  })
+
+  const currentTest = detailData?.test || null
+  const students = detailData?.students || []
+
+  useEffect(() => {
+    if (detailData?.students) {
       setStudentRows(
-        detail.students.reduce((accumulator, student) => {
+        detailData.students.reduce((accumulator, student) => {
           accumulator[student.id] = {
             marks: student.result?.marks ?? '',
             absent: Boolean(student.result?.absent),
@@ -194,23 +186,8 @@ function TeacherResults() {
           return accumulator
         }, {}),
       )
-    } catch (detailError) {
-      setError(detailError instanceof Error ? detailError.message : 'Unable to load test details.')
-      setCurrentTest(null)
-      setStudents([])
-      setStudentRows({})
-    } finally {
-      setDetailLoading(false)
     }
-  }
-
-  useEffect(() => {
-    loadOverview()
-  }, [])
-
-  useEffect(() => {
-    loadDetail(testId)
-  }, [testId])
+  }, [detailData])
 
   const handleAddTest = async ({ testName, classId, className, subject, testDate, totalMarks }) => {
     try {
@@ -225,7 +202,7 @@ function TeacherResults() {
         totalMarks,
       })
       setModalOpen(false)
-      await loadOverview()
+      queryClient.invalidateQueries({ queryKey: ['teacherResultsOverview'] })
       navigate(`/teacher/results/${test.id}`, { replace: true })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to create test.')
@@ -269,8 +246,8 @@ function TeacherResults() {
           absent: Boolean(studentRows[student.id]?.absent),
         })),
       )
-      await loadDetail(currentTest.id)
-      await loadOverview()
+      queryClient.invalidateQueries({ queryKey: ['teacherResultDetail', currentTest.id] })
+      queryClient.invalidateQueries({ queryKey: ['teacherResultsOverview'] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save results.')
     } finally {

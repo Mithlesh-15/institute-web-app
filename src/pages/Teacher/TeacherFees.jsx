@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import EmptyState from '../../components/teacher-fees/EmptyState'
@@ -18,41 +19,27 @@ import {
 function TeacherFees() {
   const navigate = useNavigate()
   const currentMonthYear = useMemo(() => getCurrentMonthYear(), [])
-  const [students, setStudents] = useState([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [error, setError] = useState('')
   const [classFilter, setClassFilter] = useState('All')
   const [search, setSearch] = useState('')
-  const [selectedStudent, setSelectedStudent] = useState(null)
+  const [selectedStudentId, setSelectedStudentId] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [editPendingOpen, setEditPendingOpen] = useState(false)
   const [editingPendingFee, setEditingPendingFee] = useState(null)
   const [saving, setSaving] = useState(false)
   const [actionLoadingId, setActionLoadingId] = useState('')
 
-  const loadFees = async (selectedStudentId = '') => {
-    try {
-      setLoading(true)
-      setError('')
-      const data = await fetchFeesOverview()
-      setStudents(data)
+  const { data: students = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['teacherFeesOverview'],
+    queryFn: fetchFeesOverview,
+    staleTime: 2 * 60 * 60 * 1000, // 2 hours
+  })
 
-      if (selectedStudentId) {
-        const nextSelected = data.find((student) => student.id === selectedStudentId) || null
-        setSelectedStudent(nextSelected)
-      }
-    } catch (loadError) {
-      setError(
-        loadError instanceof Error ? loadError.message : 'Unable to load fee records right now.',
-      )
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadFees()
-  }, [])
+  const selectedStudent = useMemo(() => {
+    if (!selectedStudentId) return null
+    return students.find((student) => student.id === selectedStudentId) || null
+  }, [students, selectedStudentId])
 
   const classBuckets = useMemo(() => {
     const bucketMap = STUDENT_CLASS_OPTIONS.filter((option) => option !== 'All').reduce(
@@ -98,18 +85,14 @@ function TeacherFees() {
     })
   }, [classFilter, search, students])
 
-  const refreshSelectedStudent = async (studentId) => {
-    await loadFees(studentId)
-  }
-
   const openStudentDetails = (student) => {
-    setSelectedStudent(student)
+    setSelectedStudentId(student.id)
     setModalOpen(true)
   }
 
   const closeStudentDetails = () => {
     setModalOpen(false)
-    setSelectedStudent(null)
+    setSelectedStudentId('')
   }
 
   const handleSaveStudentFee = async ({ studentId, status, pendingAmount }) => {
@@ -126,7 +109,7 @@ function TeacherFees() {
         month: currentMonthYear.month,
         year: currentMonthYear.year,
       })
-      await refreshSelectedStudent(studentId)
+      queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save fees right now.')
     } finally {
@@ -144,7 +127,7 @@ function TeacherFees() {
         month,
         year,
       })
-      await refreshSelectedStudent(studentId)
+      queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to add fee record.')
       throw saveError
@@ -165,7 +148,7 @@ function TeacherFees() {
         month: fee.month,
         year: fee.year,
       })
-      await refreshSelectedStudent(selectedStudent.id)
+      queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
     } catch (actionError) {
       setError(
         actionError instanceof Error ? actionError.message : 'Unable to mark fee as paid.',
@@ -200,7 +183,7 @@ function TeacherFees() {
         year: fee.year,
       })
       closeEditPending()
-      await refreshSelectedStudent(selectedStudent.id)
+      queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
     } catch (saveError) {
       setError(
         saveError instanceof Error

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Users, Plus, ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import EmptyState from '../../components/teacher-students/EmptyState'
@@ -19,18 +20,28 @@ const getTodayDateString = () => {
 }
 
 function TeacherStudents() {
-  const [students, setStudents] = useState([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [classFilter, setClassFilter] = useState('All')
   const [deletingId, setDeletingId] = useState('')
   const [profileOpen, setProfileOpen] = useState(false)
-  const [profileLoading, setProfileLoading] = useState(false)
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingFees, setSavingFees] = useState(false)
-  const [selectedStudentDetail, setSelectedStudentDetail] = useState(null)
   const [selectedStudentId, setSelectedStudentId] = useState('')
+
+  const { data: students = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['teacherStudents'],
+    queryFn: fetchStudents,
+    staleTime: 2 * 60 * 60 * 1000,
+  })
+
+  const { data: selectedStudentDetail, isLoading: profileLoading, error: profileQueryError } = useQuery({
+    queryKey: ['studentDetail', selectedStudentId],
+    queryFn: () => fetchStudentDetail(selectedStudentId),
+    enabled: !!selectedStudentId,
+    staleTime: 2 * 60 * 60 * 1000,
+  })
   const [isAdding, setIsAdding] = useState(false)
   const [saving, setSaving] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -115,32 +126,13 @@ function TeacherStudents() {
       })
 
       setIsAdding(false)
-      await loadStudents()
+      queryClient.invalidateQueries({ queryKey: ['teacherStudents'] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to create student.')
     } finally {
       setSaving(false)
     }
   }
-
-  const loadStudents = async () => {
-    try {
-      setLoading(true)
-      setError('')
-      const data = await fetchStudents()
-      setStudents(data)
-    } catch (fetchError) {
-      setError(
-        fetchError instanceof Error ? fetchError.message : 'Unable to load students right now.',
-      )
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadStudents()
-  }, [])
 
   const filteredStudents = useMemo(() => {
     const term = search.trim().toLowerCase()
@@ -156,39 +148,15 @@ function TeacherStudents() {
     })
   }, [classFilter, search, students])
 
-  const openProfile = async (student) => {
+  const openProfile = (student) => {
     setSelectedStudentId(student.id)
     setProfileOpen(true)
-    setProfileLoading(true)
     setError('')
-
-    try {
-      const detail = await fetchStudentDetail(student.id)
-      setSelectedStudentDetail(detail)
-    } catch (profileError) {
-      setError(
-        profileError instanceof Error ? profileError.message : 'Unable to load student profile.',
-      )
-      setSelectedStudentDetail({
-        student,
-        classes: [],
-        attendance: {
-          totalPresent: 0,
-          totalAbsent: 0,
-          attendancePercentage: 0,
-          totalCount: 0,
-        },
-      })
-    } finally {
-      setProfileLoading(false)
-    }
   }
 
   const closeProfile = () => {
     setProfileOpen(false)
-    setSelectedStudentDetail(null)
     setSelectedStudentId('')
-    setProfileLoading(false)
     setSavingProfile(false)
     setSavingFees(false)
   }
@@ -204,7 +172,7 @@ function TeacherStudents() {
       setDeletingId(student.id)
       setError('')
       await deleteStudentById(student.id)
-      setStudents((current) => current.filter((item) => item.id !== student.id))
+      queryClient.invalidateQueries({ queryKey: ['teacherStudents'] })
       if (selectedStudentId === student.id) {
         closeProfile()
       }
@@ -213,25 +181,6 @@ function TeacherStudents() {
     } finally {
       setDeletingId('')
     }
-  }
-
-  const refreshStudentDetail = async () => {
-    if (!selectedStudentId) {
-      return
-    }
-
-    const detail = await fetchStudentDetail(selectedStudentId)
-    setSelectedStudentDetail(detail)
-    setStudents((current) =>
-      current.map((student) =>
-        student.id === detail.student.id
-          ? {
-              ...student,
-              ...detail.student,
-            }
-          : student,
-      ),
-    )
   }
 
   const handleSaveProfile = async ({ name, className, createdAt }) => {
@@ -243,7 +192,8 @@ function TeacherStudents() {
       setSavingProfile(true)
       setError('')
       await updateStudentProfile(selectedStudentId, { name, className, createdAt })
-      await refreshStudentDetail()
+      queryClient.invalidateQueries({ queryKey: ['studentDetail', selectedStudentId] })
+      queryClient.invalidateQueries({ queryKey: ['teacherStudents'] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save student details.')
     } finally {
@@ -264,7 +214,8 @@ function TeacherStudents() {
         throw new Error('Failed to upload photo')
       }
       await updateStudentProfile(selectedStudentId, { photo: photoUrl })
-      await refreshStudentDetail()
+      queryClient.invalidateQueries({ queryKey: ['studentDetail', selectedStudentId] })
+      queryClient.invalidateQueries({ queryKey: ['teacherStudents'] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to update photo.')
       throw saveError
@@ -282,7 +233,8 @@ function TeacherStudents() {
       setSavingFees(true)
       setError('')
       await updateStudentFees(selectedStudentId, totalFees)
-      await refreshStudentDetail()
+      queryClient.invalidateQueries({ queryKey: ['studentDetail', selectedStudentId] })
+      queryClient.invalidateQueries({ queryKey: ['teacherStudents'] })
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save fee settings.')
     } finally {

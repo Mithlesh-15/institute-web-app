@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../components/ui/Button'
 import AttendanceCard from '../../components/teacher-attendance/AttendanceCard'
@@ -29,51 +30,44 @@ const buildInitialStatuses = (students, attendanceRecords) => {
 
 function TeacherAttendance() {
   const navigate = useNavigate()
-  const [classes, setClasses] = useState([])
-  const [selectedClass, setSelectedClass] = useState(null)
-  const [students, setStudents] = useState([])
+  const queryClient = useQueryClient()
+  const [selectedClassId, setSelectedClassId] = useState('')
   const [statuses, setStatuses] = useState({})
   const [attendanceDate, setAttendanceDate] = useState(getTodayDateValue())
-  const [loadingClasses, setLoadingClasses] = useState(true)
-  const [loadingAttendance, setLoadingAttendance] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [mode, setMode] = useState('save')
   const [classFilter, setClassFilter] = useState('All')
 
+  const { data: classes = [], isLoading: loadingClasses, error: classesQueryError } = useQuery({
+    queryKey: ['attendanceClasses'],
+    queryFn: fetchAttendanceClasses,
+    staleTime: 2 * 60 * 60 * 1000,
+  })
+
+  const { data: attendanceData, isLoading: loadingAttendance, error: attendanceQueryError } = useQuery({
+    queryKey: ['attendanceClassDetail', selectedClassId, attendanceDate],
+    queryFn: async () => {
+      const [classData, classStudents, attendanceRecords] = await Promise.all([
+        fetchAttendanceClass(selectedClassId),
+        fetchAttendanceClassStudents(selectedClassId),
+        fetchAttendanceRecords(selectedClassId, attendanceDate),
+      ])
+      return { classData, classStudents, attendanceRecords }
+    },
+    enabled: !!selectedClassId,
+    staleTime: 2 * 60 * 60 * 1000,
+  })
+
   useEffect(() => {
-    let mounted = true
-
-    const loadClasses = async () => {
-      try {
-        setLoadingClasses(true)
-        setError('')
-        const data = await fetchAttendanceClasses()
-
-        if (mounted) {
-          setClasses(data)
-        }
-      } catch (loadError) {
-        if (mounted) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : 'Unable to load attendance classes.',
-          )
-        }
-      } finally {
-        if (mounted) {
-          setLoadingClasses(false)
-        }
-      }
+    if (attendanceData) {
+      setStatuses(buildInitialStatuses(attendanceData.classStudents, attendanceData.attendanceRecords))
+      setMode(attendanceData.attendanceRecords.length ? 'update' : 'save')
     }
+  }, [attendanceData])
 
-    loadClasses()
-
-    return () => {
-      mounted = false
-    }
-  }, [])
+  const selectedClass = attendanceData?.classData || null
+  const students = attendanceData?.classStudents || []
 
   const filteredClasses = useMemo(() => {
     return classes.filter(
@@ -81,64 +75,15 @@ function TeacherAttendance() {
     )
   }, [classFilter, classes])
 
-  useEffect(() => {
-    if (!selectedClass) {
-      return
-    }
-
-    let mounted = true
-    const loadAttendance = async () => {
-      try {
-        setLoadingAttendance(true)
-        setError('')
-
-        const [classData, classStudents, attendanceRecords] = await Promise.all([
-          fetchAttendanceClass(selectedClass.id),
-          fetchAttendanceClassStudents(selectedClass.id),
-          fetchAttendanceRecords(selectedClass.id, attendanceDate),
-        ])
-
-        if (!mounted) {
-          return
-        }
-
-        setSelectedClass(classData)
-        setStudents(classStudents)
-        setStatuses(buildInitialStatuses(classStudents, attendanceRecords))
-        setMode(attendanceRecords.length ? 'update' : 'save')
-      } catch (loadError) {
-        if (mounted) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : 'Unable to load attendance records.',
-          )
-        }
-      } finally {
-        if (mounted) {
-          setLoadingAttendance(false)
-        }
-      }
-    }
-
-    loadAttendance()
-
-    return () => {
-      mounted = false
-    }
-  }, [attendanceDate, selectedClass?.id])
-
   const handleClassSelect = (classItem) => {
-    setSelectedClass(classItem)
+    setSelectedClassId(classItem.id)
     setStatuses({})
-    setStudents([])
     setError('')
     setMode('save')
   }
 
   const handleBack = () => {
-    setSelectedClass(null)
-    setStudents([])
+    setSelectedClassId('')
     setStatuses({})
     setError('')
     setMode('save')
@@ -160,6 +105,7 @@ function TeacherAttendance() {
       setSaving(true)
       setError('')
       await saveAttendanceRecords(selectedClass.id, attendanceDate, statuses)
+      queryClient.invalidateQueries({ queryKey: ['attendanceClassDetail', selectedClassId, attendanceDate] })
       setMode('update')
     } catch (saveError) {
       setError(

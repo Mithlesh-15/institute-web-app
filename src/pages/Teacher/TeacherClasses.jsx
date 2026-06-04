@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import Button from '../../components/ui/Button'
@@ -24,8 +25,7 @@ const initialModalState = {
 
 function TeacherClasses() {
   const navigate = useNavigate()
-  const [classes, setClasses] = useState([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [classFilter, setClassFilter] = useState('All')
@@ -34,39 +34,11 @@ function TeacherClasses() {
   const [saving, setSaving] = useState(false)
   const [deletingId, setDeletingId] = useState('')
 
-  useEffect(() => {
-    let mounted = true
-
-    const loadClasses = async () => {
-      try {
-        setLoading(true)
-        setError('')
-        const data = await fetchClassesWithStudentCounts()
-
-        if (mounted) {
-          setClasses(data)
-        }
-      } catch (fetchError) {
-        if (mounted) {
-          setError(
-            fetchError instanceof Error
-              ? fetchError.message
-              : 'Unable to load classes right now.',
-          )
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    loadClasses()
-
-    return () => {
-      mounted = false
-    }
-  }, [])
+  const { data: classes = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['teacherClasses'],
+    queryFn: fetchClassesWithStudentCounts,
+    staleTime: 2 * 60 * 60 * 1000,
+  })
 
   const filteredClasses = useMemo(() => {
     const term = search.trim().toLowerCase()
@@ -109,20 +81,14 @@ function TeacherClasses() {
 
     try {
       if (editingClass) {
-        const updatedClass = await updateClassRecord(editingClass.id, values)
-        setClasses((current) =>
-          current.map((item) =>
-            item.id === updatedClass.id
-              ? { ...updatedClass, totalStudents: item.totalStudents || 0 }
-              : item,
-          ),
-        )
+        await updateClassRecord(editingClass.id, values)
       } else {
-        const createdClass = await createClassRecord(values)
-        setClasses((current) => [{ ...createdClass, totalStudents: 0 }, ...current])
+        await createClassRecord(values)
       }
-
+      queryClient.invalidateQueries({ queryKey: ['teacherClasses'] })
       closeModal()
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Unable to save class.')
     } finally {
       setSaving(false)
     }
@@ -141,7 +107,7 @@ function TeacherClasses() {
       setDeletingId(classItem.id)
       setError('')
       await deleteClassRecord(classItem.id)
-      setClasses((current) => current.filter((item) => item.id !== classItem.id))
+      queryClient.invalidateQueries({ queryKey: ['teacherClasses'] })
     } catch (deleteError) {
       setError(
         deleteError instanceof Error
