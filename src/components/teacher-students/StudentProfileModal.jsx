@@ -23,10 +23,12 @@ function StudentProfileModal({
   onSaveProfile,
   onSaveFees,
   onUpdatePhoto,
+  defaultClassId = null,
 }) {
   const [activeTab, setActiveTab] = useState('details')
   const [name, setName] = useState('')
   const [className, setClassName] = useState('')
+  const [createdAt, setCreatedAt] = useState('')
   const [totalFees, setTotalFees] = useState('0')
   const [selectedClassId, setSelectedClassId] = useState(null)
   
@@ -42,11 +44,13 @@ function StudentProfileModal({
     setActiveTab('details')
     setName(studentDetail.student.name || '')
     setClassName(studentDetail.student.className || '')
+    const rawDate = studentDetail.student.createdAt || studentDetail.student.created_at || ''
+    setCreatedAt(rawDate ? rawDate.slice(0, 10) : '')
     setTotalFees(String(studentDetail.student.totalFees || 0))
-    setSelectedClassId(null)
+    setSelectedClassId(defaultClassId)
     setPhotoUploading(false)
     setUploadError('')
-  }, [open, studentDetail])
+  }, [open, studentDetail, defaultClassId])
 
   const classCount = studentDetail?.classes?.length || 0
   const attendance = studentDetail?.attendance || {}
@@ -88,6 +92,7 @@ function StudentProfileModal({
     await onSaveProfile?.({
       name,
       className,
+      createdAt: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
     })
   }
 
@@ -222,33 +227,120 @@ function StudentProfileModal({
               <hr className="my-6 border-slate-100" />
 
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {[
-                  { label: 'Student Name', value: student?.name },
-                  { label: "Father's Name", value: student?.fatherName },
-                  { label: 'Phone Number', value: student?.phone },
-                  { label: 'School Name', value: student?.schoolName },
-                  { label: 'Class', value: student?.className },
-                  { label: 'Medium', value: student?.medium },
-                  { label: 'Board', value: student?.board },
-                ].map((item) => (
-                  <div key={item.label} className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                      {item.label}
-                    </p>
-                    <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word">
-                      {item.value || 'N/A'}
-                    </p>
-                  </div>
-                ))}
+                {/* 1. Student Name */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <label className="block text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                    Student Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-brand focus:ring-2 focus:ring-brand/15"
+                  />
+                </div>
 
+                {/* 2. Father's Name */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    Father's Name
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word py-1">
+                    {student?.fatherName || 'N/A'}
+                  </p>
+                </div>
+
+                {/* 3. Phone Number */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    Phone Number
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word py-1">
+                    {student?.phone || 'N/A'}
+                  </p>
+                </div>
+
+                {/* 4. Class */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <label className="block text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                    Class
+                  </label>
+                  <select
+                    value={className}
+                    onChange={(e) => setClassName(e.target.value)}
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-brand focus:ring-2 focus:ring-brand/15"
+                  >
+                    {['6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG'].map((cls) => (
+                      <option key={cls} value={cls}>{cls}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* 5. Admission Date */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <label className="block text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+                    Admission Date
+                  </label>
+                  <input
+                    type="date"
+                    value={createdAt}
+                    onChange={(e) => setCreatedAt(e.target.value)}
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-brand focus:ring-2 focus:ring-brand/15"
+                  />
+                </div>
+
+                {/* 6. School Name */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    School Name
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word py-1">
+                    {student?.schoolName || 'N/A'}
+                  </p>
+                </div>
+
+                {/* 7. Medium */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    Medium
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word py-1">
+                    {student?.medium || 'N/A'}
+                  </p>
+                </div>
+
+                {/* 8. Board */}
+                <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    Board
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word py-1">
+                    {student?.board || 'N/A'}
+                  </p>
+                </div>
+
+                {/* 9. Address */}
                 <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4 sm:col-span-2 lg:col-span-3">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
                     Address
                   </p>
-                  <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word">
+                  <p className="mt-2 text-base font-semibold text-slate-900 wrap-break-word py-1">
                     {student?.address || 'N/A'}
                   </p>
                 </div>
+              </div>
+
+              {/* Save Profile Button */}
+              <div className="mt-5 flex justify-end">
+                <Button
+                  type="button"
+                  onClick={handleSaveProfile}
+                  loading={savingProfile}
+                  loadingLabel="Saving profile..."
+                >
+                  <Save className="h-4 w-4" />
+                  Save Profile
+                </Button>
               </div>
             </div>
           </div>

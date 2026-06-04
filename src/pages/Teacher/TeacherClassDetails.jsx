@@ -8,6 +8,9 @@ import EmptyState from '../../components/teacher-classes/EmptyState'
 import SearchBar from '../../components/teacher-classes/SearchBar'
 import StudentCard from '../../components/teacher-classes/StudentCard'
 import ClassFormModal from '../../components/teacher-classes/ClassFormModal'
+import StudentProfileModal from '../../components/teacher-students/StudentProfileModal'
+import { fetchStudentDetail, updateStudentProfile, updateStudentFees } from '../../utils/teacherPortal'
+import { uploadStudentPhoto } from '../../utils/studentAuth'
 import {
   addStudentsToClass,
   fetchAvailableStudentsForClass,
@@ -50,6 +53,100 @@ function TeacherClassDetails() {
   const [savingClass, setSavingClass] = useState(false)
   const [savingAssignments, setSavingAssignments] = useState(false)
   const [removingId, setRemovingId] = useState('')
+
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [profileLoading, setProfileLoading] = useState(false)
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [savingFees, setSavingFees] = useState(false)
+  const [selectedStudentDetail, setSelectedStudentDetail] = useState(null)
+  const [selectedStudentId, setSelectedStudentId] = useState('')
+
+  const openProfile = async (student) => {
+    setSelectedStudentId(student.id)
+    setProfileOpen(true)
+    setProfileLoading(true)
+    setError('')
+
+    try {
+      const detail = await fetchStudentDetail(student.id)
+      setSelectedStudentDetail(detail)
+    } catch (profileError) {
+      setError(
+        profileError instanceof Error ? profileError.message : 'Unable to load student profile.',
+      )
+      setSelectedStudentDetail({
+        student,
+        classes: [],
+        attendance: {
+          totalPresent: 0,
+          totalAbsent: 0,
+          attendancePercentage: 0,
+          totalCount: 0,
+        },
+      })
+    } finally {
+      setProfileLoading(false)
+    }
+  }
+
+  const closeProfile = () => {
+    setProfileOpen(false)
+    setSelectedStudentDetail(null)
+    setSelectedStudentId('')
+    setProfileLoading(false)
+    setSavingProfile(false)
+    setSavingFees(false)
+  }
+
+  const refreshStudentDetail = async () => {
+    if (!selectedStudentId) {
+      return
+    }
+    const detail = await fetchStudentDetail(selectedStudentId)
+    setSelectedStudentDetail(detail)
+  }
+
+  const handleSaveProfile = async ({ name, className, createdAt }) => {
+    if (!selectedStudentId) return
+    try {
+      setSavingProfile(true)
+      await updateStudentProfile(selectedStudentId, { name, className, createdAt })
+      await refreshStudentDetail()
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Unable to save student details.')
+    } finally {
+      setSavingProfile(false)
+    }
+  }
+
+  const handleUpdatePhoto = async (photoFile) => {
+    if (!selectedStudentId) return
+    try {
+      setSavingProfile(true)
+      const photoUrl = await uploadStudentPhoto(photoFile)
+      if (!photoUrl) throw new Error('Failed to upload photo')
+      await updateStudentProfile(selectedStudentId, { photo: photoUrl })
+      await refreshStudentDetail()
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Unable to update photo.')
+      throw saveError
+    } finally {
+      setSavingProfile(false)
+    }
+  }
+
+  const handleSaveFees = async ({ totalFees }) => {
+    if (!selectedStudentId) return
+    try {
+      setSavingFees(true)
+      await updateStudentFees(selectedStudentId, totalFees)
+      await refreshStudentDetail()
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Unable to save fee settings.')
+    } finally {
+      setSavingFees(false)
+    }
+  }
 
   const loadClassDetails = async () => {
     if (!id) {
@@ -210,8 +307,8 @@ function TeacherClassDetails() {
     }
   }
 
-  const handleViewProfile = () => {
-    window.alert('Student profile view coming soon.')
+  const handleViewProfile = (student) => {
+    openProfile(student)
   }
 
   if (loading) {
@@ -373,6 +470,19 @@ function TeacherClassDetails() {
         loading={savingAssignments}
         onClose={closeAddModal}
         onSubmit={handleAssignStudents}
+      />
+
+      <StudentProfileModal
+        open={profileOpen}
+        studentDetail={selectedStudentDetail}
+        loading={profileLoading}
+        savingProfile={savingProfile}
+        savingFees={savingFees}
+        onClose={closeProfile}
+        onSaveProfile={handleSaveProfile}
+        onSaveFees={handleSaveFees}
+        onUpdatePhoto={handleUpdatePhoto}
+        defaultClassId={id}
       />
     </div>
   )

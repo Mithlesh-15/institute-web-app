@@ -134,6 +134,25 @@ function TeacherFees() {
     }
   }
 
+  const handleAddNewFee = async ({ studentId, month, year, status, pendingAmount }) => {
+    try {
+      setSaving(true)
+      setError('')
+      await saveStudentFeeRecord(studentId, {
+        status,
+        pendingAmount,
+        month,
+        year,
+      })
+      await refreshSelectedStudent(studentId)
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Unable to add fee record.')
+      throw saveError
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const handleMarkOldFeePaid = async (fee) => {
     if (!selectedStudent) {
       return
@@ -313,6 +332,7 @@ function TeacherFees() {
         onSave={handleSaveStudentFee}
         onMarkPaid={handleMarkOldFeePaid}
         onEditPending={openEditPending}
+        onAddFee={handleAddNewFee}
       />
 
       <EditPendingModal

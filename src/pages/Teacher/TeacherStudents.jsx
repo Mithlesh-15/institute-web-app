@@ -10,6 +10,14 @@ import { STUDENT_CLASS_OPTIONS, deleteStudentById, fetchStudents, createStudent 
 import { fetchStudentDetail, updateStudentFees, updateStudentProfile } from '../../utils/teacherPortal'
 import { uploadStudentPhoto, convertHeicToJpeg } from '../../utils/studentAuth'
 
+const getTodayDateString = () => {
+  const today = new Date()
+  const yyyy = today.getFullYear()
+  const mm = String(today.getMonth() + 1).padStart(2, '0')
+  const dd = String(today.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
 function TeacherStudents() {
   const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(true)
@@ -39,6 +47,7 @@ function TeacherStudents() {
     address: '',
     board: '',
     medium: '',
+    createdAt: getTodayDateString(),
   })
 
   const handleOpenAddForm = () => {
@@ -53,6 +62,7 @@ function TeacherStudents() {
       address: '',
       board: '',
       medium: '',
+      createdAt: getTodayDateString(),
     })
     setPhotoFile(null)
     setShowPassword(false)
@@ -101,6 +111,7 @@ function TeacherStudents() {
         address: form.address,
         totalFees: form.totalFees,
         photo: photoUrl,
+        createdAt: form.createdAt ? new Date(form.createdAt).toISOString() : new Date().toISOString(),
       })
 
       setIsAdding(false)
@@ -223,7 +234,7 @@ function TeacherStudents() {
     )
   }
 
-  const handleSaveProfile = async ({ name, className }) => {
+  const handleSaveProfile = async ({ name, className, createdAt }) => {
     if (!selectedStudentId) {
       return
     }
@@ -231,7 +242,7 @@ function TeacherStudents() {
     try {
       setSavingProfile(true)
       setError('')
-      await updateStudentProfile(selectedStudentId, { name, className })
+      await updateStudentProfile(selectedStudentId, { name, className, createdAt })
       await refreshStudentDetail()
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Unable to save student details.')
@@ -471,7 +482,19 @@ function TeacherStudents() {
                   />
                 </div>
 
-                {/* 11. Profile Photo */}
+                {/* 11. Admission Date */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700">Admission Date *</label>
+                  <input
+                    type="date"
+                    required
+                    value={form.createdAt}
+                    onChange={(e) => setForm({ ...form, createdAt: e.target.value })}
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15"
+                  />
+                </div>
+
+                {/* 12. Profile Photo */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700">Profile Photo (Optional)</label>
                   <input

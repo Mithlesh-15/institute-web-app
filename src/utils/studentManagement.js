@@ -88,6 +88,13 @@ export async function updateStudentById(studentId, updates = {}) {
     payload.total_fees = Number(updates.totalFees || 0)
   }
 
+  if (Object.prototype.hasOwnProperty.call(updates, 'createdAt')) {
+    payload.created_at = updates.createdAt
+  }
+  if (Object.prototype.hasOwnProperty.call(updates, 'created_at')) {
+    payload.created_at = updates.created_at
+  }
+
   if (!Object.keys(payload).length) {
     return fetchStudentById(studentId)
   }
@@ -123,6 +130,10 @@ export async function createStudent(studentData) {
 
   if (studentData.photo) {
     payload.photo = normalizeText(studentData.photo)
+  }
+
+  if (studentData.createdAt || studentData.created_at) {
+    payload.created_at = studentData.createdAt || studentData.created_at
   }
 
   const { data, error } = await supabase
