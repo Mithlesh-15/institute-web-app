@@ -281,7 +281,7 @@ function FeeDetailsModal({
                         setNewFeeError(err instanceof Error ? err.message : 'Failed to add fee record.')
                       }
                     }}
-                    className="px-4 py-2 text-xs font-bold bg-blue-650 hover:bg-blue-600 text-white rounded-xl transition shadow-sm"
+                    className="px-4 py-2 text-xs font-bold bg-blue-650 bg-blue-600 text-white rounded-xl transition shadow-sm"
                   >
                     Submit Fee
                   </button>
