@@ -4,6 +4,7 @@ import Button from '../ui/Button'
 import FeeStatusBadge from './FeeStatusBadge'
 import PendingBadge from './PendingBadge'
 import PendingFeeCard from './PendingFeeCard'
+import { getTodayDateValue } from '../../utils/feesManagement'
 
 const formatMoney = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`
 
@@ -21,12 +22,14 @@ function FeeDetailsModal({
 }) {
   const [status, setStatus] = useState('pending')
   const [pendingAmount, setPendingAmount] = useState('0')
+  const [paymentDate, setPaymentDate] = useState('')
 
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [newFeeMonth, setNewFeeMonth] = useState('')
   const [newFeeYear, setNewFeeYear] = useState('')
   const [newFeeStatus, setNewFeeStatus] = useState('paid')
   const [newFeeAmount, setNewFeeAmount] = useState('')
+  const [newFeePaymentDate, setNewFeePaymentDate] = useState('')
   const [newFeeError, setNewFeeError] = useState('')
 
   useEffect(() => {
@@ -37,16 +40,18 @@ function FeeDetailsModal({
     const currentFee = student.currentFee
     setStatus(currentFee?.status || 'pending')
     setPendingAmount(String(currentFee?.pendingAmount ?? 0))
+    setPaymentDate(currentFee?.paymentDate || getTodayDateValue())
 
     setIsAddingNew(false)
     setNewFeeMonth(currentMonthYear?.month || 'January')
     setNewFeeYear(String(currentMonthYear?.year || new Date().getFullYear()))
     setNewFeeStatus('paid')
     setNewFeeAmount('')
+    setNewFeePaymentDate(getTodayDateValue())
     setNewFeeError('')
   }, [open, student, currentMonthYear])
 
-  const previousPendingFees = useMemo(() => student?.previousPendingFees || [], [student])
+  const allFees = useMemo(() => student?.allFees || [], [student])
 
   if (!open || !student) {
     return null
@@ -57,6 +62,7 @@ function FeeDetailsModal({
       studentId: student.id,
       status,
       pendingAmount: status === 'pending' ? Number(pendingAmount || 0) : 0,
+      paymentDate: status === 'paid' ? paymentDate : null,
     })
   }
 
@@ -154,8 +160,21 @@ function FeeDetailsModal({
                 />
               </label>
             ) : (
-              <div className="mt-4 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-                Paid records will store pending amount as zero and set the payment date.
+              <div className="mt-4 space-y-3">
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-slate-700">
+                    Payment Date
+                  </span>
+                  <input
+                    type="date"
+                    value={paymentDate}
+                    onChange={(event) => setPaymentDate(event.target.value)}
+                    className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15"
+                  />
+                </label>
+                <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                  Paid records will store pending amount as zero and set the selected payment date.
+                </div>
               </div>
             )}
           </div>
@@ -230,7 +249,7 @@ function FeeDetailsModal({
                   </div>
                 </div>
 
-                {newFeeStatus === 'pending' && (
+                {newFeeStatus === 'pending' ? (
                   <div>
                     <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Pending Amount</label>
                     <input
@@ -239,6 +258,16 @@ function FeeDetailsModal({
                       value={newFeeAmount}
                       onChange={(e) => setNewFeeAmount(e.target.value)}
                       placeholder="Enter amount"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Payment Date</label>
+                    <input
+                      type="date"
+                      value={newFeePaymentDate}
+                      onChange={(e) => setNewFeePaymentDate(e.target.value)}
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand focus:ring-1 focus:ring-brand"
                     />
                   </div>
@@ -274,6 +303,7 @@ function FeeDetailsModal({
                           year: Number(newFeeYear),
                           status: newFeeStatus,
                           pendingAmount: newFeeStatus === 'pending' ? Number(newFeeAmount) : 0,
+                          paymentDate: newFeeStatus === 'paid' ? newFeePaymentDate : null,
                         })
                         setIsAddingNew(false)
                         setNewFeeAmount('')
@@ -281,7 +311,7 @@ function FeeDetailsModal({
                         setNewFeeError(err instanceof Error ? err.message : 'Failed to add fee record.')
                       }
                     }}
-                    className="px-4 py-2 text-xs font-bold bg-blue-650 bg-blue-600 text-white rounded-xl transition shadow-sm"
+                    className="px-4 py-2 text-xs font-bold bg-blue-600 text-white rounded-xl transition shadow-sm"
                   >
                     Submit Fee
                   </button>
@@ -291,10 +321,10 @@ function FeeDetailsModal({
           ) : (
             <div className="rounded-3xl border border-slate-200 bg-white p-4">
               <div className="flex items-center justify-between gap-3">
-                <h4 className="text-base font-semibold text-slate-900">Previous Pending Months</h4>
+                <h4 className="text-base font-semibold text-slate-900">Fee History</h4>
                 <div className="flex items-center gap-3">
                   <div className="text-sm font-semibold text-[#f25d0d]">
-                    Total {formatMoney(student.previousPendingAmount)}
+                    Total Pending: {formatMoney(student.previousPendingAmount)}
                   </div>
                   <button
                     type="button"
@@ -308,8 +338,8 @@ function FeeDetailsModal({
               </div>
 
               <div className="mt-4 grid gap-3">
-                {previousPendingFees.length ? (
-                  previousPendingFees.map((fee) => (
+                {allFees.length ? (
+                  allFees.map((fee) => (
                     <PendingFeeCard
                       key={fee.id}
                       fee={fee}
@@ -320,7 +350,7 @@ function FeeDetailsModal({
                   ))
                 ) : (
                   <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
-                    No previous pending months for this student.
+                    No fee history found for this student.
                   </div>
                 )}
               </div>

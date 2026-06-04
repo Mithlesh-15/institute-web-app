@@ -6,6 +6,7 @@ import FeeStatusBadge from './FeeStatusBadge'
 function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
   const [status, setStatus] = useState('pending')
   const [pendingAmount, setPendingAmount] = useState('0')
+  const [paymentDate, setPaymentDate] = useState('')
   const [formError, setFormError] = useState('')
 
   useEffect(() => {
@@ -15,6 +16,7 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
 
     setStatus(fee.status || 'pending')
     setPendingAmount(String(fee.pendingAmount ?? 0))
+    setPaymentDate(fee.paymentDate || new Date().toISOString().slice(0, 10))
     setFormError('')
   }, [fee, open])
 
@@ -40,6 +42,7 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
         fee,
         status: nextStatus,
         pendingAmount: nextStatus === 'paid' ? 0 : normalizedAmount,
+        paymentDate: nextStatus === 'paid' ? paymentDate : null,
       })
     } catch (saveError) {
       setFormError(
@@ -100,7 +103,7 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
                 className={[
                   'rounded-2xl border px-4 py-3 text-sm font-semibold transition',
                   status === 'paid'
-                    ? 'border-success bg-success text-white'
+                    ? 'border-success bg-success text-white shadow-sm'
                     : 'border-slate-200 bg-white text-slate-700 hover:border-success/30 hover:text-success',
                 ].join(' ')}
               >
@@ -112,7 +115,7 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
                 className={[
                   'rounded-2xl border px-4 py-3 text-sm font-semibold transition',
                   status === 'pending'
-                    ? 'border-[#ef4444] bg-[#ef4444] text-white'
+                    ? 'border-[#ef4444] bg-[#ef4444] text-white shadow-sm'
                     : 'border-slate-200 bg-white text-slate-700 hover:border-[#ef4444]/30 hover:text-[#ef4444]',
                 ].join(' ')}
               >
@@ -120,6 +123,20 @@ function EditPendingModal({ open, fee, onClose, onSave, loading = false }) {
               </button>
             </div>
           </div>
+
+          {status === 'paid' && (
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+              <label className="block">
+                <span className="block text-sm font-semibold text-slate-700 mb-2">Payment Date</span>
+                <input
+                  type="date"
+                  value={paymentDate}
+                  onChange={(event) => setPaymentDate(event.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15"
+                />
+              </label>
+            </div>
+          )}
 
           {formError ? (
             <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">

@@ -69,6 +69,7 @@ export const normalizeFeeRecord = (row) => {
     year: Number(row.year || 0),
     status: normalizeText(row.status),
     pendingAmount: Number(row.pending_amount || 0),
+    paymentDate: row.payment_date || null,
   }
 }
 
@@ -111,6 +112,7 @@ export const normalizeStudentFee = (student, fees = [], currentMonthYear) => {
     ...student,
     currentFee: normalizedCurrentFee,
     previousPendingFees,
+    allFees: studentFees,
     previousPendingCount: previousPendingFees.length,
     previousPendingAmount: previousPendingFees.reduce(
       (total, fee) => total + Number(fee.pendingAmount || 0),
@@ -227,18 +229,19 @@ export async function fetchStudentFeeHistory(studentId) {
   return (data || []).map(normalizeFeeRecord).filter(Boolean)
 }
 
-export async function saveStudentCurrentMonthFee(studentId, { status, pendingAmount, month, year }) {
+export async function saveStudentCurrentMonthFee(studentId, { status, pendingAmount, month, year, paymentDate }) {
   return saveStudentFeeRecord(studentId, {
     status,
     pendingAmount,
     month,
     year,
+    paymentDate,
   })
 }
 
 export async function saveStudentFeeRecord(
   studentId,
-  { status, pendingAmount, month, year },
+  { status, pendingAmount, month, year, paymentDate },
 ) {
   const teacherId = getTeacherId()
 
@@ -261,6 +264,7 @@ export async function saveStudentFeeRecord(
     year: normalizedYear,
     status: nextStatus,
     pending_amount: nextStatus === 'paid' ? 0 : normalizedPendingAmount,
+    payment_date: nextStatus === 'paid' ? (paymentDate || getTodayDateValue()) : null,
   }
 
   const { data, error } = await supabase
@@ -278,11 +282,12 @@ export async function saveStudentFeeRecord(
   return normalizeFeeRecord(data)
 }
 
-export async function markStudentFeePaid(studentId, { month, year }) {
+export async function markStudentFeePaid(studentId, { month, year, paymentDate }) {
   return saveStudentFeeRecord(studentId, {
     status: 'paid',
     pendingAmount: 0,
     month,
     year,
+    paymentDate,
   })
 }

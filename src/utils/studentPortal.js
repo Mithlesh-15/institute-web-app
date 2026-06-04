@@ -181,6 +181,7 @@ export const normalizePortalFee = (row) => {
     year: Number(row.year || 0),
     status: normalizeText(row.status).toLowerCase(),
     pendingAmount: Number(row.pending_amount || row.pendingAmount || 0),
+    paymentDate: row.payment_date || null,
   }
 }
 

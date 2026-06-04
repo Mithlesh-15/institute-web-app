@@ -95,7 +95,7 @@ function TeacherFees() {
     setSelectedStudentId('')
   }
 
-  const handleSaveStudentFee = async ({ studentId, status, pendingAmount }) => {
+  const handleSaveStudentFee = async ({ studentId, status, pendingAmount, paymentDate }) => {
     if (!selectedStudent) {
       return
     }
@@ -108,6 +108,7 @@ function TeacherFees() {
         pendingAmount,
         month: currentMonthYear.month,
         year: currentMonthYear.year,
+        paymentDate,
       })
       queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
     } catch (saveError) {
@@ -117,7 +118,7 @@ function TeacherFees() {
     }
   }
 
-  const handleAddNewFee = async ({ studentId, month, year, status, pendingAmount }) => {
+  const handleAddNewFee = async ({ studentId, month, year, status, pendingAmount, paymentDate }) => {
     try {
       setSaving(true)
       setError('')
@@ -126,6 +127,7 @@ function TeacherFees() {
         pendingAmount,
         month,
         year,
+        paymentDate,
       })
       queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
     } catch (saveError) {
@@ -136,7 +138,7 @@ function TeacherFees() {
     }
   }
 
-  const handleMarkOldFeePaid = async (fee) => {
+  const handleMarkOldFeePaid = async (fee, paymentDate) => {
     if (!selectedStudent) {
       return
     }
@@ -147,6 +149,7 @@ function TeacherFees() {
       await markStudentFeePaid(selectedStudent.id, {
         month: fee.month,
         year: fee.year,
+        paymentDate,
       })
       queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
     } catch (actionError) {
@@ -168,7 +171,7 @@ function TeacherFees() {
     setEditingPendingFee(null)
   }
 
-  const handleSavePendingEdit = async ({ fee, status, pendingAmount }) => {
+  const handleSavePendingEdit = async ({ fee, status, pendingAmount, paymentDate }) => {
     if (!selectedStudent) {
       return
     }
@@ -181,15 +184,17 @@ function TeacherFees() {
         pendingAmount,
         month: fee.month,
         year: fee.year,
+        paymentDate,
       })
-      closeEditPending()
       queryClient.invalidateQueries({ queryKey: ['teacherFeesOverview'] })
+      closeEditPending()
     } catch (saveError) {
       setError(
         saveError instanceof Error
           ? saveError.message
           : 'Unable to update pending fee right now.',
       )
+      throw saveError
     } finally {
       setSaving(false)
     }

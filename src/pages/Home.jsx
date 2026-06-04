@@ -236,7 +236,7 @@ function Home() {
       name: "Prakash Dewangan",
       qual: "M.Sc. Chemistry",
       exp: "11+ Years Teaching Experience",
-      image: "/Home/Teachers/T2.png",
+      image: "/Home/Teachers/T2.jpeg",
       subject: "Chemistry & Biology",
     },
     {
