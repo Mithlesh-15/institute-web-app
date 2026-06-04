@@ -42,6 +42,14 @@ function Home() {
       url: "/Home/Banners/B1.jpeg",
       alt: "Coaching Classroom",
     },
+    {
+      url: "/Home/Banners/B2.jpeg",
+      alt: "Trip Photos",
+    },
+    {
+      url: "/Home/Banners/B3.jpeg",
+      alt: "Coaching Events",
+    },
   ];
 
   // Refs for GSAP animations
