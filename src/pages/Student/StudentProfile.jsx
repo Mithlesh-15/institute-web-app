@@ -125,7 +125,7 @@ function StudentProfile() {
     return <div className="h-64 animate-pulse rounded-[1.75rem] border border-slate-200 bg-white shadow-soft" />
   }
 
-  const boards = ['CGBSE', 'CBSE', 'UP', 'PG']
+  const boards = ['CGBSE', 'CBSE', 'UG', 'PG']
   const mediums = ['Hindi', 'English']
 
   return (
