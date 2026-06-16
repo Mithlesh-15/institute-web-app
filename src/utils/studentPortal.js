@@ -341,7 +341,13 @@ export async function fetchStudentClasses() {
 
 export async function fetchStudentAttendanceData() {
   const session = getStudentSession()
-  const classes = await fetchStudentClasses()
+  const [classes, studentResult] = await Promise.all([
+    fetchStudentClasses(),
+    supabase.from(STUDENTS_TABLE).select('created_at').eq('id', session.studentId).maybeSingle()
+  ])
+
+  const student = studentResult?.data
+  const admissionDateStr = student?.created_at ? (typeof student.created_at === 'string' ? student.created_at.slice(0, 10) : new Date(student.created_at).toISOString().slice(0, 10)) : ''
 
   if (!classes.length) {
     return {
@@ -362,7 +368,11 @@ export async function fetchStudentAttendanceData() {
     throw new Error(error.message || 'Unable to load attendance.')
   }
 
-  const records = (data || []).map(normalizePortalAttendance).filter(Boolean)
+  let records = (data || []).map(normalizePortalAttendance).filter(Boolean)
+  if (admissionDateStr) {
+    records = records.filter((record) => record.attendanceDate >= admissionDateStr)
+  }
+
   const historyByClass = records.reduce((accumulator, record) => {
     if (!accumulator[record.classId]) {
       accumulator[record.classId] = []

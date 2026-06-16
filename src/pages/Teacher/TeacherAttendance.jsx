@@ -59,15 +59,35 @@ function TeacherAttendance() {
     staleTime: 2 * 60 * 60 * 1000,
   })
 
+  const selectedClass = attendanceData?.classData || null
+
+  const normalizeDateStr = (dateVal) => {
+    if (!dateVal) return ''
+    if (typeof dateVal === 'string' && dateVal.length >= 10) {
+      return dateVal.slice(0, 10)
+    }
+    try {
+      return new Date(dateVal).toISOString().slice(0, 10)
+    } catch (e) {
+      return ''
+    }
+  }
+
+  const students = useMemo(() => {
+    if (!attendanceData?.classStudents) return []
+    const selectedDateStr = normalizeDateStr(attendanceDate)
+    return attendanceData.classStudents.filter((student) => {
+      const admissionDateStr = normalizeDateStr(student.createdAt)
+      return !admissionDateStr || admissionDateStr <= selectedDateStr
+    })
+  }, [attendanceData?.classStudents, attendanceDate])
+
   useEffect(() => {
     if (attendanceData) {
-      setStatuses(buildInitialStatuses(attendanceData.classStudents, attendanceData.attendanceRecords))
+      setStatuses(buildInitialStatuses(students, attendanceData.attendanceRecords))
       setMode(attendanceData.attendanceRecords.length ? 'update' : 'save')
     }
-  }, [attendanceData])
-
-  const selectedClass = attendanceData?.classData || null
-  const students = attendanceData?.classStudents || []
+  }, [attendanceData, students])
 
   const filteredClasses = useMemo(() => {
     return classes.filter(
@@ -104,7 +124,11 @@ function TeacherAttendance() {
     try {
       setSaving(true)
       setError('')
-      await saveAttendanceRecords(selectedClass.id, attendanceDate, statuses)
+      const filteredStatuses = students.reduce((acc, student) => {
+        acc[student.id] = statuses[student.id] || 'present'
+        return acc
+      }, {})
+      await saveAttendanceRecords(selectedClass.id, attendanceDate, filteredStatuses)
       queryClient.invalidateQueries({ queryKey: ['attendanceClassDetail', selectedClassId, attendanceDate] })
       setMode('update')
     } catch (saveError) {

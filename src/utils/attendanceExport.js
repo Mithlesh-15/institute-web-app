@@ -171,6 +171,8 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
         const row = sheet.getRow(currentRow)
         row.height = 20
 
+        const admissionDateStr = student.createdAt ? (typeof student.createdAt === 'string' ? student.createdAt.slice(0, 10) : new Date(student.createdAt).toISOString().slice(0, 10)) : ''
+
         const nameCell = row.getCell(1)
         nameCell.value = student.name || 'N/A'
         nameCell.font = { name: 'Arial', size: 10, color: { argb: darkText } }
@@ -186,20 +188,36 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
         for (let day = 1; day <= totalDays; day++) {
           const colIdx = day + 1
           const statusCell = row.getCell(colIdx)
-          const status = attMap[student.id]?.[day]
+          
+          const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+          const isBeforeAdmission = admissionDateStr && dateStr < admissionDateStr
 
           let displayVal = '*'
-          if (status === 'present') displayVal = 'P'
-          if (status === 'absent') displayVal = 'A'
+          let valColor = '94A3B8'
+          let isBold = false
+
+          if (isBeforeAdmission) {
+            displayVal = 'N/A'
+            valColor = '94A3B8' // light gray for N/A
+          } else {
+            const status = attMap[student.id]?.[day]
+            if (status === 'present') {
+              displayVal = 'P'
+              valColor = '16A34A'
+              isBold = true
+            } else if (status === 'absent') {
+              displayVal = 'A'
+              valColor = 'DC2626'
+              isBold = true
+            }
+          }
 
           statusCell.value = displayVal
           statusCell.font = { 
             name: 'Arial', 
             size: 9, 
-            bold: displayVal !== '*', 
-            color: { 
-              argb: displayVal === 'P' ? '16A34A' : (displayVal === 'A' ? 'DC2626' : '94A3B8') 
-            } 
+            bold: isBold, 
+            color: { argb: valColor } 
           }
           statusCell.alignment = { horizontal: 'center', vertical: 'middle' }
           statusCell.border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle }
@@ -234,16 +252,23 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
         const row = sheet.getRow(currentSumRow)
         row.height = 20
 
+        const admissionDateStr = student.createdAt ? (typeof student.createdAt === 'string' ? student.createdAt.slice(0, 10) : new Date(student.createdAt).toISOString().slice(0, 10)) : ''
+
         let pCount = 0
         let aCount = 0
         for (let day = 1; day <= totalDays; day++) {
-          const status = attMap[student.id]?.[day]
-          if (status === 'present') pCount++
-          if (status === 'absent') aCount++
+          const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+          const isBeforeAdmission = admissionDateStr && dateStr < admissionDateStr
+
+          if (!isBeforeAdmission) {
+            const status = attMap[student.id]?.[day]
+            if (status === 'present') pCount++
+            if (status === 'absent') aCount++
+          }
         }
 
         const totalRecorded = pCount + aCount
-        const percentage = totalRecorded > 0 ? ((pCount / totalRecorded) * 100).toFixed(2) + '%' : '0.00%'
+        const percentage = totalRecorded > 0 ? ((pCount / totalRecorded) * 100).toFixed(2) + '%' : 'N/A'
 
         const valName = row.getCell(1)
         valName.value = student.name || 'N/A'
@@ -252,20 +277,20 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
         valName.border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle }
 
         const valPresent = row.getCell(2)
-        valPresent.value = pCount
-        valPresent.font = { name: 'Arial', size: 10, color: { argb: '16A34A' }, bold: true }
+        valPresent.value = totalRecorded > 0 ? pCount : '-'
+        valPresent.font = { name: 'Arial', size: 10, color: { argb: totalRecorded > 0 ? '16A34A' : '94A3B8' }, bold: totalRecorded > 0 }
         valPresent.alignment = { horizontal: 'center', vertical: 'middle' }
         valPresent.border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle }
 
         const valAbsent = row.getCell(3)
-        valAbsent.value = aCount
-        valAbsent.font = { name: 'Arial', size: 10, color: { argb: 'DC2626' }, bold: true }
+        valAbsent.value = totalRecorded > 0 ? aCount : '-'
+        valAbsent.font = { name: 'Arial', size: 10, color: { argb: totalRecorded > 0 ? 'DC2626' : '94A3B8' }, bold: totalRecorded > 0 }
         valAbsent.alignment = { horizontal: 'center', vertical: 'middle' }
         valAbsent.border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle }
 
         const valPercent = row.getCell(4)
         valPercent.value = percentage
-        valPercent.font = { name: 'Arial', size: 10, bold: true, color: { argb: '1E3A8A' } }
+        valPercent.font = { name: 'Arial', size: 10, bold: true, color: { argb: totalRecorded > 0 ? '1E3A8A' : '94A3B8' } }
         valPercent.alignment = { horizontal: 'center', vertical: 'middle' }
         valPercent.border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle }
 

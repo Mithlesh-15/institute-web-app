@@ -181,7 +181,13 @@ export async function fetchStudentDetail(studentId) {
   }
 
   const attendance = (attendanceRows || []).map(normalizeAttendance).filter(Boolean)
-  const attendanceByClass = attendance.reduce((accumulator, record) => {
+  const admissionDateStr = student.createdAt ? (typeof student.createdAt === 'string' ? student.createdAt.slice(0, 10) : new Date(student.createdAt).toISOString().slice(0, 10)) : ''
+  
+  const eligibleAttendance = admissionDateStr
+    ? attendance.filter((record) => record.attendanceDate >= admissionDateStr)
+    : attendance
+
+  const attendanceByClass = eligibleAttendance.reduce((accumulator, record) => {
     if (!accumulator[record.classId]) {
       accumulator[record.classId] = []
     }
@@ -205,8 +211,8 @@ export async function fetchStudentDetail(studentId) {
     }
   })
 
-  const totalPresent = attendance.filter((record) => record.status === 'present').length
-  const totalAbsent = attendance.filter((record) => record.status === 'absent').length
+  const totalPresent = eligibleAttendance.filter((record) => record.status === 'present').length
+  const totalAbsent = eligibleAttendance.filter((record) => record.status === 'absent').length
   const totalCount = totalPresent + totalAbsent
 
   return {
@@ -220,7 +226,7 @@ export async function fetchStudentDetail(studentId) {
       totalAbsent,
       attendancePercentage: totalCount ? Math.round((totalPresent / totalCount) * 100) : 0,
       totalCount,
-      rawList: attendance,
+      rawList: eligibleAttendance,
     },
   }
 }
