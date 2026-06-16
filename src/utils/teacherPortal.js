@@ -302,6 +302,30 @@ export async function createTeacherTest({
   return normalizeTest(data)
 }
 
+export async function deleteTeacherTest(testId) {
+  const teacherId = requireTeacherId()
+console.log('1 . Attempting to delete test with testId:', testId, 'for teacherId:', teacherId)
+  // Delete associated results first
+  const { error: resultsError } = await supabase
+    .from(TEST_RESULTS_TABLE)
+    .delete()
+    .eq('test_id', testId)
+console.log('2 . Deleted test results for testId:', testId, 'Error:', resultsError)
+  if (resultsError) {
+    throw new Error(resultsError.message || 'Unable to delete test results.')
+  }
+
+  // Delete the test itself
+  const { error } = await supabase
+    .from(TESTS_TABLE)
+    .delete()
+    .eq('id', testId)
+
+  if (error) {
+    throw new Error(error.message || 'Unable to delete test.')
+  }
+}
+
 export async function fetchTestStudents(testId) {
   const test = await fetchTeacherTest(testId)
 

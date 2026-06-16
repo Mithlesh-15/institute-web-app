@@ -3,6 +3,8 @@ const variantClasses = {
     'bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_18px_40px_rgba(37,99,235,0.22)] hover:shadow-[0_20px_48px_rgba(37,99,235,0.28)]',
   secondary:
     'border border-slate-200 bg-white text-slate-700 hover:border-[#2563eb]/25 hover:bg-[#f8fafc]',
+  danger:
+    'border border-red-200 bg-white text-red-600 hover:border-red-300 hover:bg-red-50 focus:ring-red-500/15',
   ghost: 'bg-transparent text-[#374151] hover:bg-black/5',
 }
 

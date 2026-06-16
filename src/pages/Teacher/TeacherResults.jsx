@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ClipboardList, Plus, Save } from 'lucide-react'
+import { ClipboardList, Plus, Save, Trash2 } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Modal from '../../components/ui/Modal'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import {
   createTeacherTest,
+  deleteTeacherTest,
   fetchTeacherClassesForDropdown,
   fetchTeacherTests,
   fetchTestDetails,
@@ -67,7 +68,7 @@ function AddTestModal({ open, classes, loading, onClose, onSave }) {
             <option value="">Select class</option>
             {classes.map((classItem) => (
               <option key={classItem.id} value={classItem.id}>
-                {classItem.className || classItem.classLevel || 'Class'}
+                {classItem.className || 'Class'}{classItem.classLevel ? ` (${classItem.classLevel})` : ''}
               </option>
             ))}
           </select>
@@ -143,8 +144,10 @@ function TeacherResults() {
   const params = useParams()
   const queryClient = useQueryClient()
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [studentRows, setStudentRows] = useState({})
   const [classFilter, setClassFilter] = useState('All')
 
@@ -208,6 +211,25 @@ function TeacherResults() {
       setError(saveError instanceof Error ? saveError.message : 'Unable to create test.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleDeleteTest = async () => {
+    if (!currentTest) {
+      return
+    }
+
+    try {
+      setDeleting(true)
+      setError('')
+      await deleteTeacherTest(currentTest.id)
+      setDeleteConfirmOpen(false)
+      queryClient.invalidateQueries({ queryKey: ['teacherResultsOverview'] })
+      navigate('/teacher/results', { replace: true })
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : 'Unable to delete test.')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -323,6 +345,19 @@ function TeacherResults() {
                   Grade this test by entering marks or marking absentees.
                 </p>
               </div>
+              <div className="flex shrink-0 gap-3">
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    setError('')
+                    setDeleteConfirmOpen(true)
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete Test
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -431,6 +466,47 @@ function TeacherResults() {
             Select a test to view and edit results.
           </div>
         )}
+
+        <Modal
+          open={deleteConfirmOpen}
+          title="Delete Test"
+          description="Are you absolutely sure you want to delete this test?"
+          onClose={() => {
+            setDeleteConfirmOpen(false)
+            setError('')
+          }}
+          size="sm"
+        >
+          <div className="space-y-4">
+            {error && (
+              <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+            <p className="text-sm text-slate-600 leading-6">
+              This action cannot be undone. This will permanently delete the test <strong>{currentTest?.testName}</strong> and all associated student marks and results.
+            </p>
+            <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setDeleteConfirmOpen(false)
+                  setError('')
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleDeleteTest}
+                loading={deleting}
+                loadingLabel="Deleting test..."
+              >
+                Delete Permanently
+              </Button>
+            </div>
+          </div>
+        </Modal>
       </div>
     )
   }
