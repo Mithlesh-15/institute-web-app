@@ -387,8 +387,8 @@ function TeacherStudents() {
                     <option value="">Select Board</option>
                     <option value="CBSE">CBSE</option>
                     <option value="CGBSE">CGBSE</option>
-                    <option value="CGBSE">UG</option>
-                    <option value="CGBSE">PG</option>
+                    <option value="UG">UG</option>
+                    <option value="PG">PG</option>
                   </select>
                 </div>
 
