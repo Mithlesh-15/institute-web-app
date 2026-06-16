@@ -16,6 +16,8 @@ import {
   fetchClassesWithStudentCounts,
   updateClassRecord,
 } from '../../utils/classesManagement'
+import ExportAttendanceModal from '../../components/teacher-classes/ExportAttendanceModal'
+import { exportAttendanceToExcel } from '../../utils/attendanceExport'
 
 const initialModalState = {
   className: '',
@@ -30,9 +32,45 @@ function TeacherClasses() {
   const [search, setSearch] = useState('')
   const [classFilter, setClassFilter] = useState('All')
   const [modalOpen, setModalOpen] = useState(false)
+  const [exportModalOpen, setExportModalOpen] = useState(false)
   const [editingClass, setEditingClass] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [exportLoading, setExportLoading] = useState(false)
   const [deletingId, setDeletingId] = useState('')
+  const [toast, setToast] = useState({ show: false, message: '', type: 'info' })
+
+  const showToast = (message, type = 'info') => {
+    setToast({ show: true, message, type })
+    if (type !== 'loading') {
+      setTimeout(() => {
+        setToast((current) =>
+          current.message === message ? { ...current, show: false } : current,
+        )
+      }, 4000)
+    }
+  }
+
+  const handleExportAttendance = async (month, year) => {
+    setExportLoading(true)
+    showToast('Generating report...', 'loading')
+    try {
+      const result = await exportAttendanceToExcel(month, year, (msg) => {
+        showToast(msg, 'loading')
+      })
+      if (result.success) {
+        showToast('Report generated successfully', 'success')
+        setExportModalOpen(false)
+      } else if (result.reason === 'NO_ATTENDANCE') {
+        showToast('No attendance found', 'info')
+      } else {
+        showToast(result.message || 'Export failed', 'error')
+      }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Export failed', 'error')
+    } finally {
+      setExportLoading(false)
+    }
+  }
 
   const { data: classes = [], isLoading: loading, error: queryError } = useQuery({
     queryKey: ['teacherClasses'],
@@ -127,11 +165,18 @@ function TeacherClasses() {
             Classes
           </h1>
 
-          <div className="flex flex-col gap-3 sm:flex-row lg:w-136">
+          <div className="flex flex-col gap-3 sm:flex-row lg:w-auto">
             <SearchBar
               value={search}
               onChange={(event) => setSearch(event.target.value)}
             />
+            <Button
+              variant="secondary"
+              onClick={() => setExportModalOpen(true)}
+              className="w-full sm:w-auto"
+            >
+              Export Attendance
+            </Button>
             <Button onClick={openCreateModal} className="w-full sm:w-auto">
               <Plus className="h-4 w-4" />
               Create Class
@@ -191,6 +236,31 @@ function TeacherClasses() {
         onClose={closeModal}
         onSubmit={handleSaveClass}
       />
+
+      <ExportAttendanceModal
+        open={exportModalOpen}
+        onClose={() => setExportModalOpen(false)}
+        onExport={handleExportAttendance}
+        loading={exportLoading}
+      />
+
+      {toast.show && (
+        <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_20px_50px_rgba(15,23,42,0.15)] transition-all duration-300">
+          {toast.type === 'loading' && (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#2563eb]/40 border-t-[#2563eb]" />
+          )}
+          {toast.type === 'success' && (
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white">✓</span>
+          )}
+          {toast.type === 'error' && (
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">!</span>
+          )}
+          {toast.type === 'info' && (
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">i</span>
+          )}
+          <span className="text-sm font-semibold text-slate-800">{toast.message}</span>
+        </div>
+      )}
     </div>
   )
 }
