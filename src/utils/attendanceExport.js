@@ -34,14 +34,22 @@ async function fetchClassAttendanceForMonth(classId, month, year) {
 /**
  * Generate and download professional Excel attendance sheet
  */
-export async function exportAttendanceToExcel(month, year, onProgress) {
+export async function exportAttendanceToExcel(classId, month, year, onProgress) {
   try {
     if (onProgress) onProgress('Fetching classes...')
     
     // 1. Fetch all classes for the teacher
-    const classes = await fetchClasses()
+    let classes = await fetchClasses()
     if (!classes || classes.length === 0) {
       throw new Error('No classes found.')
+    }
+
+    // Filter by classId if a specific one is selected
+    if (classId && classId !== 'all') {
+      classes = classes.filter((item) => item.id === classId)
+      if (classes.length === 0) {
+        throw new Error('Selected class not found.')
+      }
     }
 
     const workbook = new ExcelJS.Workbook()
@@ -77,12 +85,12 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
       const totalDays = new Date(year, month, 0).getDate()
 
       // Define styling tokens
-      const primaryBlue = '1D4ED8'
+      const primaryBlue = '1E3A8A' // Navy Blue
       const lightBlue = 'EFF6FF'
       const whiteText = 'FFFFFF'
       const darkText = '1E293B'
       const borderStyle = { style: 'thin', color: { argb: 'CBD5E1' } }
-      const headerBorder = { style: 'medium', color: { argb: '1D4ED8' } }
+      const headerBorder = { style: 'medium', color: { argb: '1E3A8A' } }
 
       // --- 1. Top Header Section ---
       // A1: RAJ TUITION CLASSES
@@ -137,7 +145,7 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
       cellName.value = 'Student Name'
       cellName.font = { name: 'Arial', size: 10, bold: true, color: { argb: whiteText } }
       cellName.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: primaryBlue } }
-      cellName.alignment = { horizontal: 'left', vertical: 'middle' }
+      cellName.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 }
       cellName.border = { top: headerBorder, bottom: headerBorder, left: borderStyle, right: borderStyle }
 
       // Cols 2 to totalDays + 1: Days 1 to 31
@@ -169,14 +177,14 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
       students.forEach((student, sIdx) => {
         const currentRow = startRow + sIdx
         const row = sheet.getRow(currentRow)
-        row.height = 20
+        row.height = 22
 
         const admissionDateStr = student.createdAt ? (typeof student.createdAt === 'string' ? student.createdAt.slice(0, 10) : new Date(student.createdAt).toISOString().slice(0, 10)) : ''
 
         const nameCell = row.getCell(1)
         nameCell.value = student.name || 'N/A'
         nameCell.font = { name: 'Arial', size: 10, color: { argb: darkText } }
-        nameCell.alignment = { horizontal: 'left', vertical: 'middle' }
+        nameCell.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 }
         nameCell.border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle }
         
         // Striping for readability
@@ -241,8 +249,8 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
         const cell = sumHeaderRow.getCell(cIdx + 1)
         cell.value = colName
         cell.font = { name: 'Arial', size: 10, bold: true, color: { argb: whiteText } }
-        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '3B82F6' } }
-        cell.alignment = { horizontal: cIdx === 0 ? 'left' : 'center', vertical: 'middle' }
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '2563EB' } }
+        cell.alignment = { horizontal: cIdx === 0 ? 'left' : 'center', vertical: 'middle', indent: cIdx === 0 ? 1 : 0 }
         cell.border = { top: headerBorder, bottom: headerBorder, left: borderStyle, right: borderStyle }
       })
 
@@ -250,7 +258,7 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
       students.forEach((student, sIdx) => {
         const currentSumRow = summaryStartRow + 1 + sIdx
         const row = sheet.getRow(currentSumRow)
-        row.height = 20
+        row.height = 22
 
         const admissionDateStr = student.createdAt ? (typeof student.createdAt === 'string' ? student.createdAt.slice(0, 10) : new Date(student.createdAt).toISOString().slice(0, 10)) : ''
 
@@ -273,7 +281,7 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
         const valName = row.getCell(1)
         valName.value = student.name || 'N/A'
         valName.font = { name: 'Arial', size: 10, color: { argb: darkText } }
-        valName.alignment = { horizontal: 'left', vertical: 'middle' }
+        valName.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 }
         valName.border = { top: borderStyle, bottom: borderStyle, left: borderStyle, right: borderStyle }
 
         const valPresent = row.getCell(2)
@@ -327,7 +335,17 @@ export async function exportAttendanceToExcel(month, year, onProgress) {
     const buffer = await workbook.xlsx.writeBuffer()
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
     const monthName = MONTHS[month - 1]
-    saveAs(blob, `RTC_Attendance_${monthName}_${year}.xlsx`)
+
+    let fileName = `RTC_Attendance_All_Classes_${monthName}_${year}.xlsx`
+    if (classId && classId !== 'all') {
+      const selectedClass = classes[0]
+      const cleanClassName = (selectedClass.className || 'Class').replace(/[^a-zA-Z0-9]/g, '_')
+      const cleanClassLevel = (selectedClass.classLevel || 'N_A').replace(/[^a-zA-Z0-9]/g, '_')
+      fileName = `RTC_Attendance_${cleanClassName}_${cleanClassLevel}_${monthName}_${year}.xlsx`
+      fileName = fileName.replace(/_+/g, '_')
+    }
+
+    saveAs(blob, fileName)
 
     return { success: true }
   } catch (error) {

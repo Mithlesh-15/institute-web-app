@@ -50,11 +50,11 @@ function TeacherClasses() {
     }
   }
 
-  const handleExportAttendance = async (month, year) => {
+  const handleExportAttendance = async (classId, month, year) => {
     setExportLoading(true)
     showToast('Generating report...', 'loading')
     try {
-      const result = await exportAttendanceToExcel(month, year, (msg) => {
+      const result = await exportAttendanceToExcel(classId, month, year, (msg) => {
         showToast(msg, 'loading')
       })
       if (result.success) {
@@ -239,6 +239,7 @@ function TeacherClasses() {
 
       <ExportAttendanceModal
         open={exportModalOpen}
+        classes={classes}
         onClose={() => setExportModalOpen(false)}
         onExport={handleExportAttendance}
         loading={exportLoading}

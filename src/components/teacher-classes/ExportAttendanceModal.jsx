@@ -5,6 +5,7 @@ import { MONTHS } from '../../utils/attendanceExport'
 
 function ExportAttendanceModal({
   open,
+  classes = [],
   onClose,
   onExport,
   loading = false
@@ -13,11 +14,13 @@ function ExportAttendanceModal({
   const currentMonth = currentDate.getMonth() + 1 // 1-indexed
   const currentYear = currentDate.getFullYear()
 
+  const [classId, setClassId] = useState('all')
   const [month, setMonth] = useState(String(currentMonth))
   const [year, setYear] = useState(String(currentYear))
 
   useEffect(() => {
     if (open) {
+      setClassId('all')
       setMonth(String(currentMonth))
       setYear(String(currentYear))
     }
@@ -29,7 +32,7 @@ function ExportAttendanceModal({
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    onExport(Number(month), Number(year))
+    onExport(classId, Number(month), Number(year))
   }
 
   // Generate year options from 2024 to current year + 4
@@ -66,6 +69,23 @@ function ExportAttendanceModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 px-5 py-5 sm:px-6">
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-slate-700">Class</span>
+            <select
+              value={classId}
+              onChange={(e) => setClassId(e.target.value)}
+              disabled={loading}
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-300 focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+            >
+              <option value="all">All Classes</option>
+              {classes.map((cItem) => (
+                <option key={cItem.id} value={cItem.id}>
+                  {cItem.className || 'Class'}{cItem.classLevel ? ` (${cItem.classLevel})` : ''}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-slate-700">Month</span>
             <select
