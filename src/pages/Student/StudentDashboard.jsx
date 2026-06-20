@@ -103,7 +103,6 @@ function StudentDashboard() {
     )
   }
 
-  const activeLive = liveClasses.length > 0 ? liveClasses[0] : null
   const noticesList = dashboard?.notices || []
 
   // Greeting based on time
@@ -116,32 +115,41 @@ function StudentDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* 1. Live Class (At the very top) */}
-      {activeLive && (
-        <div className="rounded-[1.75rem] border border-red-200 bg-red-50 p-5 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-4 animate-pulse">
-          <div className="flex items-center gap-3">
-            <span className="relative flex h-3.5 w-3.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500"></span>
-            </span>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-red-600">Ongoing Live Class</p>
-              <h3 className="text-base font-bold text-red-950 mt-0.5">{activeLive.eventName}</h3>
-            </div>
-          </div>
-          {activeLive.link ? (
-            <a
-              href={activeLive.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-2xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 transition shadow-md shrink-0 w-full sm:w-auto justify-center"
+      {/* 1. Live Classes (At the very top) */}
+      {liveClasses.length > 0 && (
+        <div className="space-y-3">
+          {liveClasses.map((item, idx) => (
+            <div
+              key={item.id || idx}
+              className="rounded-[1.75rem] border border-red-200 bg-red-50 p-5 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-4 animate-pulse"
             >
-              <Video className="h-4.5 w-4.5" />
-              Join Live Class
-            </a>
-          ) : (
-            <span className="text-xs font-medium text-red-500">No link provided</span>
-          )}
+              <div className="flex items-center gap-3">
+                <span className="relative flex h-3.5 w-3.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500"></span>
+                </span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-red-600">
+                    Ongoing Live Class
+                  </p>
+                  <h3 className="text-base font-bold text-red-950 mt-0.5">{item.eventName}</h3>
+                </div>
+              </div>
+              {item.link ? (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 transition shadow-md shrink-0 w-full sm:w-auto justify-center"
+                >
+                  <Video className="h-4.5 w-4.5" />
+                  Join Live Class
+                </a>
+              ) : (
+                <span className="text-xs font-medium text-red-500">No link provided</span>
+              )}
+            </div>
+          ))}
         </div>
       )}
 

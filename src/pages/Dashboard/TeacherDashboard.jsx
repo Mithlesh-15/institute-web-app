@@ -92,7 +92,6 @@ function TeacherDashboard() {
     };
   }, []);
 
-  const activeLive = liveClasses.length > 0 ? liveClasses[0] : null;
   if (loading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -133,31 +132,38 @@ function TeacherDashboard() {
         }
       `}</style>
 
-      {/* 1. Live Class Alert (At the absolute top if any live stream is active) */}
-      {activeLive && (
-        <div className="rounded-[1.75rem] border border-red-200 bg-linear-to-r from-red-50 to-red-100/30 p-5 shadow-soft flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500 text-white shrink-0 shadow-md">
-              <Video className="h-5 w-5" />
-            </span>
-            <div>
-              <h2 className="text-base font-bold text-red-700">{activeLive.eventName}</h2>
-              <p className="text-sm text-red-600 font-semibold mt-0.5">
-                Live Class is Active!
-              </p>
-            </div>
-          </div>
-          {activeLive.link ? (
-            <a
-              href={activeLive.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 shadow-md shrink-0 active:scale-95"
+      {/* 1. Live Class Alerts (At the absolute top if any live stream is active) */}
+      {liveClasses.length > 0 && (
+        <div className="space-y-3">
+          {liveClasses.map((item, idx) => (
+            <div
+              key={item.id || idx}
+              className="rounded-[1.75rem] border border-red-200 bg-linear-to-r from-red-50 to-red-100/30 p-5 shadow-soft flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
             >
-              Join Live Class Now
-              <ExternalLink className="h-4 w-4" />
-            </a>
-          ) : null}
+              <div className="flex items-center gap-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500 text-white shrink-0 shadow-md">
+                  <Video className="h-5 w-5" />
+                </span>
+                <div>
+                  <h2 className="text-base font-bold text-red-700">{item.eventName}</h2>
+                  <p className="text-sm text-red-600 font-semibold mt-0.5">
+                    Live Class is Active!
+                  </p>
+                </div>
+              </div>
+              {item.link ? (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 shadow-md shrink-0 active:scale-95"
+                >
+                  Join Live Class Now
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              ) : null}
+            </div>
+          ))}
         </div>
       )}
 

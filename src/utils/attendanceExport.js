@@ -73,7 +73,7 @@ export async function exportAttendanceToExcel(classId, month, year, onProgress) 
 
       // Setup sheet name (limit to 31 chars as required by Excel, remove invalid chars)
       const rawSheetName = `${classItem.className} (${classItem.classLevel || 'N/A'})`
-      const cleanName = rawSheetName.replace(/[\\\/\?\*\[\]]/g, '').slice(0, 31)
+      const cleanName = rawSheetName.replace(new RegExp('[\\\\/?:*]', 'g'), '').replace(/\[/g, '').replace(/\]/g, '').slice(0, 31)
       const sheet = workbook.addWorksheet(cleanName || `Class_${classItem.id.slice(0, 5)}`, {
         views: [{ state: 'frozen', ySplit: 5 }]
       })
@@ -86,7 +86,6 @@ export async function exportAttendanceToExcel(classId, month, year, onProgress) 
 
       // Define styling tokens
       const primaryBlue = '1E3A8A' // Navy Blue
-      const lightBlue = 'EFF6FF'
       const whiteText = 'FFFFFF'
       const darkText = '1E293B'
       const borderStyle = { style: 'thin', color: { argb: 'CBD5E1' } }
