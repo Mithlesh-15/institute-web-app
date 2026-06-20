@@ -470,11 +470,14 @@ export async function exportTeacherMonthlyFeesToExcel(classFilter, year, onProgr
 
           const fee = feeMap.get(student.id)?.get(mName)
 
-          let status = 'Pending'
-          let detail = Number(student.totalFees || 0)
+          let status = '*'
+          let detail = '*'
           let isPaid = false
+          let isPending = false
+          let hasRecord = false
 
           if (fee) {
+            hasRecord = true
             const rawStatus = (fee.status || '').toLowerCase()
             if (rawStatus === 'paid') {
               status = 'Paid'
@@ -483,29 +486,34 @@ export async function exportTeacherMonthlyFeesToExcel(classFilter, year, onProgr
             } else {
               status = 'Pending'
               detail = Number(fee.pending_amount ?? fee.pendingAmount ?? 0)
+              isPending = true
             }
           }
 
           if (isPaid) {
             paidMonthsCount++
-          } else {
+          } else if (isPending) {
             pendingMonthsCount++
             studentPendingAmtSum += detail
           }
 
-          // Status cell (Green for Paid, Red for Pending)
+          // Status cell (Green for Paid, Red for Pending, Slate for *)
           const cStatus = row.getCell(startCol)
           cStatus.value = status
-          cStatus.font = { name: 'Arial', size: 10, bold: true, color: { argb: isPaid ? '16A34A' : 'DC2626' } }
+          if (hasRecord) {
+            cStatus.font = { name: 'Arial', size: 10, bold: true, color: { argb: isPaid ? '16A34A' : 'DC2626' } }
+          } else {
+            cStatus.font = { name: 'Arial', size: 10, color: { argb: '94A3B8' } }
+          }
           cStatus.alignment = { horizontal: 'center', vertical: 'middle' }
 
-          // Detail cell (payment date or amount)
+          // Detail cell (payment date, amount or *)
           const cDetail = row.getCell(endCol)
           cDetail.value = detail
-          cDetail.font = { name: 'Arial', size: 10, color: { argb: darkText } }
+          cDetail.font = { name: 'Arial', size: 10, color: { argb: hasRecord ? darkText : '94A3B8' } }
           cDetail.alignment = { horizontal: 'center', vertical: 'middle' }
 
-          if (!isPaid) {
+          if (isPending) {
             cDetail.numFmt = '₹#,##0'
             cDetail.alignment = { horizontal: 'right', vertical: 'middle' }
           }
