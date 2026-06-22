@@ -1,10 +1,18 @@
 import { useState, useMemo, useEffect } from 'react'
 import { BookOpen, ExternalLink, Library, FolderOpen, FileText } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
-import { fetchStudentClasses, fetchStudentMaterials } from '../../utils/studentPortal'
+import { fetchStudentClasses, fetchStudentMaterials, fetchStudentProfile } from '../../utils/studentPortal'
 
 function StudentLibrary() {
   const [activeTab, setActiveTab] = useState('')
+
+  // Fetch student profile (to get class level like '10th')
+  const { data: profile } = useQuery({
+    queryKey: ['studentProfile'],
+    queryFn: fetchStudentProfile,
+    staleTime: 12 * 60 * 60 * 1000,
+    gcTime: 12 * 60 * 60 * 1000,
+  })
 
   // Fetch classes the student is in
   const { data: classes = [] } = useQuery({
@@ -24,16 +32,25 @@ function StudentLibrary() {
 
   const error = queryError ? (queryError.message || 'Unable to load study materials right now.') : ''
 
-  // Generate dynamic tabs: unique enrolled class types + 'Other'
+  // Generate dynamic tabs: student's profile class + unique enrolled class types + 'Other'
   const tabs = useMemo(() => {
-    const enrolledTypes = [...new Set(classes.map((c) => c.classType).filter(Boolean))]
-    return [...enrolledTypes, 'Other']
-  }, [classes])
+    const enrolledTypes = classes.map((c) => c.classType).filter(Boolean)
+    const profileType = profile?.className || ''
+    
+    const allTypes = new Set([profileType, ...enrolledTypes].map(t => t.trim()).filter(Boolean))
+    
+    // Remove 'Other' from class tabs list, as we will append it explicitly at the end
+    const classTabs = [...allTypes].filter((t) => t.toLowerCase() !== 'other')
+    
+    return [...classTabs, 'Other']
+  }, [profile, classes])
 
-  // Set first tab as active by default
+  // Set first tab as active by default, or sync if current active tab is no longer available
   useEffect(() => {
-    if (tabs.length > 0 && !activeTab) {
-      setActiveTab(tabs[0])
+    if (tabs.length > 0) {
+      if (!activeTab || !tabs.includes(activeTab)) {
+        setActiveTab(tabs[0])
+      }
     }
   }, [tabs, activeTab])
 
@@ -42,16 +59,37 @@ function StudentLibrary() {
     if (!activeTab) return []
 
     if (activeTab === 'Other') {
-      const enrolledClassIds = new Set(classes.map((c) => c.id))
-      return materials.filter((m) => !m.classId || !enrolledClassIds.has(m.classId))
-    } else {
-      // Get class IDs that match this classType (e.g. '11th')
-      const targetClassIds = new Set(
-        classes.filter((c) => c.classType === activeTab).map((c) => c.id)
+      // Find classes with classType 'Other'
+      const otherEnrolledClassIds = new Set(
+        classes.filter((c) => c.classType && c.classType.toLowerCase() === 'other').map((c) => c.id)
       )
-      return materials.filter((m) => m.classId && targetClassIds.has(m.classId))
+      
+      return materials.filter((m) => {
+        // Show if no class level and no class ID (general)
+        const isUnassigned = !m.classLevel && !m.classId
+        // Show if level is explicitly 'Other' or 'Unassigned'
+        const isOtherLevel = m.classLevel && (m.classLevel.toLowerCase() === 'other' || m.classLevel.toLowerCase() === 'unassigned')
+        // Show if assigned to an enrolled class of type 'Other'
+        const isOtherEnrolled = m.classId && otherEnrolledClassIds.has(m.classId)
+        
+        return isUnassigned || isOtherLevel || isOtherEnrolled
+      })
+    } else {
+      // Get class IDs that match this activeTab (e.g. '10th')
+      const targetClassIds = new Set(
+        classes.filter((c) => c.classType && c.classType.toLowerCase() === activeTab.toLowerCase()).map((c) => c.id)
+      )
+      
+      return materials.filter((m) => {
+        // Show if classLevel matches activeTab
+        const levelMatch = m.classLevel && m.classLevel.toLowerCase() === activeTab.toLowerCase()
+        // Show if classId matches one of student's enrolled classes of this type
+        const idMatch = m.classId && targetClassIds.has(m.classId)
+        
+        return levelMatch || idMatch
+      })
     }
-  }, [activeTab, classes, materials])
+  }, [activeTab, classes, materials, profile])
 
   return (
     <div className="space-y-6">
@@ -73,7 +111,7 @@ function StudentLibrary() {
 
       {/* Tabs Selector Bar */}
       {!loading && !error && tabs.length > 0 ? (
-        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+        <div className="flex flex-wrap gap-6 border-b border-slate-200/80 pb-1">
           {tabs.map((tab) => {
             const isSelected = activeTab === tab
             return (
@@ -81,14 +119,21 @@ function StudentLibrary() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={[
-                  'rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200',
-                  isSelected
-                    ? 'bg-brand text-white shadow-md'
-                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50',
-                ].join(' ')}
+                className={`relative pb-3 text-sm font-bold transition-all duration-200 focus:outline-none ${
+                  isSelected ? 'text-brand' : 'text-slate-500 hover:text-slate-800'
+                }`}
               >
-                {tab === 'Other' ? 'Other Materials' : `${tab} Section`}
+                <div className="flex items-center gap-2 px-1">
+                  {tab === 'Other' ? (
+                    <FolderOpen className="h-4.5 w-4.5" />
+                  ) : (
+                    <BookOpen className="h-4.5 w-4.5" />
+                  )}
+                  <span>{tab === 'Other' ? 'Other Materials' : `${tab} Section`}</span>
+                </div>
+                {isSelected && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.75 rounded-t-full bg-brand" />
+                )}
               </button>
             )
           })}

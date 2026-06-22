@@ -627,7 +627,7 @@ export async function fetchStudentMaterials() {
   const session = getStudentSession()
   const { data, error } = await supabase
     .from('materials')
-    .select('*')
+    .select('*, classes(class)')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -637,6 +637,9 @@ export async function fetchStudentMaterials() {
   return (data || []).map((row) => ({
     id: row.id,
     classId: row.class_id || '',
+    classLevel: Array.isArray(row.classes)
+      ? (row.classes[0]?.class || '')
+      : (row.classes?.class || ''),
     materialName: row.material_name || '',
     materialLink: row.material_link || '',
     createdAt: row.created_at || null,
