@@ -247,9 +247,17 @@ export async function fetchTeacherClassesForDropdown() {
 
 export async function fetchTeacherTests() {
   const teacherId = requireTeacherId()
+  const activeClasses = await fetchClasses()
+  const activeClassIds = activeClasses.map(c => c.id)
+
+  if (!activeClassIds.length) {
+    return []
+  }
+
   const { data, error } = await supabase
     .from(TESTS_TABLE)
     .select('*')
+    .in('class_id', activeClassIds)
     .order('test_date', { ascending: false })
     .order('created_at', { ascending: false })
 
@@ -543,4 +551,19 @@ export async function deleteTeacherNotice(noticeId) {
   if (error) {
     throw new Error(error.message || 'Unable to delete notice.')
   }
+}
+
+export async function fetchClassTests(classId) {
+  const teacherId = requireTeacherId()
+  const { data, error } = await supabase
+    .from(TESTS_TABLE)
+    .select('*')
+    .eq('class_id', classId)
+    .order('test_date', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to fetch tests for this class.')
+  }
+
+  return (data || []).map(normalizeTest).filter(Boolean)
 }

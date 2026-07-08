@@ -150,8 +150,10 @@ export const normalizePortalClass = (row) => {
     id: row.id,
     className: normalizeText(row.class_name || row.className),
     classType: normalizeText(row.class || row.classType || row.classLevel),
+    classLevel: normalizeText(row.class || row.classLevel || row.classType),
     startDate: normalizeDateValue(row.start_date || row.startDate),
     classTime: row.Time || row.classTime || '',
+    isComplete: !!row.isComplete || !!row.is_completed,
   }
 }
 
@@ -304,6 +306,7 @@ export async function fetchStudentClasses() {
     .from(CLASSES_TABLE)
     .select('*')
     .in('id', classIds)
+    .eq('isComplete', false)
 
   if (classError) {
     throw new Error(classError.message || 'Unable to load class details.')
@@ -697,4 +700,134 @@ export async function fetchEventPhotos(eventId) {
     link: row.link || '',
     createdAt: row.created_at || null,
   }))
+}
+
+export async function fetchStudentCompletedClasses() {
+  const session = getStudentSession()
+
+  const { data: joinedRows, error: joinError } = await supabase
+    .from(BATCH_STUDENTS_TABLE)
+    .select('class_id')
+    .eq('student_id', session.studentId)
+
+  if (joinError) {
+    throw new Error(joinError.message || 'Unable to load student classes.')
+  }
+
+  const assignments = (joinedRows || []).filter((row) => row.class_id)
+
+  if (!assignments.length) {
+    return []
+  }
+
+  const classIds = assignments.map((row) => row.class_id)
+  const { data: classRows, error: classError } = await supabase
+    .from(CLASSES_TABLE)
+    .select('*')
+    .in('id', classIds)
+    .eq('isComplete', true)
+
+  if (classError) {
+    throw new Error(classError.message || 'Unable to load class details.')
+  }
+
+  const classMap = new Map(
+    (classRows || [])
+      .map((row) => normalizePortalClass(row))
+      .filter(Boolean)
+      .map((classItem) => [classItem.id, classItem]),
+  )
+
+  return assignments
+    .map((assignment) => {
+      const classItem = classMap.get(assignment.class_id)
+
+      if (!classItem) {
+        return null
+      }
+
+      return {
+        ...classItem,
+        joinedAt: classItem.startDate,
+      }
+    })
+    .filter(Boolean)
+}
+
+export async function fetchStudentClassAttendance(classId) {
+  const session = getStudentSession()
+
+  const { data, error } = await supabase
+    .from(ATTENDANCE_TABLE)
+    .select('*')
+    .eq('student_id', session.studentId)
+    .eq('class_id', classId)
+    .order('attendance_date', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load attendance.')
+  }
+
+  return (data || []).map(normalizePortalAttendance).filter(Boolean)
+}
+
+export async function fetchStudentClassTestsAndResults(classId) {
+  const session = getStudentSession()
+
+  // 1. Fetch all tests for this class
+  const { data: tests, error: testsError } = await supabase
+    .from('tests')
+    .select('*')
+    .eq('class_id', classId)
+    .order('test_date', { ascending: false })
+
+  if (testsError) {
+    throw new Error(testsError.message || 'Unable to load class tests.')
+  }
+
+  if (!tests || !tests.length) {
+    return []
+  }
+
+  const testIds = tests.map(t => t.id)
+
+  // 2. Fetch student's marks for these tests
+  const { data: results, error: resultsError } = await supabase
+    .from('test_results')
+    .select('*')
+    .eq('student_id', session.studentId)
+    .in('test_id', testIds)
+
+  if (resultsError) {
+    throw new Error(resultsError.message || 'Unable to load test marks.')
+  }
+
+  const resultMap = new Map(results.map(r => [r.test_id, r]))
+
+  return tests.map(test => {
+    const res = resultMap.get(test.id)
+    return {
+      id: test.id,
+      testName: test.test_name,
+      subject: test.subject,
+      testDate: test.test_date,
+      totalMarks: test.total_marks,
+      marks: res ? res.marks : null,
+      absent: res ? res.is_absent : false,
+    }
+  })
+}
+
+export async function fetchStudentClassById(classId) {
+  const { data, error } = await supabase
+    .from(CLASSES_TABLE)
+    .select('*')
+    .eq('id', classId)
+    .maybeSingle()
+
+  if (error) {
+    throw new Error(error.message || 'Unable to load class details.')
+  }
+
+  return normalizePortalClass(data)
 }

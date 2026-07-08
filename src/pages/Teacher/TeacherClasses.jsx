@@ -3,8 +3,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import ClassCard from '../../components/teacher-classes/ClassCard'
+import ClassContextMenu from '../../components/teacher-classes/ClassContextMenu'
 import ClassFormModal from '../../components/teacher-classes/ClassFormModal'
 import EmptyState from '../../components/teacher-classes/EmptyState'
 import FilterTabs from '../../components/teacher-classes/FilterTabs'
@@ -15,6 +17,7 @@ import {
   deleteClassRecord,
   fetchClassesWithStudentCounts,
   updateClassRecord,
+  completeClassRecord,
 } from '../../utils/classesManagement'
 import ExportAttendanceModal from '../../components/teacher-classes/ExportAttendanceModal'
 import { exportAttendanceToExcel } from '../../utils/attendanceExport'
@@ -47,6 +50,57 @@ function TeacherClasses() {
           current.message === message ? { ...current, show: false } : current,
         )
       }, 4000)
+    }
+  }
+
+  const [contextMenu, setContextMenu] = useState(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [completingTarget, setCompletingTarget] = useState(null)
+  const [savingComplete, setSavingComplete] = useState(false)
+
+  const handleContextMenuAction = (e, classItem) => {
+    setContextMenu({
+      classItem,
+      x: e.clientX,
+      y: e.clientY,
+    })
+  }
+
+  const handleLongPressAction = (e, classItem, clientX, clientY) => {
+    setContextMenu({
+      classItem,
+      x: clientX,
+      y: clientY,
+    })
+  }
+
+  const handleCompleteClassClick = (classItem) => {
+    setCompletingTarget(classItem)
+    setConfirmOpen(true)
+  }
+
+  const handleConfirmComplete = async () => {
+    if (!completingTarget) return
+    try {
+      setSavingComplete(true)
+      await completeClassRecord(completingTarget.id)
+      
+      // Invalidate react-query cache
+      queryClient.invalidateQueries({ queryKey: ['studentClasses'] })
+      queryClient.invalidateQueries({ queryKey: ['studentAttendance'] })
+      queryClient.invalidateQueries({ queryKey: ['studentMaterials'] })
+      queryClient.invalidateQueries({ queryKey: ['studentTests'] })
+      queryClient.invalidateQueries({ queryKey: ['completedClasses'] })
+      queryClient.invalidateQueries({ queryKey: ['teacherClasses'] })
+
+      setConfirmOpen(false)
+      setCompletingTarget(null)
+
+      showToast('Class completed successfully.', 'success')
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Unable to complete class.', 'error')
+    } finally {
+      setSavingComplete(false)
     }
   }
 
@@ -214,6 +268,8 @@ function TeacherClasses() {
               onOpen={openClassDetails}
               onEdit={openEditModal}
               onDelete={handleDeleteClass}
+              onContextMenu={handleContextMenuAction}
+              onLongPress={handleLongPressAction}
             />
           ))}
         </div>
@@ -244,6 +300,42 @@ function TeacherClasses() {
         onExport={handleExportAttendance}
         loading={exportLoading}
       />
+
+      {contextMenu && (
+        <ClassContextMenu
+          classItem={contextMenu.classItem}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+          onComplete={handleCompleteClassClick}
+        />
+      )}
+
+      <Modal
+        open={confirmOpen}
+        title="Complete this class?"
+        description="This class will be moved to Completed Classes."
+        onClose={() => setConfirmOpen(false)}
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-slate-500">
+            Attendance, Tests and Students will remain available as history.
+          </p>
+          <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+            <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleConfirmComplete} 
+              loading={savingComplete}
+              loadingLabel="Completing..."
+            >
+              Complete
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {toast.show && (
         <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_20px_50px_rgba(15,23,42,0.15)] transition-all duration-300">

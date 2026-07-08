@@ -21,6 +21,8 @@ import TeacherLogin from './pages/Login/TeacherLogin.jsx'
 import TeacherAttendance from './pages/Teacher/TeacherAttendance.jsx'
 import TeacherClasses from './pages/Teacher/TeacherClasses.jsx'
 import TeacherClassDetails from './pages/Teacher/TeacherClassDetails.jsx'
+import TeacherCompletedClasses from './pages/Teacher/TeacherCompletedClasses.jsx'
+import TeacherCompletedClassDetails from './pages/Teacher/TeacherCompletedClassDetails.jsx'
 import TeacherFees from './pages/Teacher/TeacherFees.jsx'
 import TeacherLibrary from './pages/Teacher/TeacherLibrary.jsx'
 import TeacherNotices from './pages/Teacher/TeacherNotices.jsx'
@@ -30,6 +32,8 @@ import TeacherGallery from './pages/Teacher/TeacherGallery.jsx'
 import TeacherLive from './pages/Teacher/TeacherLive.jsx'
 import StudentAttendance from './pages/Student/StudentAttendance.jsx'
 import StudentClasses from './pages/Student/StudentClasses.jsx'
+import StudentCompletedClasses from './pages/Student/StudentCompletedClasses.jsx'
+import StudentCompletedClassDetails from './pages/Student/StudentCompletedClassDetails.jsx'
 import StudentDashboard from './pages/Student/StudentDashboard.jsx'
 import StudentFees from './pages/Student/StudentFees.jsx'
 import StudentProfile from './pages/Student/StudentProfile.jsx'
@@ -70,6 +74,8 @@ const router = createBrowserRouter(
           <Route path="dashboard" element={<StudentDashboard />} />
           <Route path="profile" element={<StudentProfile />} />
           <Route path="classes" element={<StudentClasses />} />
+          <Route path="completed-classes" element={<StudentCompletedClasses />} />
+          <Route path="completed-classes/:id" element={<StudentCompletedClassDetails />} />
           <Route path="attendance" element={<StudentAttendance />} />
           <Route path="results" element={<StudentResults />} />
           <Route path="library" element={<StudentLibrary />} />
@@ -90,6 +96,8 @@ const router = createBrowserRouter(
           <Route path="students" element={<TeacherStudents />} />
           <Route path="classes" element={<TeacherClasses />} />
           <Route path="classes/:id" element={<TeacherClassDetails />} />
+          <Route path="completed-classes" element={<TeacherCompletedClasses />} />
+          <Route path="completed-classes/:id" element={<TeacherCompletedClassDetails />} />
           <Route path="attendance" element={<TeacherAttendance />} />
           <Route path="fees" element={<TeacherFees />} />
           <Route path="results" element={<TeacherResults />} />
