@@ -690,6 +690,7 @@ export async function fetchEventPhotos(eventId) {
 
 export async function fetchStudentCompletedClasses() {
   const session = getStudentSession()
+
   const { data: joinedRows, error: joinError } = await supabase
     .from(BATCH_STUDENTS_TABLE)
     .select('class_id')
@@ -741,6 +742,7 @@ export async function fetchStudentCompletedClasses() {
 
 export async function fetchStudentClassAttendance(classId) {
   const session = getStudentSession()
+
   const { data, error } = await supabase
     .from(ATTENDANCE_TABLE)
     .select('*')
