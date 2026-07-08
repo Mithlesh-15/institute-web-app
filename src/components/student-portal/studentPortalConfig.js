@@ -10,6 +10,7 @@ import {
   Megaphone,
   Image,
   Video,
+  Archive,
 } from 'lucide-react'
 
 export const studentSidebarItems = [
@@ -57,6 +58,11 @@ export const studentSidebarItems = [
     label: 'Gallery',
     to: '/student/gallery',
     icon: Image,
+  },
+  {
+    label: 'Completed Classes',
+    to: '/student/completed-classes',
+    icon: Archive,
   },
   {
     label: 'Logout',

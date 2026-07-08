@@ -77,6 +77,7 @@ function TeacherClasses() {
       queryClient.invalidateQueries({ queryKey: ['studentAttendance'] })
       queryClient.invalidateQueries({ queryKey: ['studentMaterials'] })
       queryClient.invalidateQueries({ queryKey: ['studentTests'] })
+      queryClient.invalidateQueries({ queryKey: ['completedClasses'] })
 
       // Remove from active list
       setClasses((prev) => prev.filter((c) => c.id !== completingTarget.id))

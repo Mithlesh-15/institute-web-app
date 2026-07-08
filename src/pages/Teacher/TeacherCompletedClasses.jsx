@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CalendarDays, ArrowRight } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import EmptyState from '../../components/teacher-classes/EmptyState'
 import FilterTabs from '../../components/teacher-classes/FilterTabs'
@@ -8,6 +9,7 @@ import SearchBar from '../../components/teacher-classes/SearchBar'
 import { fetchCompletedClasses } from '../../utils/classesManagement'
 
 const COMPLETED_CLASS_OPTIONS = ['All', '6th', '7th', '8th', '9th', '10th', '11th', '12th', 'UG', 'PG', 'Other']
+const CACHE_TIME_12_HOURS = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
 
 const formatDate = (value) => {
   if (!value) return 'N/A'
@@ -22,37 +24,18 @@ const formatDate = (value) => {
 
 function TeacherCompletedClasses() {
   const navigate = useNavigate()
-  const [classes, setClasses] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [classFilter, setClassFilter] = useState('All')
 
-  useEffect(() => {
-    let mounted = true
-    const loadCompletedClasses = async () => {
-      try {
-        setLoading(true)
-        setError('')
-        const data = await fetchCompletedClasses()
-        if (mounted) {
-          setClasses(data)
-        }
-      } catch (err) {
-        if (mounted) {
-          setError(err instanceof Error ? err.message : 'Unable to load completed classes.')
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
-        }
-      }
-    }
-    loadCompletedClasses()
-    return () => {
-      mounted = false
-    }
-  }, [])
+  // Cache completed classes list for 12 hours
+  const { data: classes = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['completedClasses'],
+    queryFn: fetchCompletedClasses,
+    staleTime: CACHE_TIME_12_HOURS,
+    gcTime: CACHE_TIME_12_HOURS,
+  })
+
+  const error = queryError ? (queryError.message || 'Unable to load completed classes.') : ''
 
   // Filter completed classes by search term and class level
   const filteredClasses = useMemo(() => {

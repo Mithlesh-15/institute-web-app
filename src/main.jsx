@@ -31,6 +31,8 @@ import TeacherGallery from './pages/Teacher/TeacherGallery.jsx'
 import TeacherLive from './pages/Teacher/TeacherLive.jsx'
 import StudentAttendance from './pages/Student/StudentAttendance.jsx'
 import StudentClasses from './pages/Student/StudentClasses.jsx'
+import StudentCompletedClasses from './pages/Student/StudentCompletedClasses.jsx'
+import StudentCompletedClassDetails from './pages/Student/StudentCompletedClassDetails.jsx'
 import StudentDashboard from './pages/Student/StudentDashboard.jsx'
 import StudentFees from './pages/Student/StudentFees.jsx'
 import StudentProfile from './pages/Student/StudentProfile.jsx'
@@ -68,6 +70,8 @@ const router = createBrowserRouter(
           <Route path="dashboard" element={<StudentDashboard />} />
           <Route path="profile" element={<StudentProfile />} />
           <Route path="classes" element={<StudentClasses />} />
+          <Route path="completed-classes" element={<StudentCompletedClasses />} />
+          <Route path="completed-classes/:id" element={<StudentCompletedClassDetails />} />
           <Route path="attendance" element={<StudentAttendance />} />
           <Route path="results" element={<StudentResults />} />
           <Route path="library" element={<StudentLibrary />} />

@@ -1,12 +1,15 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, UserCircle2, CalendarDays, Clock, FileText, CheckCircle2, XCircle } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import { fetchClassById, fetchClassStudents } from '../../utils/classesManagement'
 import { fetchAttendanceRecords, getTodayDateValue } from '../../utils/attendanceManagement'
 import { fetchClassTests, fetchTestDetails } from '../../utils/teacherPortal'
+
+const CACHE_TIME_12_HOURS = 12 * 60 * 60 * 1000 // 12 hours in milliseconds
 
 const formatDate = (value) => {
   if (!value) return 'N/A'
@@ -32,108 +35,68 @@ function TeacherCompletedClassDetails() {
   const navigate = useNavigate()
   const { id } = useParams()
 
-  const [classItem, setClassItem] = useState(null)
-  const [students, setStudents] = useState([])
-  const [tests, setTests] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState('students')
 
-  // Attendance states
+  // Attendance date filter
   const [attendanceDate, setAttendanceDate] = useState(getTodayDateValue())
-  const [attendanceRecords, setAttendanceRecords] = useState([])
-  const [attendanceLoading, setAttendanceLoading] = useState(false)
 
   // Test details modal states
   const [selectedTest, setSelectedTest] = useState(null)
-  const [testDetails, setTestDetails] = useState(null)
   const [testModalOpen, setTestModalOpen] = useState(false)
-  const [testDetailsLoading, setTestDetailsLoading] = useState(false)
 
-  // Load basic class details
-  useEffect(() => {
-    let mounted = true
-    const loadData = async () => {
-      if (!id) return
-      try {
-        setLoading(true)
-        setError('')
-        const [classData, studentData, testData] = await Promise.all([
-          fetchClassById(id),
-          fetchClassStudents(id),
-          fetchClassTests(id),
-        ])
+  // Query 1: Class, students, and tests (Cached for 12 hours)
+  const { data: detailsData, isLoading: loading, error: queryError } = useQuery({
+    queryKey: ['completedClassDetail', id],
+    queryFn: async () => {
+      const [classData, studentData, testData] = await Promise.all([
+        fetchClassById(id),
+        fetchClassStudents(id),
+        fetchClassTests(id),
+      ])
 
-        if (mounted) {
-          if (!classData || !classData.isComplete) {
-            setError('Class not found or is not marked as completed.')
-            return
-          }
-          setClassItem(classData)
-          setStudents(studentData)
-          setTests(testData)
-        }
-      } catch (err) {
-        if (mounted) {
-          setError(err instanceof Error ? err.message : 'Unable to load class details.')
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false)
-        }
+      if (!classData || !classData.isComplete) {
+        throw new Error('Class not found or is not marked as completed.')
       }
-    }
-    loadData()
-    return () => {
-      mounted = false
-    }
-  }, [id])
 
-  // Load attendance records when date changes
-  useEffect(() => {
-    let mounted = true
-    const loadAttendance = async () => {
-      if (!id || activeTab !== 'attendance') return
-      try {
-        setAttendanceLoading(true)
-        const records = await fetchAttendanceRecords(id, attendanceDate)
-        if (mounted) {
-          setAttendanceRecords(records)
-        }
-      } catch (err) {
-        console.error('Error fetching attendance records:', err)
-      } finally {
-        if (mounted) {
-          setAttendanceLoading(false)
-        }
-      }
-    }
-    loadAttendance()
-    return () => {
-      mounted = false
-    }
-  }, [id, attendanceDate, activeTab])
+      return { classItem: classData, students: studentData, tests: testData }
+    },
+    staleTime: CACHE_TIME_12_HOURS,
+    gcTime: CACHE_TIME_12_HOURS,
+    enabled: !!id,
+  })
 
-  // Map attendance record statuses for easy lookup
+  // Query 2: Daily attendance records (Cached for 12 hours)
+  const { data: attendanceRecords = [], isLoading: attendanceLoading } = useQuery({
+    queryKey: ['completedClassAttendance', id, attendanceDate],
+    queryFn: () => fetchAttendanceRecords(id, attendanceDate),
+    staleTime: CACHE_TIME_12_HOURS,
+    gcTime: CACHE_TIME_12_HOURS,
+    enabled: !!id && activeTab === 'attendance',
+  })
+
+  // Query 3: Specific test score sheets (Cached for 12 hours)
+  const { data: testDetails, isLoading: testDetailsLoading } = useQuery({
+    queryKey: ['completedClassTestDetails', selectedTest?.id],
+    queryFn: () => fetchTestDetails(selectedTest.id),
+    staleTime: CACHE_TIME_12_HOURS,
+    gcTime: CACHE_TIME_12_HOURS,
+    enabled: !!selectedTest?.id,
+  })
+
+  // Extracted values
+  const classItem = detailsData?.classItem || null
+  const students = detailsData?.students || []
+  const tests = detailsData?.tests || []
+  const error = queryError ? (queryError.message || 'Unable to load class details.') : ''
+
+  // Map attendance records
   const attendanceMap = useMemo(() => {
     return new Map(attendanceRecords.map((r) => [r.studentId, r.status]))
   }, [attendanceRecords])
 
-  // Open test details read-only modal
-  const handleOpenTestDetails = async (test) => {
+  const handleOpenTestDetails = (test) => {
     setSelectedTest(test)
     setTestModalOpen(true)
-    try {
-      setTestDetailsLoading(true)
-      const details = await fetchTestDetails(test.id)
-      setTestDetails(details)
-    } catch (err) {
-      console.error('Error fetching test details:', err)
-      alert(err instanceof Error ? err.message : 'Unable to load test results.')
-      setTestModalOpen(false)
-    } finally {
-      setTestDetailsLoading(false)
-    }
   }
 
   if (loading) {
@@ -377,7 +340,7 @@ function TeacherCompletedClassDetails() {
           description={`Subject: ${selectedTest.subject} | Date: ${formatDate(selectedTest.testDate)} | Total Marks: ${selectedTest.totalMarks}`}
           onClose={() => {
             setTestModalOpen(false)
-            setTestDetails(null)
+            setSelectedTest(null)
           }}
           size="md"
         >
@@ -433,7 +396,7 @@ function TeacherCompletedClassDetails() {
                   variant="secondary" 
                   onClick={() => {
                     setTestModalOpen(false)
-                    setTestDetails(null)
+                    setSelectedTest(null)
                   }}
                 >
                   Close View
