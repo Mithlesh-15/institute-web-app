@@ -11,22 +11,34 @@ const quickActions = [
     title: 'My Classes',
     to: '/student/classes',
     icon: GraduationCap,
+    gradient: 'from-emerald-50/70 via-teal-50/20 to-white hover:border-emerald-300',
+    iconBg: 'bg-emerald-50 text-emerald-600 border border-emerald-100/50',
+    iconHover: 'group-hover:text-emerald-700',
   },
   {
     title: 'Attendance',
     to: '/student/attendance',
     icon: CalendarCheck2,
+    gradient: 'from-blue-50/70 via-indigo-50/20 to-white hover:border-blue-300',
+    iconBg: 'bg-blue-50 text-blue-600 border border-blue-100/50',
+    iconHover: 'group-hover:text-blue-700',
   },
   {
     title: 'Fees Summary',
     to: '/student/fees',
     icon: CreditCard,
+    gradient: 'from-amber-50/70 via-orange-50/20 to-white hover:border-amber-300',
+    iconBg: 'bg-amber-50 text-amber-600 border border-amber-100/50',
+    iconHover: 'group-hover:text-amber-700',
     description: 'Review fee payments & status',
   },
   {
     title: 'My Profile',
     to: '/student/profile',
     icon: User,
+    gradient: 'from-purple-50/70 via-pink-50/20 to-white hover:border-purple-300',
+    iconBg: 'bg-purple-50 text-purple-600 border border-purple-100/50',
+    iconHover: 'group-hover:text-purple-700',
     description: 'Update profile and details',
   },
 ]
@@ -154,10 +166,11 @@ function StudentDashboard() {
       )}
 
       {/* 2. Greeting & Student Header */}
-      <section className="rounded-4xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+      <section className="rounded-4xl border border-slate-200 bg-linear-to-br from-indigo-50/40 via-slate-50/30 to-blue-50/50 p-6 shadow-soft sm:p-8">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+          <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
           {getGreeting()},
-        </p>
+        </div>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
@@ -167,8 +180,29 @@ function StudentDashboard() {
               Class {dashboard?.profile?.className || 'N/A'}
             </p>
           </div>
-          <div className="rounded-2xl bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700">
+          <div className="rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-md">
             Welcome to your tuition portal
+          </div>
+        </div>
+
+        {/* Quote Banner */}
+        <div className="relative mt-6 overflow-hidden rounded-2xl border border-blue-200/50 bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 p-5 text-white shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.005]">
+          {/* Decorative blur elements */}
+          <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-white/10 blur-xl"></div>
+          <div className="absolute -bottom-12 -left-12 h-28 w-28 rounded-full bg-white/10 blur-xl"></div>
+          
+          <div className="relative flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md shadow-xs shrink-0 select-none text-2xl">
+              🌸
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-100">
+                Motto of RTC
+              </p>
+              <p className="mt-1 text-base sm:text-lg font-bold italic tracking-wide text-white leading-relaxed">
+                "Come to the garden Of RTC and get the flower of success"
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -203,7 +237,7 @@ function StudentDashboard() {
           value={dashboard?.stats?.totalJoinedClasses || 0}
           hint="Total classes assigned to you"
           icon={GraduationCap}
-          tone="slate"
+          tone="emerald"
         />
         <StudentStatCard
           label="Pending Fees"
@@ -231,13 +265,13 @@ function StudentDashboard() {
               <Link
                 key={item.title}
                 to={item.to}
-                className="rounded-3xl border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:border-brand/20 hover:bg-white"
+                className={`group rounded-3xl border border-slate-200 bg-linear-to-br ${item.gradient} p-5 transition hover:-translate-y-1 hover:shadow-md`}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-brand">
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-2xl ${item.iconBg}`}>
                     <Icon className="h-5 w-5" />
                   </span>
-                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-brand transition-colors" />
+                  <ArrowRight className={`h-4 w-4 text-slate-400 ${item.iconHover} transition-colors`} />
                 </div>
                 <h2 className="mt-5 text-base font-semibold text-slate-900">{item.title}</h2>
               </Link>

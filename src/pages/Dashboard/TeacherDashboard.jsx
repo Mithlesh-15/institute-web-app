@@ -168,7 +168,7 @@ function TeacherDashboard() {
       )}
 
       {/* 2. Welcome Greeting Block */}
-      <section className="rounded-2xl border border-slate-200 bg-linear-to-br from-blue-50/55 via-slate-50 to-indigo-50/35 p-6 sm:p-8 shadow-soft">
+      <section className="rounded-2xl border border-slate-200 bg-linear-to-br from-indigo-50 via-purple-50/20 to-blue-50/45 p-6 sm:p-8 shadow-soft">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700">
@@ -181,16 +181,37 @@ function TeacherDashboard() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-sm">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                <CalendarDays className="h-4 w-4 text-brand" />
+            <div className="rounded-2xl border border-white/80 bg-white/95 p-4 shadow-sm">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-indigo-500">
+                <CalendarDays className="h-4 w-4 text-indigo-600" />
                 Current date
               </div>
-              <p className="mt-2 text-sm font-semibold text-slate-900">
+              <p className="mt-2 text-sm font-semibold text-slate-800">
                 {dateLabel}
               </p>
             </div>
             
+          </div>
+        </div>
+
+        {/* Quote Banner */}
+        <div className="relative mt-6 overflow-hidden rounded-2xl border border-blue-200/50 bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 p-5 text-white shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.005]">
+          {/* Decorative blur elements */}
+          <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-white/10 blur-xl"></div>
+          <div className="absolute -bottom-12 -left-12 h-28 w-28 rounded-full bg-white/10 blur-xl"></div>
+          
+          <div className="relative flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md shadow-xs shrink-0 select-none text-2xl">
+              🌸
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-100">
+                Motto of RTC
+              </p>
+              <p className="mt-1 text-base sm:text-lg font-bold italic tracking-wide text-white leading-relaxed">
+                "Come to the garden Of RTC and get the flower of success"
+              </p>
+            </div>
           </div>
         </div>
       </section>
