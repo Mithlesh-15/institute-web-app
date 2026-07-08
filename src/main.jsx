@@ -20,6 +20,8 @@ import TeacherLogin from './pages/Login/TeacherLogin.jsx'
 import TeacherAttendance from './pages/Teacher/TeacherAttendance.jsx'
 import TeacherClasses from './pages/Teacher/TeacherClasses.jsx'
 import TeacherClassDetails from './pages/Teacher/TeacherClassDetails.jsx'
+import TeacherCompletedClasses from './pages/Teacher/TeacherCompletedClasses.jsx'
+import TeacherCompletedClassDetails from './pages/Teacher/TeacherCompletedClassDetails.jsx'
 import TeacherFees from './pages/Teacher/TeacherFees.jsx'
 import TeacherLibrary from './pages/Teacher/TeacherLibrary.jsx'
 import TeacherNotices from './pages/Teacher/TeacherNotices.jsx'
@@ -86,6 +88,8 @@ const router = createBrowserRouter(
           <Route path="students" element={<TeacherStudents />} />
           <Route path="classes" element={<TeacherClasses />} />
           <Route path="classes/:id" element={<TeacherClassDetails />} />
+          <Route path="completed-classes" element={<TeacherCompletedClasses />} />
+          <Route path="completed-classes/:id" element={<TeacherCompletedClassDetails />} />
           <Route path="attendance" element={<TeacherAttendance />} />
           <Route path="fees" element={<TeacherFees />} />
           <Route path="results" element={<TeacherResults />} />

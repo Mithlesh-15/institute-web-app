@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
 import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
 import SectionCard from '../../components/teacher-dashboard/SectionCard'
 import ClassCard from '../../components/teacher-classes/ClassCard'
+import ClassContextMenu from '../../components/teacher-classes/ClassContextMenu'
 import ClassFormModal from '../../components/teacher-classes/ClassFormModal'
 import EmptyState from '../../components/teacher-classes/EmptyState'
 import FilterTabs from '../../components/teacher-classes/FilterTabs'
@@ -14,6 +17,7 @@ import {
   deleteClassRecord,
   fetchClassesWithStudentCounts,
   updateClassRecord,
+  completeClassRecord,
 } from '../../utils/classesManagement'
 
 const initialModalState = {
@@ -24,6 +28,7 @@ const initialModalState = {
 
 function TeacherClasses() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [classes, setClasses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -33,6 +38,61 @@ function TeacherClasses() {
   const [editingClass, setEditingClass] = useState(null)
   const [saving, setSaving] = useState(false)
   const [deletingId, setDeletingId] = useState('')
+
+  const [contextMenu, setContextMenu] = useState(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [completingTarget, setCompletingTarget] = useState(null)
+  const [savingComplete, setSavingComplete] = useState(false)
+  const [toast, setToast] = useState('')
+
+  const handleContextMenuAction = (e, classItem) => {
+    setContextMenu({
+      classItem,
+      x: e.clientX,
+      y: e.clientY,
+    })
+  }
+
+  const handleLongPressAction = (e, classItem, clientX, clientY) => {
+    setContextMenu({
+      classItem,
+      x: clientX,
+      y: clientY,
+    })
+  }
+
+  const handleCompleteClassClick = (classItem) => {
+    setCompletingTarget(classItem)
+    setConfirmOpen(true)
+  }
+
+  const handleConfirmComplete = async () => {
+    if (!completingTarget) return
+    try {
+      setSavingComplete(true)
+      await completeClassRecord(completingTarget.id)
+      
+      // Invalidate react-query cache for student portal
+      queryClient.invalidateQueries({ queryKey: ['studentClasses'] })
+      queryClient.invalidateQueries({ queryKey: ['studentAttendance'] })
+      queryClient.invalidateQueries({ queryKey: ['studentMaterials'] })
+      queryClient.invalidateQueries({ queryKey: ['studentTests'] })
+
+      // Remove from active list
+      setClasses((prev) => prev.filter((c) => c.id !== completingTarget.id))
+      setConfirmOpen(false)
+      setCompletingTarget(null)
+
+      setToast('Class completed successfully.')
+      setTimeout(() => {
+        setToast('')
+      }, 3000)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Unable to complete class.')
+    } finally {
+      setSavingComplete(false)
+    }
+  }
 
   useEffect(() => {
     let mounted = true
@@ -203,6 +263,8 @@ function TeacherClasses() {
               onOpen={openClassDetails}
               onEdit={openEditModal}
               onDelete={handleDeleteClass}
+              onContextMenu={handleContextMenuAction}
+              onLongPress={handleLongPressAction}
             />
           ))}
         </div>
@@ -225,6 +287,49 @@ function TeacherClasses() {
         onClose={closeModal}
         onSubmit={handleSaveClass}
       />
+
+      {contextMenu && (
+        <ClassContextMenu
+          classItem={contextMenu.classItem}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(null)}
+          onComplete={handleCompleteClassClick}
+        />
+      )}
+
+      <Modal
+        open={confirmOpen}
+        title="Complete this class?"
+        description="This class will be moved to Completed Classes."
+        onClose={() => setConfirmOpen(false)}
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-slate-500">
+            Attendance, Tests and Students will remain available as history.
+          </p>
+          <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+            <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleConfirmComplete} 
+              loading={savingComplete}
+              loadingLabel="Completing..."
+            >
+              Complete
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {toast && (
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-xl animate-fade-in">
+          <span>✨</span>
+          <span>{toast}</span>
+        </div>
+      )}
     </div>
   )
 }

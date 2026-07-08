@@ -41,6 +41,7 @@ export const normalizeClass = (row) => {
     startDate: normalizeDateValue(row.start_date || row.startDate),
     classTime: row.Time || row.classTime || "",
     createdAt: row.created_at || row.createdAt || null,
+    isComplete: !!row.is_completed || !!row.isComplete,
   };
 };
 
@@ -83,6 +84,7 @@ export async function fetchClasses() {
   const { data, error } = await supabase
     .from(CLASSES_TABLE)
     .select("*")
+    .eq("isComplete", false)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -324,4 +326,65 @@ export async function removeStudentFromClass(classId, studentId) {
   if (error) {
     throw new Error(error.message || 'Unable to remove student from class.')
   }
+}
+
+export async function fetchCompletedClasses() {
+  const teacherId = getTeacherId();
+
+  if (!teacherId) {
+    throw new Error("Teacher session not found. Please log in again.");
+  }
+
+  const { data, error } = await supabase
+    .from(CLASSES_TABLE)
+    .select("*")
+    .eq("isComplete", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message || "Unable to fetch completed classes.");
+  }
+
+  // We need to fetch student counts for completed classes too.
+  const { data: assignments, error: assignmentsError } = await supabase
+    .from(BATCH_STUDENTS_TABLE)
+    .select('class_id')
+
+  if (assignmentsError) {
+    throw new Error(assignmentsError.message || 'Unable to fetch assignments.')
+  }
+
+  const countMap = (assignments || []).reduce((accumulator, assignment) => {
+    const classId = assignment.class_id
+    if (classId) {
+      accumulator[classId] = (accumulator[classId] || 0) + 1
+    }
+    return accumulator
+  }, {})
+
+  return (data || []).map(normalizeClass).filter(Boolean).map((classItem) => ({
+    ...classItem,
+    totalStudents: countMap[classItem.id] || 0,
+  }));
+}
+
+export async function completeClassRecord(classId) {
+  const teacherId = getTeacherId();
+
+  if (!teacherId) {
+    throw new Error("Teacher session not found. Please log in again.");
+  }
+
+  const { data, error } = await supabase
+    .from(CLASSES_TABLE)
+    .update({ isComplete: true })
+    .eq("id", classId)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message || "Unable to complete class.");
+  }
+
+  return normalizeClass(data);
 }

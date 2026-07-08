@@ -303,6 +303,7 @@ export async function fetchStudentClasses() {
     .from(CLASSES_TABLE)
     .select('*')
     .in('id', classIds)
+    .eq('isComplete', false)
 
   if (classError) {
     throw new Error(classError.message || 'Unable to load class details.')

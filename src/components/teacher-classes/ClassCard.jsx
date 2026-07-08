@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { CalendarDays, PencilLine, Trash2, Clock } from 'lucide-react'
 
 const formatDate = (value) => {
@@ -40,7 +41,18 @@ const formatTime = (value) => {
   }
 }
 
-function ClassCard({ classItem, onEdit, onDelete, onOpen, deleting = false }) {
+function ClassCard({ 
+  classItem, 
+  onEdit, 
+  onDelete, 
+  onOpen, 
+  onContextMenu, 
+  onLongPress, 
+  deleting = false 
+}) {
+  const touchTimeout = useRef(null)
+  const touchStartPos = useRef({ x: 0, y: 0 })
+
   const handleOpen = () => {
     if (typeof onOpen === 'function') {
       onOpen(classItem)
@@ -59,18 +71,60 @@ function ClassCard({ classItem, onEdit, onDelete, onOpen, deleting = false }) {
     }
   }
 
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0]
+    touchStartPos.current = { x: touch.clientX, y: touch.clientY }
+
+    if (touchTimeout.current) clearTimeout(touchTimeout.current)
+
+    touchTimeout.current = setTimeout(() => {
+      if (typeof onLongPress === 'function') {
+        onLongPress(e, classItem, touch.clientX, touch.clientY)
+      }
+    }, 600)
+  }
+
+  const handleTouchMove = (e) => {
+    const touch = e.touches[0]
+    const diffX = Math.abs(touch.clientX - touchStartPos.current.x)
+    const diffY = Math.abs(touch.clientY - touchStartPos.current.y)
+
+    if (diffX > 10 || diffY > 10) {
+      if (touchTimeout.current) {
+        clearTimeout(touchTimeout.current)
+      }
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (touchTimeout.current) {
+      clearTimeout(touchTimeout.current)
+    }
+  }
+
+  const handleContextMenu = (e) => {
+    e.preventDefault()
+    if (typeof onContextMenu === 'function') {
+      onContextMenu(e, classItem)
+    }
+  }
+
   return (
     <article
       role="button"
       tabIndex={0}
       onClick={handleOpen}
+      onContextMenu={handleContextMenu}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault()
           handleOpen()
         }
       }}
-      className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]"
+      className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)] select-none"
     >
       <div className="h-1.5 bg-[linear-gradient(90deg,#2563eb,#f25d0d)]" />
 
